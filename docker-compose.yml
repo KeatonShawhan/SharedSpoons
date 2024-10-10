@@ -1,9 +1,29 @@
+# version: '3.7'
+
+# services:
+#   postgres:
+#     container_name: sharedspoons
+#     image: postgres
+#     restart: always
+#     environment:
+#       POSTGRES_DB: ${POSTGRES_DB}
+#       POSTGRES_USER: ${POSTGRES_USER}
+#       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+#     ports:
+#       - "5432:5432"
+#     volumes:
+#       - ./sql/databases.sql:/docker-entrypoint-initdb.d/1.databases.sql
+#       - ./sql/schema.sql:/docker-entrypoint-initdb.d/2.schema.sql
+#       - ./sql/test.sql:/docker-entrypoint-initdb.d/3.test.sql
+#       - ./sql/data.sql:/docker-entrypoint-initdb.d/4.data.sql
+
 version: '3.7'
 
 services:
   postgres:
     container_name: sharedspoons
     image: postgres
+    restart: always
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -11,7 +31,9 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./sql/databases.sql:/docker-entrypoint-initdb.d/1.databases.sql
-      - ./sql/schema.sql:/docker-entrypoint-initdb.d/2.schema.sql
-      - ./sql/test.sql:/docker-entrypoint-initdb.d/3.test.sql
-      - ./sql/data.sql:/docker-entrypoint-initdb.d/4.data.sql
+      - postgres_data:/var/lib/postgresql/data
+      - ./sql/schema.sql:/docker-entrypoint-initdb.d/1.schema.sql
+      - ./sql/data.sql:/docker-entrypoint-initdb.d/2.data.sql
+
+volumes:
+  postgres_data:
