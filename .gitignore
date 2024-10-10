@@ -1,0 +1,45 @@
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+<<<<<<< HEAD
+*.pem
+.next/*
+=======
+.yarn/install-state.gz
+>>>>>>> d5d78f7452558df83d6d153c7e603206b1a1f94f
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+**/node_modules/
+**/build/
+**/.next/
+**/coverage/
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env*.local
+.env
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts

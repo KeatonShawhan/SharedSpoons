@@ -1,0 +1,32 @@
+{
+  "name": "sharedspoons",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "prestart": "npm run build",
+    "start": "node build/src/server.js",
+    "prebuild": "npm run swagger",
+    "build": "tsc",
+    "dev": "ts-node src/server.ts",
+    "swagger": "tsoa spec-and-routes"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.1",
+    "pg": "^8.13.0",
+    "swagger-ui-express": "^5.0.1",
+    "tsoa": "^6.4.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.7.5",
+    "@types/swagger-ui-express": "^4.1.6",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
+  }
+}
