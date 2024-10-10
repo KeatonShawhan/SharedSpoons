@@ -1,5 +1,5 @@
 import { Controller, Get, Route, Request, Post, Body} from 'tsoa';
-import {Fruit} from '.';
+import {Fruit, FruitInput} from '.';
 import * as express from 'express';
 import {ExampleService} from './exService'; 
 
@@ -16,7 +16,7 @@ export class ExampleController extends Controller {
   @Post()
   public async newFruit(
     @Request() request: express.Request, 
-    @Body() fruit: Fruit
+    @Body() fruit: FruitInput
   ): Promise<Fruit|undefined> {
     return new ExampleService().newFruit(fruit);
   }

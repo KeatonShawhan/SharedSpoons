@@ -6,4 +6,10 @@ export interface Fruit {
     color: string;
   }
 
+  export interface FruitInput {
+    name: string;
+    color: string;
+  }
+
+
   

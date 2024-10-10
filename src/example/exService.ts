@@ -1,4 +1,4 @@
-import {Fruit} from '.';
+import {Fruit, FruitInput} from '.';
 import { pool } from '../db';
 import {SessionUser, UUID} from '../types';
 
@@ -17,11 +17,11 @@ export class ExampleService {
         }));
     }
 
-    public async newFruit(fruit: Fruit): Promise<Fruit | undefined> {
-        const select = `INSERT into fruit (name, color) VALUES ($1,  $2)`;
+    public async newFruit(fruit: FruitInput): Promise<Fruit | undefined> {
+        const insertQuery = `INSERT INTO fruit (data) VALUES ($1) RETURNING *`;
         const query = {
-            text: select,
-            values: [fruit.name, fruit.color]
+            text: insertQuery,
+            values: [JSON.stringify(fruit)],
         };
         const { rows } = await pool.query(query);
 
