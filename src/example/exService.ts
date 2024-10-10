@@ -11,9 +11,20 @@ export class ExampleService {
         const { rows } = await pool.query(query);
 
         return rows.map(row => ({
-            id: row.id, // UUID
-            name: row.data.name, // Access name from JSON data
-            color: row.data.color, // Access color from JSON data
+            id: row.id,
+            name: row.data.name, 
+            color: row.data.color,
         }));
+    }
+
+    public async newFruit(fruit: Fruit): Promise<Fruit | undefined> {
+        const select = `INSERT into fruit (name, color) VALUES ($1,  $2)`;
+        const query = {
+            text: select,
+            values: [fruit.name, fruit.color]
+        };
+        const { rows } = await pool.query(query);
+
+        return rows[0];
     }
 }
