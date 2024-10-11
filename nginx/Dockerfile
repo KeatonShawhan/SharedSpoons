@@ -14,6 +14,6 @@ COPY /etc/ssl/certs/sharedspoons.crt /etc/ssl/certs/sharedspoons.crt
 EXPOSE 80
 
 # Expose port 443 for HTTPS traffic (if SSL/TLS is added)
-# EXPOSE 443
+EXPOSE 443
 
 # Start nginx (the official image already uses CMD to start nginx)
