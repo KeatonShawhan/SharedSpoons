@@ -4,6 +4,9 @@ FROM nginx:latest
 # Copy custom nginx configuration file to the container
 COPY nginx.conf /etc/nginx/nginx.conf
 
+# copy ssl cert to nginx dir
+COPY /etc/ssl/certs/sharedspoons.crt /etc/ssl/certs/sharedspoons.crt 
+
 # Copy any additional configuration files if needed (optional)
 # COPY conf.d /etc/nginx/conf.d
 
