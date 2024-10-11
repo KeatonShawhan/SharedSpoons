@@ -5,8 +5,8 @@ FROM nginx:latest
 COPY nginx.conf /etc/nginx/nginx.conf
 
 # copy ssl cert to nginx dir
-COPY sharedspoons.crt /etc/ssl/certs/sharedspoons.crt
-COPY sharedspoons_new.key /etc/ssl/private/sharedspoons_new.key
+COPY ./certs/sharedspoons.crt /etc/ssl/certs/sharedspoons.crt
+COPY ./certs/sharedspoons_new.key /etc/ssl/private/sharedspoons_new.key
 
 # Copy any additional configuration files if needed (optional)
 # COPY conf.d /etc/nginx/conf.d
