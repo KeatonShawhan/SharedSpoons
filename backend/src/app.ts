@@ -5,11 +5,13 @@ import express, {
     Request as ExRequest, 
     ErrorRequestHandler 
   } from 'express';
+
   import cors from 'cors';
   import swaggerUi from 'swagger-ui-express';
   
   import {RegisterRoutes} from "../build/routes";
   
+
   const app: Express = express();
   app.use(cors());
   app.use(express.json());
