@@ -1,20 +1,27 @@
 # Use the official nginx base image
 FROM nginx:latest
 
-# Copy custom nginx configuration file to the container
-COPY nginx.conf /etc/nginx/nginx.conf
+# Accept build-time arguments
+ARG SSL_CERT_NAME
+ARG SSL_KEY_NAME
 
-# copy ssl cert to nginx dir
-COPY certs/sharedspoons.crt /etc/ssl/certs/sharedspoons.crt
-COPY certs/sharedspoons_new.key /etc/ssl/private/sharedspoons_new.key
+# Set environment variables to persist in the container for runtime
+ENV SSL_CERT_NAME=${SSL_CERT_NAME}
+ENV SSL_KEY_NAME=${SSL_KEY_NAME}
 
-# Copy any additional configuration files if needed (optional)
-# COPY conf.d /etc/nginx/conf.d
+# Copy custom nginx configuration file template to the container
+COPY nginx.conf /etc/nginx/nginx.conf.template
 
-# Expose port 80 for HTTP traffic
+# Copy SSL certificates using the build arguments
+COPY certs/$SSL_CERT_NAME /etc/ssl/certs/$SSL_CERT_NAME
+COPY certs/$SSL_KEY_NAME /etc/ssl/private/$SSL_KEY_NAME
+
+# Install envsubst for environment variable substitution
+RUN apt-get update && apt-get install -y gettext-base
+
+# Substitute environment variables in nginx.conf at runtime and start nginx
+CMD envsubst '$SSL_CERT_NAME $SSL_KEY_NAME' < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf && nginx -g 'daemon off;'
+
+# Expose ports for HTTP and HTTPS
 EXPOSE 80
-
-# Expose port 443 for HTTPS traffic (if SSL/TLS is added)
 EXPOSE 443
-
-# Start nginx (the official image already uses CMD to start nginx)
