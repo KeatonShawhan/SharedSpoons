@@ -1,0 +1,16 @@
+current directory: /Users/nicovitagliano/Desktop/SharedSpoons/frontend/SharedSpoons/vendor/bundle/ruby/3.1.0/gems/nkf-0.2.0/ext/nkf
+/Users/nicovitagliano/.rbenv/versions/3.1.4/bin/ruby -I /Users/nicovitagliano/.rbenv/versions/3.1.4/lib/ruby/3.1.0 extconf.rb
+creating Makefile
+
+current directory: /Users/nicovitagliano/Desktop/SharedSpoons/frontend/SharedSpoons/vendor/bundle/ruby/3.1.0/gems/nkf-0.2.0/ext/nkf
+make DESTDIR\= sitearchdir\=./.gem.20241014-34330-e97l17 sitelibdir\=./.gem.20241014-34330-e97l17 clean
+
+current directory: /Users/nicovitagliano/Desktop/SharedSpoons/frontend/SharedSpoons/vendor/bundle/ruby/3.1.0/gems/nkf-0.2.0/ext/nkf
+make DESTDIR\= sitearchdir\=./.gem.20241014-34330-e97l17 sitelibdir\=./.gem.20241014-34330-e97l17
+compiling nkf.c
+linking shared-object nkf.bundle
+ld: warning: ignoring duplicate libraries: '-lruby.3.1'
+
+current directory: /Users/nicovitagliano/Desktop/SharedSpoons/frontend/SharedSpoons/vendor/bundle/ruby/3.1.0/gems/nkf-0.2.0/ext/nkf
+make DESTDIR\= sitearchdir\=./.gem.20241014-34330-e97l17 sitelibdir\=./.gem.20241014-34330-e97l17 install
+/usr/bin/install -c -m 0755 nkf.bundle ./.gem.20241014-34330-e97l17
