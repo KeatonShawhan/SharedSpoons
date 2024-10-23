@@ -8,6 +8,7 @@ import { Colors } from '@/constants/Colors';
 import {Card } from 'react-native-paper';
 import { postCaption } from './postCaption';
 import { starDisplay } from './starDisplay';
+import { addButton } from './addButton';
 
 
 export function postCard({ children, caption, rating, dish, username, place, image }: PropsWithChildren & {caption:string, rating:number, dish:string, username:string, place:string, image:string }) {
@@ -20,12 +21,17 @@ export function postCard({ children, caption, rating, dish, username, place, ima
         <View style={{paddingBottom:10}}>
           {postHeader({username: username, place:place})}
         </View>
-        <Image
-          style={{width:"100%", height: 500, borderRadius: 5}}
-          source={{
-            uri: image,
-          }}
-        />
+        <View style={{position: 'relative', width: '100%', height: 500}}>
+          <Image
+            style={{width: '100%', height: 500, borderRadius: 5}}
+            source={{
+              uri: image,
+            }}
+          />
+          {addButton()}
+          
+          
+        </View>
         <View style={{paddingTop:8, display:'flex', flexDirection:'row', gap:10, flexWrap:'wrap'}}>
           {postCaption({caption: caption, dish: dish, rating: rating})}
         </View>

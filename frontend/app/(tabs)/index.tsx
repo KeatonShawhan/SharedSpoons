@@ -26,7 +26,7 @@ export default function HomeScreen() {
             dish:"big mac",
             rating: 1,
             place: "McDonalds",
-            image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFGJ2-FbJk717ZkaM5gjIUHT3kCQhDWNdIyvsR-XLbpsRdFVMpWRlSZx6jo9JAa1joLRU&usqp=CAU"
+            image: "https://i2-prod.walesonline.co.uk/incoming/article22961099.ece/ALTERNATES/s615b/0_EGR_020222_ChickenBigMac_05.jpg"
 
           })}
 
@@ -36,7 +36,7 @@ export default function HomeScreen() {
             dish:"Italian Sandwich #13",
             rating: 4,
             place: "Jersey Mikes",
-            image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFGJ2-FbJk717ZkaM5gjIUHT3kCQhDWNdIyvsR-XLbpsRdFVMpWRlSZx6jo9JAa1joLRU&usqp=CAU"
+            image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyvmjamuCycuEPL9U1rse906oY1Ga-8uv0vw&s"
 
           })}
          
