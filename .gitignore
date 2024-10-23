@@ -3,12 +3,9 @@
 /.pnp
 .pnp.js
 **/Pods
-<<<<<<< HEAD
 *.pem
 .next/*
-=======
 .yarn/install-state.gz
->>>>>>> d5d78f7452558df83d6d153c7e603206b1a1f94f
 
 # testing
 /coverage
