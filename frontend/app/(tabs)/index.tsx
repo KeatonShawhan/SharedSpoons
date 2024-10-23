@@ -10,9 +10,37 @@ export default function HomeScreen() {
     <ScrollView>
       <SafeAreaView>
         <ThemedView style={{paddingTop: 20}}>
-          {postCard({title:"heyyy"})}
-          {postCard({title:"byeee"})}
-          {postCard({title:"okokokoko"})}
+          {postCard({
+            username:"Zoe Feller",
+            caption: "yum!",
+            dish:"pepperoni pizza",
+            rating: 4.5,
+            place: "Pizza Hut",
+            image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFGJ2-FbJk717ZkaM5gjIUHT3kCQhDWNdIyvsR-XLbpsRdFVMpWRlSZx6jo9JAa1joLRU&usqp=CAU"
+
+          })}
+
+          {postCard({
+            username:"Keaton Shawhan",
+            caption: "had e coli :/",
+            dish:"big mac",
+            rating: 1,
+            place: "McDonalds",
+            image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFGJ2-FbJk717ZkaM5gjIUHT3kCQhDWNdIyvsR-XLbpsRdFVMpWRlSZx6jo9JAa1joLRU&usqp=CAU"
+
+          })}
+
+          {postCard({
+            username:"Luca Schram",
+            caption: ":p",
+            dish:"Italian Sandwich #13",
+            rating: 4,
+            place: "Jersey Mikes",
+            image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFGJ2-FbJk717ZkaM5gjIUHT3kCQhDWNdIyvsR-XLbpsRdFVMpWRlSZx6jo9JAa1joLRU&usqp=CAU"
+
+          })}
+         
+
         </ThemedView>
       </SafeAreaView>
     </ScrollView>

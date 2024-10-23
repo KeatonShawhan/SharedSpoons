@@ -7,9 +7,10 @@ import { ThemedView } from '@/components/ThemedView';
 import { Colors } from '@/constants/Colors';
 import {Card } from 'react-native-paper';
 import { postCaption } from './postCaption';
+import { starDisplay } from './starDisplay';
 
 
-export function postCard({ children, title }: PropsWithChildren & { title: string }) {
+export function postCard({ children, caption, rating, dish, username, place, image }: PropsWithChildren & {caption:string, rating:number, dish:string, username:string, place:string, image:string }) {
   const [isOpen, setIsOpen] = useState(false);
   const theme = useColorScheme() ?? 'light';
 
@@ -17,16 +18,16 @@ export function postCard({ children, title }: PropsWithChildren & { title: strin
     <View style={{justifyContent:'center', alignItems:'center', paddingBottom:30}}>
       <View style={{width: "95%", borderRadius: 0, borderColor:"none"}}>
         <View style={{paddingBottom:10}}>
-          {postHeader({username: "Zoe Feller"})}
+          {postHeader({username: username, place:place})}
         </View>
         <Image
-          style={{width:"100%", height: 300, borderRadius: 5}}
+          style={{width:"100%", height: 500, borderRadius: 5}}
           source={{
-            uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFGJ2-FbJk717ZkaM5gjIUHT3kCQhDWNdIyvsR-XLbpsRdFVMpWRlSZx6jo9JAa1joLRU&usqp=CAU',
+            uri: image,
           }}
         />
-        <View style={{paddingTop:5}}>
-          {postCaption({caption: "cat :3"})}
+        <View style={{paddingTop:8, display:'flex', flexDirection:'row', gap:10, flexWrap:'wrap'}}>
+          {postCaption({caption: caption, dish: dish, rating: rating})}
         </View>
       </View>
     </View>

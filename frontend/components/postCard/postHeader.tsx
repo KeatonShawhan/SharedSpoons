@@ -8,7 +8,7 @@ import { Colors } from '@/constants/Colors';
 import {Avatar, Card } from 'react-native-paper';
 
 
-export function postHeader({ children, username }: PropsWithChildren & { username: string }) {
+export function postHeader({ children, username, place }: PropsWithChildren & { username: string, place:string }) {
   const [isOpen, setIsOpen] = useState(false);
   const theme = useColorScheme() ?? 'light';
 
@@ -21,7 +21,7 @@ export function postHeader({ children, username }: PropsWithChildren & { usernam
             {username}
           </Text>
           <Text style={{paddingLeft:10, paddingTop:0, fontSize: 14, color:'grey'}}>
-            Pizza Hut
+            {place}
           </Text>
         </View>
       </View>
