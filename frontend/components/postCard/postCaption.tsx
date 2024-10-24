@@ -17,7 +17,7 @@ export function postCaption({ children, caption, dish, rating }: PropsWithChildr
               paddingRight: 10,
               fontSize: 16,
               fontWeight: 'bold',
-              maxWidth: '75%', 
+              maxWidth: '65%', 
             }}
             numberOfLines={1}
             ellipsizeMode="tail"
