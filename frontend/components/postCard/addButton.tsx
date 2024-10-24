@@ -1,8 +1,6 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-import {useState } from 'react';
+import { useState } from 'react';
 import {TouchableOpacity, useColorScheme} from 'react-native';
-
 import { ThemedView } from '@/components/ThemedView';
 
 type IoniconNames = 'add-circle-sharp' | 'checkmark-circle-outline';

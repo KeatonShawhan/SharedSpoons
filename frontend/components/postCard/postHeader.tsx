@@ -1,17 +1,10 @@
-import Ionicons from '@expo/vector-icons/Ionicons';
-import { PropsWithChildren, useState } from 'react';
-import { StyleSheet, TouchableOpacity, useColorScheme, Text , View} from 'react-native';
-
-import { ThemedText } from '@/components/ThemedText';
+import { PropsWithChildren} from 'react';
+import { Text, View } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
-import { Colors } from '@/constants/Colors';
-import {Avatar, Card } from 'react-native-paper';
+import { Avatar } from 'react-native-paper';
 
 
 export function postHeader({ children, username, place }: PropsWithChildren & { username: string, place:string }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const theme = useColorScheme() ?? 'light';
-
   return (
     <ThemedView>
       <View style={{flexDirection:'row', display:'flex', alignItems:'center'}}>

@@ -16,7 +16,9 @@ export default function HomeScreen() {
             dish:"pepperoni pizza",
             rating: 4.5,
             place: "Pizza Hut",
-            image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFGJ2-FbJk717ZkaM5gjIUHT3kCQhDWNdIyvsR-XLbpsRdFVMpWRlSZx6jo9JAa1joLRU&usqp=CAU"
+            image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFGJ2-FbJk717ZkaM5gjIUHT3kCQhDWNdIyvsR-XLbpsRdFVMpWRlSZx6jo9JAa1joLRU&usqp=CAU",
+            categories: ["Pizza", "Italian"],
+            notes: "i thought it was really good, maybe a little greasy "
 
           })}
 
@@ -26,17 +28,21 @@ export default function HomeScreen() {
             dish:"big mac",
             rating: 1,
             place: "McDonalds",
-            image: "https://i2-prod.walesonline.co.uk/incoming/article22961099.ece/ALTERNATES/s615b/0_EGR_020222_ChickenBigMac_05.jpg"
+            image: "https://i2-prod.walesonline.co.uk/incoming/article22961099.ece/ALTERNATES/s615b/0_EGR_020222_ChickenBigMac_05.jpg",
+            categories: ["Fast Food", "American"],
+            notes: "terrible awful disgusting. dont eat here. my burger looked nasty."
 
           })}
 
           {postCard({
             username:"Luca Schram",
             caption: ":p",
-            dish:"Italian Sandwich #13",
+            dish:"Italian Sandwich #13 with no ham add roast beef",
             rating: 4,
             place: "Jersey Mikes",
-            image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyvmjamuCycuEPL9U1rse906oY1Ga-8uv0vw&s"
+            image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyvmjamuCycuEPL9U1rse906oY1Ga-8uv0vw&s",
+            categories: ["Lunch", "Deli", "Fast Food"],
+            notes: "I love the rosemary parm bread its my favorite. I usually get it mikes waay with no tomatoes and honey mustard on the side"
 
           })}
          
