@@ -6,7 +6,7 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 export function toEatCard({id, dish, place, image, navigation }: {dish: string, place:string, image:string, id:uuidv4, navigation:any}) {
   return (
     <TouchableOpacity
-      onPress={() => navigation.navigate('PostDetails', { uuid: id })} // navigate to post details screen
+      onPress={() => navigation.navigate('PostDetails', { uuid: id })} 
     >
       <View style={{ justifyContent: 'center', alignItems: 'center', paddingBottom: 20 }}>
         <View style={{height: 120, width: "95%", borderRadius: 5, borderColor: "black", borderWidth: 1, display: 'flex', flexDirection: 'row', position: 'relative'}}>

@@ -1,6 +1,6 @@
 import { createStackNavigator } from '@react-navigation/stack'; // Ensure you're using this
 import React from 'react';
-import ToEatList from '../pages/toEatPage'; 
+import ToEatPage from '../pages/toEatPage'; 
 import ToEatDetails from '../pages/toEatDetails';
 const Stack = createStackNavigator();
 
@@ -9,7 +9,7 @@ export default function ToEatTab() {
     <Stack.Navigator>
       <Stack.Screen 
         name="ToEatList" 
-        component={ToEatList} 
+        component={ToEatPage} 
         options={{ title: 'To-Eat' }} 
       />
       <Stack.Screen 

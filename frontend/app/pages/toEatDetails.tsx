@@ -3,9 +3,10 @@ import { ThemedView } from '@/components/ThemedView';
 import { toEatCard } from '@/components/toEatCard/toEatCard';
 import { useNavigation } from '@react-navigation/native';
 import { ToEatDetailsInfo } from '@/components/toEatCard/toEatDetails';
+import { useRoute } from '@react-navigation/native';
+// query post here 
+
 export default function ToEatDetails() {
-  // query happens here!!
-  
   return (
     <ScrollView>
       <SafeAreaView>

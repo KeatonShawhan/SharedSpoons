@@ -3,7 +3,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { toEatCard } from '@/components/toEatCard/toEatCard';
 import { useNavigation } from '@react-navigation/native';
 
-export default function ToEatList() {
+export default function ToEatPage() {
   const navigation = useNavigation();
 
   return (
