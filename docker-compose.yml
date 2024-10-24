@@ -15,7 +15,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./sql/schema.sql:/docker-entrypoint-initdb.d/1.schema.sql
-
+      - ./sql/data.sql:/docker-entrypoint-initdb.d/2.data.sql
   backend:
     container_name: sharedspoons-backend
     build:
