@@ -8,15 +8,8 @@ import { postCaption } from './postCaption';
 import { postDescription } from './postDescription';
 
 
-export function postCard({ children, notes, categories, caption, rating, dish, username, place, image }: PropsWithChildren & 
-  {caption:string,
-    rating:number,
-    dish:string,
-    username:string,
-    place:string,
-    image:string,
-    categories: string[],
-    notes: string}) {
+
+export function postCard({notes, categories, caption, rating, dish, username, place, image }: Post) {
   const [isFlipped, setIsFlipped] = useState(false);
   const fadeAnim = useState(new Animated.Value(1))[0]; 
 
@@ -26,7 +19,7 @@ export function postCard({ children, notes, categories, caption, rating, dish, u
     setIsFlipped(!isFlipped);
     Animated.timing(fadeAnim, {
       toValue: isFlipped ? 1 : 0,
-      duration: 300,
+      duration: 100,
       useNativeDriver: true,
     }).start();
   };
@@ -44,7 +37,7 @@ export function postCard({ children, notes, categories, caption, rating, dish, u
 
             {/* Front Side - Image */}
             <Animated.View style={{ opacity: fadeAnim }}>
-              {postImage({ image: image, caption: caption, dish: dish, rating: rating })}
+              {postImage({ image: image })}
             </Animated.View>
 
             {/* Back Side - Description */}
@@ -57,6 +50,7 @@ export function postCard({ children, notes, categories, caption, rating, dish, u
                 right: 0, 
                 bottom: 0 
               }}>
+
               {postDescription({categories:categories, dish: dish, notes:notes})}
             </Animated.View>
           </View>

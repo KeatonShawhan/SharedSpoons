@@ -1,5 +1,6 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
@@ -30,6 +31,14 @@ export default function TabLayout() {
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
           ),
+        }}
+      />
+      <Tabs.Screen
+        name="toeat"
+        options={{
+          title: 'To-Eat',
+          tabBarIcon: ({ color, focused }) => (
+            <MaterialCommunityIcons name="silverware-fork-knife" style={{paddingTop:8}} size={24} color={color} />          ),
         }}
       />
     </Tabs>
