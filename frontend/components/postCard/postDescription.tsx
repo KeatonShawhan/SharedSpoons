@@ -5,7 +5,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { addButton } from './addButton';
 import { postCaption } from './postCaption';
 
-export function postDescription({categories, notes, dish}: PropsWithChildren & { categories: string[], dish:string, notes:string}) {
+export function postDescription({categories, notes, dish}: { categories: string[], dish:string, notes:string}) {
 
   const catString = categories.join(', ');
 

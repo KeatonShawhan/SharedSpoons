@@ -4,7 +4,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { Avatar } from 'react-native-paper';
 
 
-export function postHeader({ children, username, place }: PropsWithChildren & { username: string, place:string }) {
+export function postHeader({username, place }: { username: string, place:string }) {
   return (
     <ThemedView>
       <View style={{flexDirection:'row', display:'flex', alignItems:'center'}}>

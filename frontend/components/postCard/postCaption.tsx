@@ -6,7 +6,7 @@ import { ThemedView } from '@/components/ThemedView';
 
 
 
-export function postCaption({ children, caption, dish, rating }: PropsWithChildren & { caption: string, dish:string, rating:number }) {
+export function postCaption({caption, dish, rating }: { caption: string, dish:string, rating:number }) {
   return (
       <ThemedView >
         <View style={{flexDirection:'row', display:'flex', alignItems:'center'}}>

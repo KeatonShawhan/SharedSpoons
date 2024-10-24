@@ -9,7 +9,7 @@ import { postDescription } from './postDescription';
 
 
 
-export function postCard({notes, categories, caption, rating, dish, username, place, image }: Post) {
+export function postCard({id, notes, categories, caption, rating, dish, username, place, image }: Post) {
   const [isFlipped, setIsFlipped] = useState(false);
   const fadeAnim = useState(new Animated.Value(1))[0]; 
 
