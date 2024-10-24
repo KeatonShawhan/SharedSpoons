@@ -16,6 +16,7 @@ CREATE TABLE post (
 );
 
 -- Sponsors Table
+-- Needs to add an end date watchdog that makes sure to switch the active status to false after the end date
 DROP TABLE IF EXISTS sponsor CASCADE;
 CREATE TABLE sponsor (
     id UUID UNIQUE PRIMARY KEY DEFAULT gen_random_uuid(),
