@@ -8,6 +8,7 @@ export default function HomeScreen() {
       <SafeAreaView>
         <ThemedView style={{paddingTop: 20}}>
           {postCard({
+            id: "83c689b1-b7a7-4100-8b2d-309908b444f5",
             username:"Zoe Feller",
             caption: "yum!",
             dish:"pepperoni pizza",
@@ -20,6 +21,7 @@ export default function HomeScreen() {
           })}
 
           {postCard({
+            id: "81c689b1-b7a7-4100-8b2d-309908b444f5",
             username:"Keaton Shawhan",
             caption: "had e coli :/",
             dish:"big mac",
@@ -32,6 +34,7 @@ export default function HomeScreen() {
           })}
 
           {postCard({
+            id: "83c689b1-b7a7-4100-8b2d-309908b444f5",
             username:"Luca Schram",
             caption: ":p",
             dish:"Italian Sandwich #13 with no ham add roast beef",

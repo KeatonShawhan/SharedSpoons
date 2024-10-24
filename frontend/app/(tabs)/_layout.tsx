@@ -5,11 +5,13 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { ProfileProvider } from '../../contexts/profileContext'; 
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
 
   return (
+    <ProfileProvider> 
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
@@ -41,6 +43,16 @@ export default function TabLayout() {
             <MaterialCommunityIcons name="silverware-fork-knife" style={{paddingTop:8}} size={24} color={color} />          ),
         }}
       />
+      <Tabs.Screen
+        name="profile"
+        options={{
+          title: 'Profile',
+          tabBarIcon: ({ color, focused }) => (
+            <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
+          ),
+        }}
+      />
     </Tabs>
+    </ProfileProvider>
   );
 }

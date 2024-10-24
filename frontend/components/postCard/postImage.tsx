@@ -5,7 +5,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { addButton } from './addButton';
 import { postCaption } from './postCaption';
 
-export function postImage({image}: PropsWithChildren & { image:string }) {
+export function postImage({image}: { image:string }) {
   return (
       <ThemedView >
         <View>
