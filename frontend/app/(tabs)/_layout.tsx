@@ -6,6 +6,7 @@ import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { ProfileProvider } from '../../contexts/profileContext'; 
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -48,7 +49,7 @@ export default function TabLayout() {
         options={{
           title: 'Profile',
           tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
+            <Ionicons name="person-outline" size={24} style={{paddingTop:8}} color={color} />
           ),
         }}
       />

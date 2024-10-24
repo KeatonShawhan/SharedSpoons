@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, Image, Dimensions, ScrollView } from 'react-nat
 import { Colors } from '../../constants/Colors';
 import { useProfile } from '../../contexts/profileContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useFonts, Inter_400Regular } from '@expo-google-fonts/inter';
 
 const { width } = Dimensions.get('window');
 
