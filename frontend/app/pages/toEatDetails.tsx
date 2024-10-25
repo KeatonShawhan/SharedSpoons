@@ -10,7 +10,7 @@ export default function ToEatDetails() {
   return (
     <ScrollView>
       <SafeAreaView>
-        <ThemedView style={{ paddingTop: 0 }}>
+        <ThemedView style={{ paddingTop: 20 }}>
           {ToEatDetailsInfo({
             id: "83c689b1-b7a7-4100-8b2d-309908b444f5",
             username:"Zoe Feller",

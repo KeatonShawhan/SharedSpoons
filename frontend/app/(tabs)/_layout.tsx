@@ -7,6 +7,7 @@ import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { ProfileProvider } from '../../contexts/profileContext'; 
 import Ionicons from '@expo/vector-icons/Ionicons';
+import CenterButton from '@/components/CenterButton';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -33,6 +34,15 @@ export default function TabLayout() {
           title: 'Explore',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="makepost"
+        options={{
+          tabBarLabel: '',
+          tabBarIcon: ({ color, focused }) => (
+            <CenterButton/>
           ),
         }}
       />
