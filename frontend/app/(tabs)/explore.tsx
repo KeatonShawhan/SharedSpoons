@@ -20,6 +20,7 @@ export default function TabTwoScreen() {
 
   const configureGoogleSignin = () => {
     GoogleSignin.configure({
+      // should probably use .env??
       iosClientId: "534693056287-paa8r7p79enuq2u91j32eireombub6qv.apps.googleusercontent.com"
     })
   }
