@@ -6,9 +6,11 @@ import { Colors } from '@/constants/Colors';
 
 export default function CenterButton() {
   return (
+    <TouchableOpacity style={styles.container} onPress={()=>{}}>
       <View style={styles.button}>
-        <Icon name="add" size={24} color="#fff" /> 
+        <Icon name="add" size={30} color="#fff" /> 
       </View>
+    </TouchableOpacity>
   );
 }
 
@@ -22,7 +24,7 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: Colors.light.primaryColor,
+    backgroundColor: Colors.light.primaryColor, // Customize color
     alignItems: 'center',
     justifyContent: 'center',
   },
