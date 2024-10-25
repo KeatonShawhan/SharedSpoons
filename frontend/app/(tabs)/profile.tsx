@@ -1,10 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, Dimensions, ScrollView } from 'react-native';
-import { Colors } from '../../constants/Colors';
-import { useProfile } from '../../contexts/profileContext';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { Colors } from '@/constants/Colors';
+import { useProfile } from '@/contexts/profileContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useColorScheme } from '@/hooks/useColorScheme';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import ProfileHeader from '@/components/profile/ProfileHeader';
+import ProfileStats from '@/components/profile/ProfileStats';
+import AchievementList from '@/components/profile/AchievementList';
 
-const { width } = Dimensions.get('window');
+type Tab = 'posts' | 'achievements';
+
+interface Achievement {
+  rank: string;
+  progress: number;
+  required: number;
+  description: string;
+}
 
 const ProfileTab: React.FC = () => {
   const { name } = useProfile();
@@ -12,6 +24,10 @@ const ProfileTab: React.FC = () => {
   const [followerCount, setFollowerCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
   const [postCount, setPostCount] = useState(0);
+  const [rank, setRank] = useState("Loading rank...");
+  const [activeTab, setActiveTab] = useState<Tab>('posts');
+  const [achievements, setAchievements] = useState<Achievement[]>([]);
+  const colorScheme = useColorScheme();
 
   useEffect(() => {
     // Simulate fetching data
@@ -20,93 +36,143 @@ const ProfileTab: React.FC = () => {
       setFollowerCount(267000);
       setFollowingCount(348);
       setPostCount(143);
-    }, 2000); // simulate a fetch delay
+      setRank("Food Connoisseur");
+      
+      setAchievements([
+        {
+          rank: "New Foodie",
+          progress: 25,
+          required: 25,
+          description: "Try your first 25 different dishes"
+        },
+        {
+          rank: "Food Explorer",
+          progress: 100,
+          required: 100,
+          description: "Discover 100 unique dishes"
+        },
+        {
+          rank: "Taste Enthusiast",
+          progress: 250,
+          required: 250,
+          description: "Experience 250 different dishes"
+        },
+        {
+          rank: "Food Connoisseur",
+          progress: 500,
+          required: 500,
+          description: "Savor 500 diverse dishes"
+        },
+        {
+          rank: "Culinary Veteran",
+          progress: 800,
+          required: 1000,
+          description: "Master 1000 different dishes"
+        },
+      ]);
+    }, 2000);
   }, []);
 
+  const renderPosts = () => (
+    <View style={styles.postsContainer}>
+      <Text style={[styles.emptyStateText, { color: Colors[colorScheme].text }]}>
+        Posts coming soon...
+      </Text>
+    </View>
+  );
+
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors.light.background }}>
-        <ScrollView contentContainerStyle={styles.container}>
-            <View style={styles.header}>
-                <Image
-                  style={styles.profileImage}
-                  source={{ uri: 'https://via.placeholder.com/150' }}
-                />
-                <Text style={styles.name}>{name}</Text>
-                <Text style={styles.bio}>{bio}</Text>
-                <View style={styles.statsContainer}>
-                    <View style={styles.statsBox}>
-                        <Text style={styles.statAmount}>{followerCount.toLocaleString()}</Text>
-                        <Text style={styles.statTitle}>Followers</Text>
-                    </View>
-                    <View style={styles.statsBox}>
-                        <Text style={styles.statAmount}>{followingCount}</Text>
-                        <Text style={styles.statTitle}>Following</Text>
-                    </View>
-                    <View style={styles.statsBox}>
-                        <Text style={styles.statAmount}>{postCount}</Text>
-                        <Text style={styles.statTitle}>Posts</Text>
-                    </View>
-                </View>
-            </View>
-        </ScrollView>
+    <SafeAreaView style={[styles.container, { backgroundColor: Colors[colorScheme].background }]}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <ProfileHeader 
+          name={name}
+          bio={bio}
+          rank={rank}
+          colorScheme={colorScheme}
+        />
+
+        <ProfileStats 
+          postCount={postCount}
+          followerCount={followerCount}
+          followingCount={followingCount}
+          colorScheme={colorScheme}
+        />
+
+        <View style={styles.tabContainer}>
+          <TouchableOpacity 
+            style={styles.tabButton} 
+            onPress={() => setActiveTab('posts')}
+          >
+            <Ionicons 
+              name="grid-outline"
+              size={24} 
+              color={activeTab === 'posts' ? Colors[colorScheme].text : Colors[colorScheme].tabIconDefault}
+            />
+            {activeTab === 'posts' && <View style={styles.activeIndicator} />}
+          </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.tabButton} 
+            onPress={() => setActiveTab('achievements')}
+          >
+            <Ionicons 
+              name="trophy-outline"
+              size={24} 
+              color={activeTab === 'achievements' ? Colors[colorScheme].text : Colors[colorScheme].tabIconDefault}
+            />
+            {activeTab === 'achievements' && <View style={styles.activeIndicator} />}
+          </TouchableOpacity>
+        </View>
+
+        {activeTab === 'posts' ? renderPosts() : (
+          <AchievementList 
+            achievements={achievements}
+            colorScheme={colorScheme}
+          />
+        )}
+      </ScrollView>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  scrollContainer: {
     flexGrow: 1,
   },
-  header: {
-    paddingTop: '8%',
-    paddingBottom: '4%',
-    backgroundColor: Colors.light.secondaryColor,
-    alignItems: 'center',
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.light.primaryColor,
-  },
-  profileImage: {
-    width: width * 0.2,
-    height: width * 0.2,
-    borderRadius: width * 0.1,
-    borderWidth: 3,
-    borderColor: Colors.light.secondaryColor,
-    marginBottom: '2%',
-  },
-  name: {
-    fontSize: width * 0.05,
-    fontWeight: '600',
-    color: Colors.light.primaryColor,
-    marginBottom: '3%', // Added margin for spacing
-    fontFamily: 'Inter_400Regular',
-  },
-  bio: {
-    fontSize: width * 0.035,
-    color: Colors.light.text,
-    fontWeight: '300',
-    marginBottom: '4%', // Increased for better spacing
-  },
-  statsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly', // Keeps items evenly spaced, but we will reduce the space
-    width: '100%', // Full width
-    paddingBottom: '2%', // Padding at the bottom
-    paddingHorizontal: '8%', // Reduce horizontal padding if necessary
-  },
-  statsBox: {
-    alignItems: 'center',
+  postsContainer: {
     flex: 1,
-    paddingHorizontal: 10, // Adjust this value to reduce the space between the stats
+    padding: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  statAmount: {
-    fontSize: width * 0.045,
-    color: Colors.light.text,
-    fontWeight: '600',
+  emptyStateText: {
+    fontSize: 16,
+    marginTop: 20,
   },
-  statTitle: {
-    fontSize: width * 0.03,
-    color: Colors.light.icon,
-    fontWeight: 'bold',
+  tabContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 10,
+    paddingVertical: 10,
+    backgroundColor: 'transparent',
+  },
+  tabButton: {
+    flex: 1,
+    alignItems: 'center',
+    position: 'relative',
+    paddingVertical: 10,
+  },
+  activeIndicator: {
+    position: 'absolute',
+    bottom: -2,
+    width: 40, 
+    height: 2, 
+    backgroundColor: '#FF9F45', 
+    borderRadius: 1,
+    left: '50%',
+    marginLeft: -20, 
   },
 });
 

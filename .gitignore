@@ -41,7 +41,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+expo-env.d.ts
 
 # certs
 *.crt
 *.key
+
+# expo
+.expo/
