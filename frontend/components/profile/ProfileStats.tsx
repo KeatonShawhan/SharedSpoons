@@ -56,7 +56,8 @@ const styles = StyleSheet.create({
   statsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    paddingVertical: 10,
+    paddingTop: 1,
+    paddingBottom: 3,
   },
   statsBox: {
     alignItems: 'center',

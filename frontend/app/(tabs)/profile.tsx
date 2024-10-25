@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, ScrollView, StyleSheet, FlatList } from 'react-native';
 import { Colors } from '@/constants/Colors';
 import { useProfile } from '@/contexts/profileContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -10,6 +10,8 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import ProfileHeader from '@/components/profile/ProfileHeader';
 import ProfileStats from '@/components/profile/ProfileStats';
 import AchievementList from '@/components/profile/AchievementList';
+import ProfilePostSquare from '@/components/profile/profilePostSquare';
+
 
 type ProfileStackParamList = {
   ProfileMain: undefined;
@@ -36,7 +38,7 @@ const ProfileMainScreen: React.FC = () => {
   const [bio, setBio] = useState("Loading bio...");
   const [followerCount, setFollowerCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
-  const [postCount, setPostCount] = useState(0);
+  const [posts, setPosts] = useState([]); // State to hold posts
   const [rank, setRank] = useState("Loading rank...");
   const [activeTab, setActiveTab] = useState<'posts' | 'achievements'>('posts');
   const [achievements, setAchievements] = useState([]);
@@ -49,7 +51,7 @@ const ProfileMainScreen: React.FC = () => {
       setBio("Here is my dynamic bio loaded from a simulated fetch.");
       setFollowerCount(267000);
       setFollowingCount(348);
-      setPostCount(143);
+      setPosts(Array.from({ length: 4 }).map((_, idx) => ({ id: idx, imageUrl: `https://placekitten.com/200/200?image=${idx}` }))); // Generate placeholder posts
       setRank("Food Connoisseur");
       setAchievements([
         { rank: "New Foodie", progress: 25, required: 25, description: "Try your first 25 different dishes" },
@@ -62,11 +64,13 @@ const ProfileMainScreen: React.FC = () => {
   }, []);
 
   const renderPosts = () => (
-    <View style={styles.postsContainer}>
-      <Text style={[styles.emptyStateText, { color: Colors[colorScheme].text }]}>
-        Posts coming soon...
-      </Text>
-    </View>
+    <FlatList
+      data={posts}
+      numColumns={3} // Render three columns
+      renderItem={({ item }) => <ProfilePostSquare />}
+      keyExtractor={item => item.id.toString()}
+      contentContainerStyle={styles.postsContainer}
+    />
   );
 
   return (
@@ -75,7 +79,7 @@ const ProfileMainScreen: React.FC = () => {
         <ProfileHeader name={name} bio={bio} rank={rank} colorScheme={colorScheme} />
 
         <ProfileStats 
-          postCount={postCount}
+          postCount={posts.length}
           followerCount={followerCount}
           followingCount={followingCount}
           colorScheme={colorScheme}
@@ -134,10 +138,8 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   postsContainer: {
-    flex: 1,
-    padding: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
+    padding: 8, // Adjusts padding around the grid
+    alignItems: 'flex-start' // Aligns items to the start of the row
   },
   emptyStateText: {
     fontSize: 16,
