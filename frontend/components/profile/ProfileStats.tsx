@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity } from 'react-native';
 import { Colors } from '@/constants/Colors';
 
 const { width } = Dimensions.get('window');
@@ -9,13 +9,17 @@ interface ProfileStatsProps {
   followerCount: number;
   followingCount: number;
   colorScheme: string;
+  onFollowersPress: () => void;
+  onFollowingPress: () => void;
 }
 
 const ProfileStats: React.FC<ProfileStatsProps> = ({ 
   postCount, 
   followerCount, 
   followingCount, 
-  colorScheme 
+  colorScheme,
+  onFollowersPress,
+  onFollowingPress 
 }) => {
   const formatNumber = (num: number): string => {
     if (num >= 1000000000) return (num / 1000000000).toFixed(1).replace(/\.0$/, '') + 'B';
@@ -32,18 +36,18 @@ const ProfileStats: React.FC<ProfileStatsProps> = ({
         </Text>
         <Text style={[styles.statTitle, { color: Colors[colorScheme].tabIconDefault }]}>Posts</Text>
       </View>
-      <View style={styles.statsBox}>
+      <TouchableOpacity style={styles.statsBox} onPress={onFollowersPress}>
         <Text style={[styles.statAmount, { color: Colors[colorScheme].text }]}>
           {formatNumber(followerCount)}
         </Text>
         <Text style={[styles.statTitle, { color: Colors[colorScheme].tabIconDefault }]}>Followers</Text>
-      </View>
-      <View style={styles.statsBox}>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.statsBox} onPress={onFollowingPress}>
         <Text style={[styles.statAmount, { color: Colors[colorScheme].text }]}>
           {formatNumber(followingCount)}
         </Text>
         <Text style={[styles.statTitle, { color: Colors[colorScheme].tabIconDefault }]}>Following</Text>
-      </View>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -52,7 +56,7 @@ const styles = StyleSheet.create({
   statsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    paddingVertical: .1,
+    paddingVertical: 10,
   },
   statsBox: {
     alignItems: 'center',
