@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   searchContainer: {
     position: 'absolute',
     left: 16,
-    top: 100,
+    top: 90,
     width: width * 0.5,
     height: 40,
     backgroundColor: 'rgba(128, 128, 128, 0.1)',

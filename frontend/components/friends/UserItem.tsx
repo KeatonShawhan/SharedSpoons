@@ -16,8 +16,15 @@ interface UserItemProps {
   onPress: (user: User) => void;
 }
 
-export const UserItem: React.FC<UserItemProps> = ({ user, colorScheme, onPress }) => (
-  <TouchableOpacity style={styles.userItem} onPress={() => onPress(user)}>
+export const UserItem: React.FC<UserItemProps> = ({ 
+  user, 
+  colorScheme, 
+  onPress, 
+}) => (
+  <TouchableOpacity 
+    style={styles.userItem} 
+    onPress={() => onPress(user)}
+  >
     <View style={styles.userInfo}>
       <Text style={[styles.userName, { color: Colors[colorScheme].text }]}>
         {user.name}
@@ -34,8 +41,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 12,
     paddingHorizontal: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(128, 128, 128, 0.2)',
   },
   userInfo: {
     flex: 1,

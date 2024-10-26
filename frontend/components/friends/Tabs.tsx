@@ -43,16 +43,16 @@ const styles = StyleSheet.create({
   tabsContainer: {
     position: 'absolute',
     right: 30,
-    top: 90,
+    top: 75,
     alignItems: 'flex-end',
   },
   tabButton: {
-    paddingVertical: 8,
+    paddingVertical: 4,
     paddingHorizontal: 0,
   },
   tabText: {
-    fontSize: 20,
-    fontWeight: '500',
+    fontSize: 24,
+    fontWeight: '600',
     textAlign: 'right',
   },
   activeTabText: {
