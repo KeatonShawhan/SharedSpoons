@@ -28,7 +28,7 @@ export function postCard({id, notes, categories, caption, rating, dish, username
     <View style={{ justifyContent: 'center', alignItems: 'center', paddingBottom: 30 }}>
       <View style={{ width: "95%", borderRadius: 0, borderColor: "none" }}>
         
-        <View style={{ paddingBottom: 10 }}>
+        <View style={{ paddingBottom: 10 , paddingLeft: 6}}>
           {postHeader({ username: username, place: place })}
         </View>
         
@@ -56,7 +56,7 @@ export function postCard({id, notes, categories, caption, rating, dish, username
           </View>
         </TouchableOpacity>
 
-        <View style={{ paddingTop: 8, display: 'flex', flexDirection: 'row', gap: 10, flexWrap: 'wrap' }}>
+        <View style={{ paddingTop: 15, paddingLeft: 6, display: 'flex', flexDirection: 'row', gap: 10, flexWrap: 'wrap' }}>
           {postCaption({ caption: caption, dish: dish, rating: rating })}
         </View>
       </View>

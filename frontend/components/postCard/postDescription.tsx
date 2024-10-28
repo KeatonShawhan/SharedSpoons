@@ -11,7 +11,7 @@ export function postDescription({categories, notes, dish}: { categories: string[
 
   return (
     <ThemedView >
-      <View style={{position: 'relative', width: '100%', height: 500, borderWidth: 2, borderColor: 'black', borderRadius:5}}>
+      <View style={{position: 'relative', width: '100%', height: 350, borderWidth: 2, borderColor: 'black', borderRadius: 20}}>
         <View style={{position: 'relative', padding: 20}}>
           <Text style={{fontWeight:'bold', fontSize: 24, flexWrap:'wrap'}}>
             {dish}
