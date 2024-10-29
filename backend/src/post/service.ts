@@ -109,4 +109,19 @@ export class postService{
         }
     }
 
+    public async getAllPosts(): Promise<any | undefined> {
+        const select = `SELECT * from post`;
+        const query = {
+          text: select,
+        };
+        const { rows } = await pool.query(query);
+        if (rows.length == 0) {
+          return undefined;
+        }
+        console.log(rows)
+        return rows;
+
+      };
+    
+
 }

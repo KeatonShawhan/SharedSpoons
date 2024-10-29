@@ -16,8 +16,8 @@ INSERT INTO app_user (id, data) VALUES
         'pfp', 'https://imgur.com/a/zazu-soldier-cat-two-thousand-yard-stare-meme-restoration-0UhrRnU'));
 
 -- Insert data into post table
-INSERT INTO post (user_id, data) VALUES
-    ((SELECT id FROM app_user WHERE data->>'email' = 'lschram@ucsc.edu'), 
+INSERT INTO post (id, user_id, data) VALUES
+    ('a5059ef4-971b-4e60-a692-a3af3365ba85', (SELECT id FROM app_user WHERE data->>'email' = 'lschram@ucsc.edu'), 
     json_build_object('image', 'https://imgur.com/a/zazu-soldier-cat-two-thousand-yard-stare-meme-restoration-0UhrRnU', 
                       'rating', 4, 'adds', 2, 'restaurant', 'CatFood', 'dish', 'Stare', 'time', '2024-10-24T12:45:00.000Z', 'caption', 'look at cat')),
     ((SELECT id FROM app_user WHERE data->>'email' = 'kshawhan@ucsc.edu'), 

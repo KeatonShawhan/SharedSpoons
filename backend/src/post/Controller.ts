@@ -83,31 +83,43 @@ export class PostController extends Controller {
             return false;
         }
     }
-    @Get('{postID}')
-    public async getPost(
-        @Path() postID: string
+    // @Get('{postID}')
+    // public async getPost(
+    //     @Path() postID: string
 
-    ): Promise< PostContent | undefined > {
-        try {
-            return new postService()
-                .getPost(postID)
-                .then(
-                    async (post : PostContent | undefined):
-                        Promise<PostContent | undefined> => {
-                            if (post === undefined) {
-                                this.setStatus(400);
-                                throw new Error('Could not get post');
-                                return undefined;
-                            }
-                            return post;
-                        }
-                )
-        } catch (error) {
-            this.setStatus(500);
-            console.error('Error in post /post/getPost route:', error);
-            throw new Error('Post retrieval failed in route /post/getPost');
-            return undefined;
-        }
+    // ): Promise< PostContent | undefined > {
+    //     try {
+    //         return new postService()
+    //             .getPost(postID)
+    //             .then(
+    //                 async (post : PostContent | undefined):
+    //                     Promise<PostContent | undefined> => {
+    //                         if (post === undefined) {
+    //                             this.setStatus(400);
+    //                             throw new Error('Could not get post');
+    //                             return undefined;
+    //                         }
+    //                         return post;
+    //                     }
+    //             )
+    //     } catch (error) {
+    //         this.setStatus(500);
+    //         console.error('Error in post /post/getPost route:', error);
+    //         throw new Error('Post retrieval failed in route /post/getPost');
+    //         return undefined;
+    //     }
+    // }
+
+
+    @Get("/all")
+    public async IDuserInfo(
+    ): Promise<PostContent | undefined> {
+        return new postService()
+        .getAllPosts()
+        .then(async (post: PostContent): Promise<PostContent> => {
+            this.setStatus(200);
+            return post;
+          })
     }
 
 }
