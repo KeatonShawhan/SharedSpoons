@@ -6,8 +6,9 @@ import { useEffect, useState } from 'react';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
-import LoginPage from '@/app/pages/login/LoginPage'; // Import your LoginPage component
-import { LoginProvider } from "@/contexts/loginContext"; // Use curly braces for named import
+import LoginPage from '@/app/pages/login/LoginPage';
+import { LoginProvider } from "@/contexts/loginContext";
+import SignUpPage from './pages/signup/SignUpPage';
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -19,6 +20,7 @@ export default function RootLayout() {
   });
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
 
   useEffect(() => {
     if (loaded) {
@@ -30,6 +32,10 @@ export default function RootLayout() {
     return null;
   }
 
+  const toggleAuthPage = () => {
+    setIsLogin((prev) => !prev);
+  };
+
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       {/* Conditional rendering based on authentication state */}
@@ -40,7 +46,11 @@ export default function RootLayout() {
         </Stack>
       ) : (
         <LoginProvider>
-          <LoginPage setIsAuthenticated={setIsAuthenticated} />
+          {isLogin ? (
+            <LoginPage setIsAuthenticated={setIsAuthenticated} toggleAuthPage={toggleAuthPage} />
+          ) : (
+            <SignUpPage setIsAuthenticated={setIsAuthenticated} toggleAuthPage={toggleAuthPage} />
+          )}
         </LoginProvider>
       )}
     </ThemeProvider>

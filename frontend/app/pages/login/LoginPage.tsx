@@ -8,9 +8,8 @@ interface LoginPageProps {
   setIsAuthenticated: (authenticated: boolean) => void;
 }
 
-const LoginPage: React.FC<LoginPageProps> = ({ setIsAuthenticated }) => {
+const LoginPage: React.FC<{ setIsAuthenticated: (authenticated: boolean) => void; toggleAuthPage: () => void; }> = ({ setIsAuthenticated, toggleAuthPage }) => {
   const loginContext = useContext(LoginContext);
-  const navigation = useNavigation();
   const [user, setUser] = useState({ username: "", password: "" });
   const [showPassword, setShowPassword] = useState(true);
 
@@ -28,6 +27,8 @@ const LoginPage: React.FC<LoginPageProps> = ({ setIsAuthenticated }) => {
   }, [loginContext.accessToken, setIsAuthenticated]);
 
   const sendLoginRequest = () => {
+    // remove this line once implemented the login endpoint
+    loginContext.setAccessToken("testToken");
     if (!user.username || !user.password) {
         Alert.alert("Validation Error", "Please enter both email and password.");
         return;
@@ -44,7 +45,10 @@ const LoginPage: React.FC<LoginPageProps> = ({ setIsAuthenticated }) => {
         style={styles.input}
         placeholder="Username"
         value={user.username}
-        onChangeText={(value) => handleInputChange('username', value)}
+        onChangeText={(value) => {
+          const formattedValue = value.replace(/[^a-zA-Z0-9_]/g, '');
+          handleInputChange('username', formattedValue);
+        }}
         autoCapitalize="none"
         keyboardType="email-address"
       />
@@ -61,6 +65,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ setIsAuthenticated }) => {
         />
       </View>
       <Button title="Continue" onPress={sendLoginRequest} color="#FF9900" />
+      <Button title="Sign Up" onPress={toggleAuthPage} />
     </View>
   );
 };
