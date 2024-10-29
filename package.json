@@ -3,7 +3,6 @@
     "version": "0.0.1",
     "private": true,
     "scripts": {
-      "installs": "cd frontendSim && npm install && cd ios && pod install"
     },
     "dependencies": {
     },
