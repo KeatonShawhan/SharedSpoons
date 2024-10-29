@@ -1,6 +1,6 @@
 import { UUID } from '../types';
 
-export interface PostContent{
+export interface PostJSON{
     image: string;
     rating: number;
     adds: number;
@@ -11,7 +11,7 @@ export interface PostContent{
   }
   
 
-export interface PostInput {
+export interface PostContent {
     user: UUID;
-    data: PostContent;
+    data: PostJSON;
 }

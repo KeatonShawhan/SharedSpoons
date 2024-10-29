@@ -1,3 +1,5 @@
+\c sharedspoons;
+
 -- Insert data into app_user table
 INSERT INTO app_user (id, data) VALUES
     ('a3059ef4-971b-4e60-a692-a3af3365ba85'::uuid, 

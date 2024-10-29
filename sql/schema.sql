@@ -49,4 +49,3 @@ CREATE TABLE recommend (
     rating INT CHECK (rating >= 0 AND rating <= 5),
     PRIMARY KEY (user_id, dish)
 );
-

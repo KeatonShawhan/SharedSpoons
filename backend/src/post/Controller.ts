@@ -1,8 +1,8 @@
-import { Controller, Get, Route, Request, FormField, Post, Body, UploadedFile, Query} from 'tsoa';
+import { Controller, Get, Route, Request, FormField, Post, Body, UploadedFile, Query, Delete, Put, Path} from 'tsoa';
 import * as express from 'express';
 import { S3Service } from '../s3/service'; // S3 service for handling uploads
 import { postService } from './service'; // Post service for handling post creation
-import { PostInput, PostContent } from '.';
+import { PostJSON, PostContent } from '.';
 
 @Route('post')
 export class PostController extends Controller {
@@ -15,7 +15,7 @@ export class PostController extends Controller {
     ): Promise< boolean | undefined > {
         try{
             // need to add some verification of the user's identity here
-            const postData: PostInput = JSON.parse(post);
+            const postData: PostContent = JSON.parse(post);
 
             if (postData === undefined) {
                 this.setStatus(400);
@@ -46,6 +46,7 @@ export class PostController extends Controller {
                                 throw new Error('Could not create post');
                                 return false;
                             }
+                            this.setStatus(201);
                             return created;
                         }
                 )
@@ -57,4 +58,56 @@ export class PostController extends Controller {
             return false;
         }
     }
+    @Delete('/delete')
+    public async deletePost(
+        @Query() postID: string
+    ): Promise< boolean | undefined > {
+        try {
+            return new postService()
+                .deletePost(postID)
+                .then(
+                    async (deleted : boolean | undefined):
+                        Promise<boolean | undefined> => {
+                            if (!deleted) {
+                                this.setStatus(400);
+                                throw new Error('Could not delete post');
+                                return false;
+                            }
+                            return deleted;
+                        }
+                )
+        } catch (error) {
+            this.setStatus(500);
+            console.error('Error in post /post/delete route:', error);
+            throw new Error('Post deletion failed in route /post/delete');
+            return false;
+        }
+    }
+    @Get('{postID}')
+    public async getPost(
+        @Path() postID: string
+
+    ): Promise< PostContent | undefined > {
+        try {
+            return new postService()
+                .getPost(postID)
+                .then(
+                    async (post : PostContent | undefined):
+                        Promise<PostContent | undefined> => {
+                            if (post === undefined) {
+                                this.setStatus(400);
+                                throw new Error('Could not get post');
+                                return undefined;
+                            }
+                            return post;
+                        }
+                )
+        } catch (error) {
+            this.setStatus(500);
+            console.error('Error in post /post/getPost route:', error);
+            throw new Error('Post retrieval failed in route /post/getPost');
+            return undefined;
+        }
+    }
+
 }
