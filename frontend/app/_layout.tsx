@@ -4,7 +4,7 @@ import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState } from 'react';
 import 'react-native-reanimated';
-import AuthNavigator from './AuthStack';
+
 import { useColorScheme } from '@/hooks/useColorScheme';
 import LoginPage from '@/app/pages/login/LoginPage';
 import { LoginProvider } from "@/contexts/loginContext";
@@ -46,18 +46,12 @@ export default function RootLayout() {
         </Stack>
       ) : (
         <LoginProvider>
-          <AuthNavigator /> 
+          {isLogin ? (
+            <LoginPage setIsAuthenticated={setIsAuthenticated} toggleAuthPage={toggleAuthPage} />
+          ) : (
+            <SignUpPage setIsAuthenticated={setIsAuthenticated} toggleAuthPage={toggleAuthPage} />
+          )}
         </LoginProvider>
-        // <LoginProvider>
-        //    <LoginProvider>
-        //   <AuthNavigator /> {/* Render the Auth Navigator when not authenticated */}
-        // </LoginProvider>
-        //   {/* {isLogin ? (
-        //     <LoginPage setIsAuthenticated={setIsAuthenticated} toggleAuthPage={toggleAuthPage} />
-        //   ) : (
-        //     <SignUpPage setIsAuthenticated={setIsAuthenticated} toggleAuthPage={toggleAuthPage} />
-        //   )} */}
-        // </LoginProvider>
       )}
     </ThemeProvider>
   );
