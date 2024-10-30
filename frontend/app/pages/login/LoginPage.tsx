@@ -13,12 +13,27 @@ const LoginPage: React.FC<{ setIsAuthenticated: (authenticated: boolean) => void
   const [user, setUser] = useState({ username: "", password: "" });
   const [showPassword, setShowPassword] = useState(true);
 
+
+
   const handleInputChange = (name: string, value: string) => {
     setUser((prevUser) => ({
       ...prevUser,
       [name]: value,
     }));
   };
+  // get all the messsages in a channel ---------------------------
+  // useEffect(() => {
+  //   fetch(`api/v0/post/all`, {
+  //     method: 'GET',
+  //     headers: new Headers({
+  //       'Content-Type': 'application/json',
+  //     }),
+  //   })
+  //       .then((res) => res.json())
+  //       .then((messagesData) => {
+          
+  //       });
+  // }, []);
   
   useEffect(() => {
     if (loginContext.accessToken && loginContext.accessToken.length > 0) {
@@ -27,16 +42,32 @@ const LoginPage: React.FC<{ setIsAuthenticated: (authenticated: boolean) => void
   }, [loginContext.accessToken, setIsAuthenticated]);
 
   const sendLoginRequest = () => {
-    // remove this line once implemented the login endpoint
+    // Placeholder token; replace with actual token on successful login
     loginContext.setAccessToken("testToken");
+
+    // Validate form fields
     if (!user.username || !user.password) {
-        Alert.alert("Validation Error", "Please enter both email and password.");
+        Alert.alert("Validation Error", "Please enter both username and password.");
         return;
     }
-    // Make API call with 'user' local state
-    // If successful, loginContext.setAccessToken(token);
-    Alert.alert('Login Request', `Email: ${user.username}, Password: ${user.password}`);
-  }
+
+    // Send fetch request to login API
+    fetch(`http://localhost:3010/api/v0/post/all`, {  // Update with your base URL
+      method: 'GET',
+      headers: new Headers({
+        'Content-Type': 'application/json',
+      }),
+    })
+    .then((res) => res.json())
+    .then((messagesData) => {
+      Alert.alert('Login Request', `Username: ${user.username}, Password: ${user.password}`);
+    })
+    .catch((error) => {
+      console.error("Error during login:", error);
+      Alert.alert("Error", "Failed to complete login request.");
+    });
+}
+
 
   return (
     <View style={styles.container}>

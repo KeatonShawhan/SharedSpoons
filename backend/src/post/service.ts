@@ -3,7 +3,7 @@ import { PostContent } from '.';
 
 export class postService{
 
-    public async createPost(postData: PostContent): Promise < boolean | undefined > {
+    public async createPost(postData: PostContent): Promise < string | undefined > {
         const client = await pool.connect();
 
         try{
@@ -25,17 +25,16 @@ export class postService{
             await client.query('COMMIT');
 
             if(res.rows.length === 0) {
-                throw new Error('Database insertion of post creation failed');
-                return false;
+                console.error('Database insertion of post creation failed');
+                return undefined;
             }
 
-            return true;
+            return res.rows[0].id;
             
         }catch (error) {
             await client.query('ROLLBACK');
             console.error('Error creating post:', error);
-            throw new Error('Post creation failed in postService');
-            return false;
+            return undefined;
         } finally {
             client.release();
         }
@@ -62,8 +61,8 @@ export class postService{
             await client.query('COMMIT');
 
             if(res.rowCount === 0) {
-                throw new Error('Database deletion of post failed');
-                return false;
+                console.error('Database deletion of post failed');
+                return undefined;
             }
 
             return true;
@@ -71,8 +70,7 @@ export class postService{
         } catch (error) {
             await client.query('ROLLBACK');
             console.error('Error deleting post:', error);
-            throw new Error('Post deletion failed in postService');
-            return false;
+            return undefined;
         } finally {
             client.release();
         }
@@ -95,6 +93,7 @@ export class postService{
             const res = await client.query(query.text, query.values);
 
             if(res.rows.length === 0) {
+                console.error('Database retrieval of post failed');
                 return undefined;
             }
 
@@ -102,11 +101,25 @@ export class postService{
 
         } catch (error) {
             console.error('Error getting post:', error);
-            throw new Error('Post retrieval failed in postService');
             return undefined;
         } finally {
             client.release();
         }
     }
+
+    public async getAllPosts(): Promise<any | undefined> {
+        const select = `SELECT * from post`;
+        const query = {
+          text: select,
+        };
+        const { rows } = await pool.query(query);
+        if (rows.length == 0) {
+          return undefined;
+        }
+        console.log(rows)
+        return rows;
+
+      };
+    
 
 }
