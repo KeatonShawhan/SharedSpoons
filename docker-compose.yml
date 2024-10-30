@@ -69,6 +69,8 @@ services:
       AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
       AWS_REGION: ${AWS_REGION}
       S3_BUCKET_NAME: ${S3_BUCKET_NAME}
+    restart: "no"
+    tty: true  #keeps test logs visible
 
 volumes:
   postgres_data:
