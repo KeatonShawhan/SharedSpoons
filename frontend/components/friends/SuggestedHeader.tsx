@@ -18,7 +18,7 @@ export const SuggestedHeader: React.FC<SuggestedHeaderProps> = ({ colorScheme })
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 10,
-    paddingTop: 15,
+    paddingTop: 20,
   },
   divider: {
     position: 'absolute',
@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(128, 128, 128, 0.2)',
   },
   title: {
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: '800',
     textAlign: 'left',
     marginLeft: 16,

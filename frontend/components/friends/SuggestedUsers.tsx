@@ -3,7 +3,7 @@ import { View, ScrollView, Text, StyleSheet, TouchableOpacity, Dimensions } from
 import { Colors } from '@/constants/Colors';
 
 const ORANGE_COLOR = '#FF9F45';
-const SQUARE_SIZE = 80;
+const SQUARE_SIZE = 70;
 const SQUARE_MARGIN = 15;
 
 interface SuggestedUser {

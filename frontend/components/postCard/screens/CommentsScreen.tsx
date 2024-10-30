@@ -6,7 +6,7 @@ import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import type { PostStackParamList } from '../PostNavigator';
+import type { PostStackParamList } from '../postNavigator';
 
 type CommentsScreenRouteProp = RouteProp<PostStackParamList, 'Comments'>;
 

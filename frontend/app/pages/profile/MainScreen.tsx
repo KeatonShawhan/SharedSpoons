@@ -126,16 +126,20 @@ export default function MainScreen() {
         }
       ]}>
         <View style={styles.tabContent}>
-          <FlatList
-            key="posts"
-            data={posts}
-            numColumns={3}
-            renderItem={({ item }) => <ProfilePostSquare />}
-            keyExtractor={item => item.id.toString()}
-            contentContainerStyle={styles.listContainer}
-            columnWrapperStyle={styles.postsRow}
-            style={styles.flatList}
-          />
+        <FlatList
+          key="posts"
+          data={posts}
+          numColumns={3}
+          renderItem={({ item }) => (
+            <ProfilePostSquare
+              onPress={() => navigation.navigate('PostPage')}  // Navigate to ProfilePostScreen when a post is clicked
+            />
+          )}
+          keyExtractor={item => item.id.toString()}
+          contentContainerStyle={styles.listContainer}
+          columnWrapperStyle={styles.postsRow}
+          style={styles.flatList}
+        />
         </View>
         <View style={styles.tabContent}>
           <AchievementList 

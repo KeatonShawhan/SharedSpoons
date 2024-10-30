@@ -28,7 +28,7 @@ export const Header: React.FC<HeaderProps> = ({ colorScheme }) => (
 
 const styles = StyleSheet.create({
   headerContainer: {
-    paddingTop: 50,
+    paddingTop: 60,
   },
   titleContainer: {
     flexDirection: 'row',
