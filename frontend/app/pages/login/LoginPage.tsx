@@ -3,7 +3,7 @@ import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity } fr
 import Icon from 'react-native-vector-icons/Ionicons';
 import LoginContext from "@/contexts/loginContext";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import API_URL from '../../../config'
 
 interface LoginPageProps {
   setIsAuthenticated: (authenticated: boolean) => void;
@@ -33,7 +33,7 @@ export default function LoginPage ({ setIsAuthenticated, toggleAuthPage }) {
       Alert.alert("Validation Error", "Please enter both username and password.");
       return;
     }
-    fetch('http://localhost:3010/api/v0/auth/login', {
+    fetch(API_URL + 'auth/login', {
       method: 'POST',
       body: JSON.stringify(user),
       headers: {
