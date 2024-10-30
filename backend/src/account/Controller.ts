@@ -50,13 +50,12 @@ import {
       @Body() info: UserSignUp
     ): Promise<Authenticated | undefined> {
       const ret = await new AccountService().signup(info);
+      console.log(ret);
       if (!ret) {
         this.setStatus(409);
         return undefined;
       }
       return this.login({username: info.username, password: info.password});
-  
-      // return ret;
     }
   
     @Get()

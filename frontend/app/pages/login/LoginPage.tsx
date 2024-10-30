@@ -12,7 +12,7 @@ interface LoginPageProps {
 export default function LoginPage ({ setIsAuthenticated, toggleAuthPage }) {
   const loginContext = useContext(LoginContext);
   const [user, setUser] = useState({ username: "", password: "" });
-  const [showPassword, setShowPassword] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
   const [badLogin, setBadLogin] = useState(false);
 
   const handleInputChange = (name: string, value: string) => {

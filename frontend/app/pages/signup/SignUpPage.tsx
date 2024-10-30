@@ -1,7 +1,8 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity } from "react-native";
 import Icon from 'react-native-vector-icons/Ionicons';
 import LoginContext from "@/contexts/loginContext";
+import API_URL from '../../../config'
 
 interface LoginPageProps {
   setIsAuthenticated: (authenticated: boolean) => void;
@@ -34,22 +35,19 @@ export default function SignUpPage ({ setIsAuthenticated, toggleAuthPage }) {
     }));
   };
 
+  useEffect(() => {
+    if (loginContext.accessToken && loginContext.accessToken.length > 0) {
+      setIsAuthenticated(true);
+    }
+  }, [loginContext.accessToken]);
+
   const sendSignUpRequest = () => {
-    if (!user.username || !user.password || !user.phoneNumber) {
+    if (!user.username || !user.password || !user.phoneNumber || !user.email || !user.firstname || !user.lastname) {
       Alert.alert("Validation Error", "Please enter both email and password.");
       return;
     }
-    sendLoginRequest();
-  };
-
-  const sendLoginRequest = () => {
-    // Validate form fields
-    if (!user.username || !user.password) {
-      Alert.alert("Validation Error", "Please enter both username and password.");
-      return;
-    }
-    //console.log(JSON.stringify(user));
-    fetch('http://localhost:3010/api/v0/auth/login', {
+    console.log("user:" + JSON.stringify(user));
+    fetch(API_URL + '/auth/signup', {
       method: 'POST',
       body: JSON.stringify(user),
       headers: {
@@ -65,10 +63,7 @@ export default function SignUpPage ({ setIsAuthenticated, toggleAuthPage }) {
       })
       .then((json) => {
         console.log(json);
-        // localStorage.setItem('userId', JSON.stringify(json.user.id));
-      
         loginContext.setAccessToken(json.accessToken);
-        // localStorage.setItem('username', JSON.stringify(json.user.credentials.username));
       })
       .catch((err) => {
         setBadSignup(true);

@@ -15,14 +15,16 @@ export interface Authenticated {
   
   export type UserSignUp = {
     username: string;
-    name: string;
+    firstname: string;
+    lastname: string;
     password: string;
     email: string;
+    phoneNumber: string;
   };
   
   export type SignUpRet = {
     username: string;
-    name: string;
+    firstname: string;
   };
   
   export type UserIdInfo = {
