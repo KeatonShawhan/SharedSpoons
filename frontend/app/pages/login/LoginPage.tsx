@@ -22,7 +22,9 @@ export default function LoginPage ({ setIsAuthenticated, toggleAuthPage }) {
     }));
   };
   useEffect(() => {
+    console.log(loginContext.accessToken);
     if (loginContext.accessToken && loginContext.accessToken.length > 0) {
+      console.log("hi");
       setIsAuthenticated(true);
     }
   }, [loginContext.accessToken]);
@@ -34,7 +36,7 @@ export default function LoginPage ({ setIsAuthenticated, toggleAuthPage }) {
       return;
     }
     //console.log(JSON.stringify(user));
-    fetch('http://localhost:443/api/v0/auth/login', {
+    fetch('http://localhost:3010/api/v0/auth/login', {
       method: 'POST',
       body: JSON.stringify(user),
       headers: {
@@ -42,17 +44,17 @@ export default function LoginPage ({ setIsAuthenticated, toggleAuthPage }) {
       },
     })
       .then((res) => {
-        console.log(res);
         if (!res.ok) {
           setBadLogin(true);
-          return res.text(); // return as text to avoid JSON parsing errors
-
+          return res.text();
         }
         return res.json();
       })
       .then((json) => {
+        console.log(json);
         // localStorage.setItem('userId', JSON.stringify(json.user.id));
-        loginContext.setAccessToken(json.token);
+      
+        loginContext.setAccessToken(json.accessToken);
         // localStorage.setItem('username', JSON.stringify(json.user.credentials.username));
       })
       .catch((err) => {
