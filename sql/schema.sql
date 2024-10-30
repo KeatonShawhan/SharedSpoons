@@ -1,4 +1,5 @@
 \c sharedspoons;
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
 -- Users Table
 DROP TABLE IF EXISTS app_user CASCADE;
