@@ -8,7 +8,7 @@ interface LoginPageProps {
   setIsAuthenticated: (authenticated: boolean) => void;
 }
 
-const SignUpPage: React.FC<{ setIsAuthenticated: (authenticated: boolean) => void; toggleAuthPage: () => void; }> = ({ setIsAuthenticated, toggleAuthPage }) => {
+export default function SignUpPage ({ setIsAuthenticated, toggleAuthPage }) {
   const loginContext = useContext(LoginContext);
   const [user, setUser] = useState({ username: "", password: "", phoneNumber: "", firstname: "", lastname: "" });
   const [showPassword, setShowPassword] = useState(false);
@@ -163,5 +163,3 @@ const styles = StyleSheet.create({
     width: '48%',
   },
 });
-
-export default SignUpPage;
