@@ -1,7 +1,6 @@
 import React, { useContext, useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity } from "react-native";
 import Icon from 'react-native-vector-icons/Ionicons';
-import { useNavigation } from '@react-navigation/native';
 import LoginContext from "@/contexts/loginContext";
 
 interface LoginPageProps {
@@ -10,7 +9,7 @@ interface LoginPageProps {
 
 const SignUpPage: React.FC<{ setIsAuthenticated: (authenticated: boolean) => void; toggleAuthPage: () => void; }> = ({ setIsAuthenticated, toggleAuthPage }) => {
   const loginContext = useContext(LoginContext);
-  const [user, setUser] = useState({ username: "", password: "", phoneNumber: "", firstname: "", lastname: "" });
+  const [user, setUser] = useState({ username: "", password: "", phoneNumber: "", firstname: "", lastname: "", email: "" });
   const [showPassword, setShowPassword] = useState(false);
 
   const formatPhoneNumber = (phone: string) => {
@@ -81,6 +80,7 @@ const SignUpPage: React.FC<{ setIsAuthenticated: (authenticated: boolean) => voi
             handleInputChange('password', formattedValue);
           }}
           secureTextEntry={!showPassword}
+          autoCapitalize="none"
         />
       </View>
       <TextInput
@@ -93,6 +93,14 @@ const SignUpPage: React.FC<{ setIsAuthenticated: (authenticated: boolean) => voi
         }}
         autoCapitalize="none"
         keyboardType="phone-pad"
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Email"
+        value={user.email}
+        onChangeText={(value) => handleInputChange('email', value)}
+        autoCapitalize="none"
+        keyboardType="email-address"
       />
       
       <View style={styles.nameContainer}>

@@ -18,8 +18,8 @@ import {
     UserSignUp,
     SignUpRet,
     UserIdInfo,
-  } from ".";
-  import { AccountService } from "./service";
+  } from "./Index";
+  import { AccountService } from "./Service";
   
   @Route("auth")
   export class AccountController extends Controller {
@@ -28,6 +28,7 @@ import {
     public async login(
       @Body() credentials: Credentials
     ): Promise<Authenticated | undefined> {
+      console.log(credentials);
       return new AccountService()
         .login(credentials)
         .then(

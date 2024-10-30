@@ -1,5 +1,5 @@
 import { pool } from '../db';
-import { PostContent } from '.';
+import { PostContent } from './Index';
 
 export class postService{
 

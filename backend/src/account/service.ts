@@ -6,7 +6,7 @@ import {
   UserSignUp,
   SignUpRet,
   UserIdInfo,
-} from ".";
+} from "./Index";
 import { pool } from "../db";
 
 interface Account {
@@ -24,31 +24,43 @@ export class AccountService {
       text: select,
       values: [`${credentials.username}`],
     };
-    const { rows } = await pool.query(query);
-    if (rows.length != 1) {
-      return undefined;
+    let password = "";
+    try {
+        const { rows } = await pool.query(query);
+        if (rows.length != 1) {
+            console.log("no users");
+            return undefined;
+          }
+          password = rows[0].pass;
+    } catch (err) {
+        console.error(err);
+        return undefined;
     }
-    const password = rows[0].pass;
     const select2 = `SELECT data || jsonb_build_object('id', id) AS user FROM app_user WHERE data->>'username' = $1::text AND data->>'pwhash' = crypt($2::text, $3::text)`;
 
     const query2 = {
       text: select2,
       values: [credentials.username, credentials.password, password],
     };
-    const { rows: row } = await pool.query(query2);
-    if (row.length != 1) {
-      return undefined;
+    try {
+        const { rows: row } = await pool.query(query2);
+        if (row.length != 1) {
+          return undefined;
+        }
+        let user = row[0].user;
+        const accessToken = jwt.sign(
+            { id: user.id, username: user.username, name: user.name },
+            `${process.env.HASH_MASTER_SECRET}`,
+            {
+              expiresIn: "7d",
+              algorithm: "HS256",
+            }
+          );
+          return { id: user.id, name: user.name, accessToken: accessToken };
+    } catch (err) {
+        console.error(err);
+        return undefined;
     }
-    const user = row[0].user;
-    const accessToken = jwt.sign(
-      { id: user.id, username: user.username, name: user.name },
-      `${process.env.HASH_MASTER_SECRET}`,
-      {
-        expiresIn: "7d",
-        algorithm: "HS256",
-      }
-    );
-    return { id: user.id, name: user.name, accessToken: accessToken };
   }
 
   public async signup(info: UserSignUp): Promise<SignUpRet | undefined> {
