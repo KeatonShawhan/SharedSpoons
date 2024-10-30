@@ -9,7 +9,7 @@ interface LoginPageProps {
   setIsAuthenticated: (authenticated: boolean) => void;
 }
 
-const LoginPage: React.FC<{ setIsAuthenticated: (authenticated: boolean) => void; toggleAuthPage: () => void; }> = ({ setIsAuthenticated, toggleAuthPage }) => {
+export default function LoginPage ({ setIsAuthenticated, toggleAuthPage }) {
   const loginContext = useContext(LoginContext);
   const [user, setUser] = useState({ username: "", password: "" });
   const [showPassword, setShowPassword] = useState(true);
@@ -21,7 +21,6 @@ const LoginPage: React.FC<{ setIsAuthenticated: (authenticated: boolean) => void
       [name]: value,
     }));
   };
-  
   useEffect(() => {
     if (loginContext.accessToken && loginContext.accessToken.length > 0) {
       setIsAuthenticated(true);
@@ -130,5 +129,3 @@ const styles = StyleSheet.create({
       },
   });
   
-
-export default LoginPage;

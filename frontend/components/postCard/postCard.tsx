@@ -1,19 +1,44 @@
-import Ionicons from '@expo/vector-icons/Ionicons';
-import React, { useState, PropsWithChildren } from 'react';
-import { Animated, TouchableOpacity, useColorScheme, View, Text } from 'react-native';
+// components/post/postCard.tsx
+import React, { useState } from 'react';
+import { Animated, TouchableOpacity, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { postHeader } from './postHeader';
-
 import { postImage } from './postImage';
 import { postCaption } from './postCaption';
 import { postDescription } from './postDescription';
+import { postActions } from './postActions';
+import type { HomeScreenNavigationProp } from '@/app/(tabs)';
 
+interface postCardProps {
+  id: string;
+  username: string;
+  caption: string;
+  dish: string;
+  rating: number;
+  place: string;
+  image: string;
+  categories: string[];
+  notes: string;
+  likes?: number;
+  commentsCount?: number;
+}
 
-
-export function postCard({id, notes, categories, caption, rating, dish, username, place, image }: Post) {
+export function postCard({
+  id,
+  username,
+  caption,
+  dish,
+  rating,
+  place,
+  image,
+  categories,
+  notes,
+  likes = 0,
+  commentsCount = 0,
+}: postCardProps) {
+  const navigation = useNavigation<HomeScreenNavigationProp>();
   const [isFlipped, setIsFlipped] = useState(false);
-  const fadeAnim = useState(new Animated.Value(1))[0]; 
-
-  const theme = useColorScheme() ?? 'light';
+  const fadeAnim = useState(new Animated.Value(1))[0];
 
   const handlePress = () => {
     setIsFlipped(!isFlipped);
@@ -27,37 +52,39 @@ export function postCard({id, notes, categories, caption, rating, dish, username
   return (
     <View style={{ justifyContent: 'center', alignItems: 'center', paddingBottom: 30 }}>
       <View style={{ width: "95%", borderRadius: 0, borderColor: "none" }}>
-        
-        <View style={{ paddingBottom: 10 , paddingLeft: 6}}>
-          {postHeader({ username: username, place: place })}
+        <View style={{ paddingBottom: 10, paddingLeft: 6 }}>
+          {postHeader({ username, place })}
         </View>
-        
+
         <TouchableOpacity onPress={handlePress}>
           <View style={{ position: 'relative' }}>
-
-            {/* Front Side - Image */}
             <Animated.View style={{ opacity: fadeAnim }}>
-              {postImage({ image: image })}
+              {postImage({ image })}
             </Animated.View>
 
-            {/* Back Side - Description */}
-            <Animated.View 
-              style={{ 
-                opacity: isFlipped ? 1 : 0, 
-                position: 'absolute', 
-                top: 0, 
-                left: 0, 
-                right: 0, 
-                bottom: 0 
-              }}>
-
-              {postDescription({categories:categories, dish: dish, notes:notes})}
+            <Animated.View style={{
+              opacity: isFlipped ? 1 : 0,
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0
+            }}>
+              {postDescription({ categories, dish, notes })}
             </Animated.View>
           </View>
         </TouchableOpacity>
 
-        <View style={{ paddingTop: 15, paddingLeft: 6, display: 'flex', flexDirection: 'row', gap: 10, flexWrap: 'wrap' }}>
-          {postCaption({ caption: caption, dish: dish, rating: rating })}
+        <View style={{ paddingTop: 15, paddingLeft: 6 }}>
+          {postCaption({
+            caption,
+            dish,
+            rating,
+            postId: id,
+            likes,
+            commentsCount,
+            navigation, // Pass navigation as a prop
+          })}
         </View>
       </View>
     </View>

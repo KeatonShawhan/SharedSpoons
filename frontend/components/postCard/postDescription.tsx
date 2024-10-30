@@ -1,18 +1,34 @@
-import { PropsWithChildren } from 'react';
-import { Image, View, Text} from 'react-native';
-
+// components/post/postDescription.tsx
+import { View, Text } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
-import { addButton } from './addButton';
-import { postCaption } from './postCaption';
 
-export function postDescription({categories, notes, dish}: { categories: string[], dish:string, notes:string}) {
+interface postDescriptionProps {
+  categories: string[];
+  notes: string;
+  dish: string;
+}
 
+export function postDescription({ categories, notes, dish }: postDescriptionProps): React.JSX.Element {
   const catString = categories.join(', ');
 
   return (
-    <ThemedView >
-      <View style={{position: 'relative', width: '100%', height: 350, borderWidth: 2, borderColor: 'black', borderRadius: 20}}>
-        <View style={{position: 'relative', padding: 20}}>
+    <ThemedView>
+      <View style={{
+        position: 'relative', 
+        width: '100%', 
+        height: 350,
+        paddingHorizontal: 8,
+        paddingVertical: 3,
+      }}>
+        <View style={{
+          position: 'relative',
+          width: '100%',
+          height: '102%',
+          borderWidth: 2,
+          borderColor: 'black',
+          borderRadius: 20,
+          padding: 20,
+        }}>
           <Text style={{fontWeight:'bold', fontSize: 24, flexWrap:'wrap'}}>
             {dish}
           </Text>
@@ -22,7 +38,6 @@ export function postDescription({categories, notes, dish}: { categories: string[
           <Text style={{fontSize: 16, flexWrap:'wrap', paddingTop: 10}}>
             Additional Notes: {notes}
           </Text>
-          
         </View>
       </View>
     </ThemedView>
