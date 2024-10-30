@@ -11,6 +11,7 @@ export default function SignUpPage ({ setIsAuthenticated, toggleAuthPage }) {
   const loginContext = useContext(LoginContext);
   const [user, setUser] = useState({ username: "", password: "", phoneNumber: "", firstname: "", lastname: "", email: "" });
   const [showPassword, setShowPassword] = useState(false);
+  const [badSignup, setBadSignup] = useState(false);
 
   const formatPhoneNumber = (phone: string) => {
     const cleaned = phone.replace(/\D/g, "");
@@ -42,15 +43,37 @@ export default function SignUpPage ({ setIsAuthenticated, toggleAuthPage }) {
   };
 
   const sendLoginRequest = () => {
-    loginContext.setAccessToken("testToken");
-    Alert.alert('Login Request',
-      `Email: ${user.username},
-      Password: ${user.password},
-      Phone Number: ${user.phoneNumber},
-      Firstname: ${user.firstname},
-      Lastname: ${user.lastname}`
-    );
-    setIsAuthenticated(true);
+    // Validate form fields
+    if (!user.username || !user.password) {
+      Alert.alert("Validation Error", "Please enter both username and password.");
+      return;
+    }
+    //console.log(JSON.stringify(user));
+    fetch('http://localhost:3010/api/v0/auth/login', {
+      method: 'POST',
+      body: JSON.stringify(user),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((res) => {
+        if (!res.ok) {
+          setBadSignup(true);
+          return res.text();
+        }
+        return res.json();
+      })
+      .then((json) => {
+        console.log(json);
+        // localStorage.setItem('userId', JSON.stringify(json.user.id));
+      
+        loginContext.setAccessToken(json.accessToken);
+        // localStorage.setItem('username', JSON.stringify(json.user.credentials.username));
+      })
+      .catch((err) => {
+        setBadSignup(true);
+        console.log(err);
+      });
   };
 
   return (

@@ -22,9 +22,7 @@ export default function LoginPage ({ setIsAuthenticated, toggleAuthPage }) {
     }));
   };
   useEffect(() => {
-    console.log(loginContext.accessToken);
     if (loginContext.accessToken && loginContext.accessToken.length > 0) {
-      console.log("hi");
       setIsAuthenticated(true);
     }
   }, [loginContext.accessToken]);
@@ -35,7 +33,6 @@ export default function LoginPage ({ setIsAuthenticated, toggleAuthPage }) {
       Alert.alert("Validation Error", "Please enter both username and password.");
       return;
     }
-    //console.log(JSON.stringify(user));
     fetch('http://localhost:3010/api/v0/auth/login', {
       method: 'POST',
       body: JSON.stringify(user),
@@ -67,6 +64,9 @@ export default function LoginPage ({ setIsAuthenticated, toggleAuthPage }) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Log In</Text>
+      {badLogin ? 
+            <Text style={styles.badLogin}>Incorrect username or password</Text>
+        : undefined}
       <TextInput
         style={styles.input}
         placeholder="Username"
@@ -105,7 +105,12 @@ const styles = StyleSheet.create({
     },
     title: {
       fontSize: 24,
-      marginBottom: 20,
+      marginBottom: 10,
+    },
+    badLogin: {
+      fontSize: 14,
+      marginBottom: 10,
+      color: "red"
     },
     input: {
       width: '90%',
