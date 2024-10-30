@@ -10,7 +10,7 @@ interface LoginPageProps {
 
 const SignUpPage: React.FC<{ setIsAuthenticated: (authenticated: boolean) => void; toggleAuthPage: () => void; }> = ({ setIsAuthenticated, toggleAuthPage }) => {
   const loginContext = useContext(LoginContext);
-  const [user, setUser] = useState({ username: "", password: "", phoneNumber: "" });
+  const [user, setUser] = useState({ username: "", password: "", phoneNumber: "", firstname: "", lastname: "" });
   const [showPassword, setShowPassword] = useState(false);
 
   const formatPhoneNumber = (phone: string) => {
@@ -44,7 +44,13 @@ const SignUpPage: React.FC<{ setIsAuthenticated: (authenticated: boolean) => voi
 
   const sendLoginRequest = () => {
     loginContext.setAccessToken("testToken");
-    Alert.alert('Login Request', `Email: ${user.username}, Password: ${user.password}, Phone Number: ${user.phoneNumber}`);
+    Alert.alert('Login Request',
+      `Email: ${user.username},
+      Password: ${user.password},
+      Phone Number: ${user.phoneNumber},
+      Firstname: ${user.firstname},
+      Lastname: ${user.lastname}`
+    );
     setIsAuthenticated(true);
   };
 
@@ -88,6 +94,23 @@ const SignUpPage: React.FC<{ setIsAuthenticated: (authenticated: boolean) => voi
         autoCapitalize="none"
         keyboardType="phone-pad"
       />
+      
+      <View style={styles.nameContainer}>
+        <TextInput
+          style={[styles.input, styles.nameInput]}
+          placeholder="First Name"
+          value={user.firstname}
+          onChangeText={(value) => handleInputChange('firstname', value)}
+          autoCapitalize="none"
+        />
+        <TextInput
+          style={[styles.input, styles.nameInput]}
+          placeholder="Last Name"
+          value={user.lastname}
+          onChangeText={(value) => handleInputChange('lastname', value)}
+          autoCapitalize="none"
+        />
+      </View>
       <Button title="Continue" onPress={sendSignUpRequest} color="#FF9900" />
       <Button title="Login" onPress={toggleAuthPage} />
     </View>
@@ -129,6 +152,15 @@ const styles = StyleSheet.create({
     right: 10,
     transform: [{ translateY: 10 }],
     zIndex: 1,
+  },
+  nameContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '90%',
+    marginBottom: 10,
+  },
+  nameInput: {
+    width: '48%',
   },
 });
 
