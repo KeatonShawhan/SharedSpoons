@@ -112,7 +112,7 @@ export class PostController extends Controller {
     }
 
     @Get("/all")
-    public async IDuserInfo(
+    public async getAllPosts(
     ): Promise<PostContent | undefined> {
         return new postService()
         .getAllPosts()
