@@ -1,5 +1,6 @@
 import { pool } from '../db';
 import { PostContent } from '.';
+import { uuid } from 'aws-sdk/clients/customerprofiles';
 
 export class postService{
 
@@ -107,10 +108,11 @@ export class postService{
         }
     }
 
-    public async getAllPosts(): Promise<any | undefined> {
-        const select = `SELECT * from post`;
+    public async getAllPosts(userID:uuid): Promise<any | undefined> {
+        const select = `SELECT * from post WHERE user_id = $1`;
         const query = {
           text: select,
+          values: [userID]
         };
         const { rows } = await pool.query(query);
         if (rows.length == 0) {

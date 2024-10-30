@@ -111,11 +111,12 @@ export class PostController extends Controller {
         }
     }
 
-    @Get("/all")
+    @Get("/all/{userID}")
     public async getAllPosts(
+      @Path() userID: string
     ): Promise<PostContent | undefined> {
         return new postService()
-        .getAllPosts()
+        .getAllPosts(userID)
         .then(async (post: PostContent): Promise<PostContent> => {
             this.setStatus(200);
             return post;
