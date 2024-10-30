@@ -33,7 +33,7 @@ export default function LoginPage ({ setIsAuthenticated, toggleAuthPage }) {
       Alert.alert("Validation Error", "Please enter both username and password.");
       return;
     }
-    console.log(JSON.stringify(user));
+    //console.log(JSON.stringify(user));
     fetch('http://localhost:443/api/v0/auth/login', {
       method: 'POST',
       body: JSON.stringify(user),
@@ -42,8 +42,11 @@ export default function LoginPage ({ setIsAuthenticated, toggleAuthPage }) {
       },
     })
       .then((res) => {
+        console.log(res);
         if (!res.ok) {
           setBadLogin(true);
+          return res.text(); // return as text to avoid JSON parsing errors
+
         }
         return res.json();
       })

@@ -14,7 +14,7 @@ SELECT
         'email', 'lschram@ucsc.edu', 
         'username', 'lucaschram', 
         'pfp', 'https://imgur.com/a/zazu-soldier-cat-two-thousand-yard-stare-meme-restoration-0UhrRnU',
-        'pwhash', crypt('$2b$12$725hzYIBj7we05u6X57hXuwNxgPL9Y425nJifesn6MHXQYAuRfzNK', salt.salt), 
+        'pwhash', crypt('$2y$10$1tvvzfYfxk9e0Wp/5D5N6Osca.8esJBplUJ6qSNJ/2MZgoQY3KNE2', salt.salt), 
         'salt', salt.salt
     )
 FROM salt
@@ -27,7 +27,7 @@ SELECT
         'email', 'kshawhan@ucsc.edu', 
         'username', 'keatonshawhan', 
         'pfp', 'https://imgur.com/a/zazu-soldier-cat-two-thousand-yard-stare-meme-restoration-0UhrRnU',
-        'pwhash', crypt('$2a$12$RmHs51Bg1dMHYrLM9x3rIuJ9J3TDP7FwR9nH/DZ8nG9ZCXTqZyWby', salt.salt), 
+        'pwhash', crypt('$2y$10$OLFS8bsEqIrStTPzd0sGhuhc5v14bjVrN4s8GmFgRjf3S3XmGEqfK', salt.salt), 
         'salt', salt.salt
     )
 FROM salt;
