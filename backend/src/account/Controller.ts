@@ -18,8 +18,8 @@ import {
     UserSignUp,
     SignUpRet,
     UserIdInfo,
-  } from "./Index";
-  import { AccountService } from "./Service";
+  } from "./index";
+  import { AccountService } from "./service";
   
   @Route("auth")
   export class AccountController extends Controller {

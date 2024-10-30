@@ -6,7 +6,7 @@ import {
   UserSignUp,
   SignUpRet,
   UserIdInfo,
-} from "./Index";
+} from ".";
 import { pool } from "../db";
 
 interface Account {
