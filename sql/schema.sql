@@ -43,7 +43,7 @@ CREATE TABLE toEat (
 );
 
 -- Recommend Table
-DROP TABLE IF EXISTS review CASCADE;
+DROP TABLE IF EXISTS recommend CASCADE;
 CREATE TABLE recommend (
     user_id UUID REFERENCES app_user(id) ON DELETE CASCADE,
     dish TEXT NOT NULL,
