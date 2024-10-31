@@ -1,16 +1,17 @@
-// Import dependencies
 import supertest from 'supertest';
 import * as http from 'http';
 import app from '../../src/app'; // Adjust path as needed to your Express app
-
+import * as db from '../db';
 let server: http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>;
 
-beforeAll((done:any) => {
+beforeAll(async () => {
   server = http.createServer(app);
-  server.listen(done);
+  server.listen();
+  await db.reset();
 });
 
-afterAll((done:any) => {
+afterAll((done) => {
+  db.shutdown();
   server.close(done);
 });
 
@@ -27,42 +28,32 @@ const testPostData = {
   }
 }
 
-let postID = '';
 // AN IMAGE PATH NEEDS TO BE ADDED TO THIS 
 // this and the delete test will fail until an image path is added
-describe('Testing post/create endpoint', () => {
-  it('should return something ', async () => {
-    const res = await supertest(server)
-    .post('/api/v0/post/create')
-    .send(JSON.stringify(testPostData))
-    .expect(201)
-    postID = res.body;
-    expect(postID).toBeDefined();
-    expect(typeof postID).toBe('string');
-  });
+test('Testing post/create endpoint', async () => {
+  return await supertest(server)
+  .post('/api/v0/post/create')
+  .set('Content-Type', 'multipart/form-data')
+  .field('post', JSON.stringify(testPostData))
+  .attach('file', '/usr/src/app/tests/testcat.jpg')
+  .expect(201)
 });
 
-describe('Testing post/delete endpoint', () => {
-  it('should return something ', async () => {
-    return await supertest(server)
-    .delete('/api/v0/post/delete')
-    .send({postID})
-    .expect(200)
-  });
+test('Testing post/delete endpoint', async () => {
+  return await supertest(server)
+  .delete('/api/v0/post/delete')
+  .query({postID : 'a9359ef4-971b-4e60-a692-a3af3365ba85'})
+  .expect(200)
 });
 
-describe('Testing post/all endpoint', () => {
-  it('should return something ', async () => {
-    return await supertest(server)
-    .get('/api/v0/post/all')
-    .expect(200)
-  });
+test('Testing post/all endpoint', async () => {
+  return await supertest(server)
+  .get('/api/v0/post/all')
+  .expect(200)
 });
 
-describe('Testing post/postID/{ID} endpoint', () => {
-  it('should return something ', async () => {
-    return await supertest(server)
-    .get('/api/v0/post/a5059ef4-971b-4e60-a692-a3af3365ba85')
-    .expect(200)
-  });
+test('Testing post/postID/{ID} endpoint', async () => {
+  return await supertest(server)
+  .get('/api/v0/post/postID/a5059ef4-971b-4e60-a692-a3af3365ba85')
+  .expect(200)
 });

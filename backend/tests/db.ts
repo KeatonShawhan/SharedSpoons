@@ -7,7 +7,7 @@ dotenv.config();
 process.env.POSTGRES_DB = 'test';
 
 const pool = new Pool({
-  host: 'localhost',
+  host: 'postgres',
   port: 5432,
   database: process.env.POSTGRES_DB,
   user: process.env.POSTGRES_USER,
@@ -16,16 +16,12 @@ const pool = new Pool({
 
 const run = async (file: string) => {
   const content = fs.readFileSync(file, 'utf8');
-  const statements = content.split(/\r?\n/);
-  for (const statement of statements) {
-    if (statement) {
-      await pool.query(statement);
-    }
-  }
+  await pool.query(content);  // Run the full content at once
+
 };
 
 const reset = async () => {
-  await run('../../sql/test.sql');
+  await run('/usr/src/app/tests/sql/test.sql');
 };
 
 const shutdown = () => {
