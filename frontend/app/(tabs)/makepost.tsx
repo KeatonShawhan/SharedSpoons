@@ -12,11 +12,8 @@ export default function MakePost() {
       headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
       headerImage={<Ionicons size={310} name="code-slash" />}>
       <ThemedView>
-        <ThemedText type="title">Explore</ThemedText>
+        <ThemedText type="title">Make Post</ThemedText>
       </ThemedView>
-      
     </ParallaxScrollView>
   );
 }
-
-

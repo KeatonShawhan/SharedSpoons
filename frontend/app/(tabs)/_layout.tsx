@@ -8,6 +8,9 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { ProfileProvider } from '../../contexts/profileContext'; 
 import Ionicons from '@expo/vector-icons/Ionicons';
 import CenterButton from '@/components/CenterButton';
+import { TouchableOpacity } from 'react-native';
+import { MakePostButton } from '@/components/MakePostButton';
+
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -22,7 +25,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
+          title: '',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
           ),
@@ -31,7 +34,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="explore"
         options={{
-          title: 'Explore',
+          title: '',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
           ),
@@ -42,14 +45,15 @@ export default function TabLayout() {
         options={{
           tabBarLabel: '',
           tabBarIcon: ({ color, focused }) => (
-            <CenterButton/>
+            <MakePostButton color={color} focused={focused} />
           ),
+          tabBarButton: (props) => <TouchableOpacity {...props} />, 
         }}
       />
       <Tabs.Screen
         name="toeat"
         options={{
-          title: 'To-Eat',
+          title: '',
           tabBarIcon: ({ color, focused }) => (
             <MaterialCommunityIcons name="silverware-fork-knife" style={{paddingTop:8}} size={24} color={color} />          ),
         }}
@@ -57,7 +61,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="profile"
         options={{
-          title: 'Profile',
+          title: '',
           tabBarIcon: ({ color, focused }) => (
             <Ionicons name="person-outline" size={24} style={{paddingTop:8}} color={color} />
           ),
