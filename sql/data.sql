@@ -13,7 +13,7 @@ SELECT
         'lastname', 'Schram', 
         'email', 'lschram@ucsc.edu', 
         'username', 'lucaschram',
-        'phoneNumber', '(123) 123-1232'
+        'phoneNumber', '(123) 123-1232',
         'pfp', 'https://imgur.com/a/zazu-soldier-cat-two-thousand-yard-stare-meme-restoration-0UhrRnU',
         'pwhash', crypt('lucasucks123', salt.salt), 
         'salt', salt.salt
@@ -27,7 +27,7 @@ SELECT
         'lastname', 'Shawhan', 
         'email', 'kshawhan@ucsc.edu', 
         'username', 'keatonshawhan',
-        'phoneNumber', '(858) 688-4237'
+        'phoneNumber', '(858) 688-4237',
         'pfp', 'https://imgur.com/a/zazu-soldier-cat-two-thousand-yard-stare-meme-restoration-0UhrRnU',
         'pwhash', crypt('keatoniscool123', salt.salt), 
         'salt', salt.salt
