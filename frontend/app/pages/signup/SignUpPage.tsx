@@ -74,6 +74,9 @@ export default function SignUpPage ({ setIsAuthenticated, toggleAuthPage }) {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Sign Up</Text>
+      {badSignup ? 
+            <Text style={styles.badSignup}>Username or email already in use.</Text>
+        : undefined}
       <TextInput
         style={styles.input}
         placeholder="Username"
@@ -126,14 +129,20 @@ export default function SignUpPage ({ setIsAuthenticated, toggleAuthPage }) {
           style={[styles.input, styles.nameInput]}
           placeholder="First Name"
           value={user.firstname}
-          onChangeText={(value) => handleInputChange('firstname', value)}
+          onChangeText={(value) => {
+            const formattedValue = value.replace(/[0-9]/g, '').slice(0, 10);
+            handleInputChange('firstname', formattedValue);
+          }}
           autoCapitalize="none"
         />
         <TextInput
           style={[styles.input, styles.nameInput]}
           placeholder="Last Name"
           value={user.lastname}
-          onChangeText={(value) => handleInputChange('lastname', value)}
+          onChangeText={(value) => {
+            const formattedValue = value.replace(/[0-9]/g, '').slice(0, 10);
+            handleInputChange('lastname', formattedValue);
+          }}
           autoCapitalize="none"
         />
       </View>
@@ -152,6 +161,11 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     marginBottom: 20,
+  },
+  badSignup: {
+    fontSize: 14,
+    marginBottom: 10,
+    color: "red"
   },
   input: {
     width: '90%',

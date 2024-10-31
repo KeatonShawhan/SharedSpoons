@@ -4,6 +4,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { Avatar } from 'react-native-paper';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { Image } from 'react-native';
 
 interface postHeaderProps {
   username: string;
