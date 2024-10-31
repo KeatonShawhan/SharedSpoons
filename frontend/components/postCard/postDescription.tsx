@@ -17,13 +17,13 @@ export function postDescription({ categories, notes, dish }: postDescriptionProp
         position: 'relative', 
         width: '100%', 
         height: 350,
-        paddingHorizontal: 8,
-        paddingVertical: 3,
+        paddingHorizontal: 0,
+        paddingVertical: 0,
       }}>
         <View style={{
           position: 'relative',
           width: '100%',
-          height: '102%',
+          height: '100%',
           borderWidth: 2,
           borderColor: 'black',
           borderRadius: 20,

@@ -12,7 +12,7 @@ export function postImage({ image }: postImageProps): React.JSX.Element {
   return (
     <ThemedView>
       <View>
-        <View style={{position: 'relative', width: '100%', height: 350, paddingHorizontal: 8, paddingVertical: 3}}>
+        <View style={{position: 'relative', width: '100%', height: 350, paddingHorizontal: 0, paddingVertical: 0}}>
           <Image
             style={{width: '100%', height: 350, borderRadius: 20}}
             source={{

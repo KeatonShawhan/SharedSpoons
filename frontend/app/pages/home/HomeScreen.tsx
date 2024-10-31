@@ -1,7 +1,6 @@
 import React, { useRef } from 'react';
 import { Animated, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ThemedView } from '@/components/ThemedView';
 import { postCard } from '@/components/postCard/postCard';
 import { useNavigation } from '@react-navigation/native';
 import { useColorScheme } from '@/hooks/useColorScheme';
