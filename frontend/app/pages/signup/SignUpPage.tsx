@@ -43,7 +43,7 @@ export default function SignUpPage ({ setIsAuthenticated, toggleAuthPage }) {
 
   const sendSignUpRequest = () => {
     if (!user.username || !user.password || !user.phoneNumber || !user.email || !user.firstname || !user.lastname) {
-      Alert.alert("Validation Error", "Please enter both email and password.");
+      Alert.alert("Validation Error", "Please fill out all fields.");
       return;
     }
     console.log("user:" + JSON.stringify(user));
