@@ -3,6 +3,8 @@ import * as express from 'express';
 import { S3Service } from '../s3/service'; // S3 service for handling uploads
 import { postService } from './service'; // Post service for handling post creation
 import { PostJSON, PostContent } from '.';
+import  postDataSchema  from './validator';
+
 
 @Route('post')
 export class PostController extends Controller {
@@ -16,20 +18,34 @@ export class PostController extends Controller {
     ): Promise< string | undefined > {
         try{
             // need to add some verification of the user's identity here
-            const postData: PostContent = JSON.parse(post);
 
+
+            const postData: PostContent = JSON.parse(post);
             if (postData === undefined) {
                 this.setStatus(400);
-                throw new Error('Invalid post data');
+                console.error('Invalid post data, failed json parsing.');
                 return undefined;
             }
 
+            const { error } = postDataSchema.validate(postData.data, { allowUnknown: false });
+            if (error) {
+                this.setStatus(400);
+                console.error('Invalid post data, failed verification', error);
+                return undefined;
+            }
+
+            const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+            if (!allowedMimeTypes.includes(file.mimetype)) {
+                this.setStatus(400);
+                console.error('Invalid file type');
+                return undefined;
+            }
 
 
             const s3key = await this.s3Service.uploadFile(file);
             if (s3key === undefined) {
                 this.setStatus(400);
-                throw new Error('Could not upload file');
+                console.error('Could not upload file');
                 return undefined;
             }
 
@@ -100,6 +116,13 @@ export class PostController extends Controller {
                                 console.error('Could not get post');
                                 return undefined;
                             }
+                            const imageLink = await this.s3Service.getFileLink(post.data.image);
+                            if (imageLink === undefined) {
+                                this.setStatus(400);
+                                console.error('Could not get image link');
+                                return undefined;
+                            }
+                            post.data.image = imageLink;
                             this.setStatus(200);
                             return post;
                         }

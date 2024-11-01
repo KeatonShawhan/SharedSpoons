@@ -1,3 +1,4 @@
+
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
 DROP TABLE IF EXISTS app_user CASCADE;
@@ -54,7 +55,7 @@ SELECT
         'lastname', 'Schram', 
         'email', 'lschram@ucsc.edu', 
         'username', 'lucaschram', 
-        'pfp', 'https://imgur.com/a/zazu-soldier-cat-two-thousand-yard-stare-meme-restoration-0UhrRnU',
+        'pfp', '10bc9173-ff57-4bd6-8e79-10339a57cc4c.jpg',
         'pwhash', crypt('$2b$12$725hzYIBj7we05u6X57hXuwNxgPL9Y425nJifesn6MHXQYAuRfzNK', salt.salt), 
         'salt', salt.salt
     )
@@ -67,7 +68,7 @@ SELECT
         'lastname', 'Shawhan', 
         'email', 'kshawhan@ucsc.edu', 
         'username', 'keatonshawhan', 
-        'pfp', 'https://imgur.com/a/zazu-soldier-cat-two-thousand-yard-stare-meme-restoration-0UhrRnU',
+        'pfp', '10bc9173-ff57-4bd6-8e79-10339a57cc4c.jpg',
         'pwhash', crypt('$2a$12$RmHs51Bg1dMHYrLM9x3rIuJ9J3TDP7FwR9nH/DZ8nG9ZCXTqZyWby', salt.salt), 
         'salt', salt.salt
     )
@@ -75,16 +76,16 @@ FROM salt;
 
 INSERT INTO post (id, user_id, data) VALUES
     ('a5059ef4-971b-4e60-a692-a3af3365ba85', (SELECT id FROM app_user WHERE data->>'email' = 'lschram@ucsc.edu'), 
-    json_build_object('image', 'https://imgur.com/a/zazu-soldier-cat-two-thousand-yard-stare-meme-restoration-0UhrRnU', 
+    json_build_object('image', '10bc9173-ff57-4bd6-8e79-10339a57cc4c.jpg', 
                       'rating', 4, 'adds', 2, 'restaurant', 'CatFood', 'dish', 'Stare', 'time', '2024-10-24T12:45:00.000Z', 'caption', 'look at cat')),
     ('a9359ef4-971b-4e60-a692-a3af3365ba85', (SELECT id FROM app_user WHERE data->>'email' = 'kshawhan@ucsc.edu'), 
-    json_build_object('image', 'https://imgur.com/a/zazu-soldier-cat-two-thousand-yard-stare-meme-restoration-0UhrRnU', 
+    json_build_object('image', '10bc9173-ff57-4bd6-8e79-10339a57cc4c.jpg', 
                       'rating', 3, 'adds', 1, 'restaurant', 'CatFood', 'dish', 'Stare', 'time', '2024-10-24T11:23:44.336Z', 'caption', 'cat!'));
 
 INSERT INTO sponsor (data, active) VALUES
-    (json_build_object('image', 'https://imgur.com/a/zazu-soldier-cat-two-thousand-yard-stare-meme-restoration-0UhrRnU', 
+    (json_build_object('image', '10bc9173-ff57-4bd6-8e79-10339a57cc4c.jpg', 
                        'adds', 3, 'restaurant', 'CatPlace', 'dish', 'catnip', 'start', '2024-10-22T12:45:00.000Z', 'end', '2024-10-25T12:45:00.000Z'), true),
-    (json_build_object('image', 'https://imgur.com/a/zazu-soldier-cat-two-thousand-yard-stare-meme-restoration-0UhrRnU', 
+    (json_build_object('image', '10bc9173-ff57-4bd6-8e79-10339a57cc4c.jpg', 
                        'adds', 5, 'restaurant', 'war.', 'dish', 'death', 'start', '2024-10-21T12:45:00.000Z', 'end', '2024-10-24T12:45:00.000Z'), false);
 
 INSERT INTO follow (sender, receiver) VALUES

@@ -50,7 +50,6 @@ export class S3Service {
     }
     catch (error) {
       console.error('Error getting signed URL:', error);
-      throw new Error('Could not get signed URL');
       return undefined;
     }
   }
