@@ -96,7 +96,7 @@ export class PostController extends Controller {
         } catch (error) {
             this.setStatus(500);
             console.error('Error in post /post/delete route:', error);
-            return false;
+            return undefined;
         }
     }
 
