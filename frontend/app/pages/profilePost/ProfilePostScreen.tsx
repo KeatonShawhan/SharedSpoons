@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import ProfilePostHeader from '@/components/profilePost/ProfilePostHeader';
-import { postCard as PostCard } from '@/components/postCard/postCard';
+import { PostCard } from '@/components/postCard/postCard';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
@@ -33,7 +33,10 @@ export default function PostPage() {
             <ProfilePostHeader onBackPress={() => navigation.goBack()} />
             <View style={styles.content}>
                 <View style={styles.postCardContainer}>
-                    <PostCard {...postData} />
+                    <PostCard 
+                      {...postData}
+                      parentTab="ProfileTab" // Specify ProfileTab as the parent for navigation
+                    />
                 </View>
             </View>
         </View>

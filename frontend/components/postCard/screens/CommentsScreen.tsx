@@ -2,13 +2,11 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, FlatList, KeyboardAvoidingView, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import type { PostStackParamList } from '../postNavigator';
-
-type CommentsScreenRouteProp = RouteProp<PostStackParamList, 'Comments'>;
+import type { CommentsScreenNavigationProp, CommentsScreenRouteProp } from '../postNavigator';
 
 interface Comment {
   id: string;
@@ -18,12 +16,13 @@ interface Comment {
 }
 
 export function CommentsScreen() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<CommentsScreenNavigationProp>();
   const route = useRoute<CommentsScreenRouteProp>();
   const colorScheme = useColorScheme();
+  const { postId, parentTab } = route.params; // Access params from the route
   const [newComment, setNewComment] = useState('');
   
-  // In a real app, you'd fetch these based on route.params.postId
+  // Dummy comments
   const [comments, setComments] = useState<Comment[]>([
     {
       id: '1',
@@ -202,11 +201,13 @@ const styles = StyleSheet.create({
     marginRight: 12,
     paddingHorizontal: 15,
     paddingVertical: 8,
+    marginBottom: 5,
     borderRadius: 20,
     fontSize: 16,
     maxHeight: 100,
   },
   sendButton: {
     padding: 8,
+    marginBottom: 5,
   },
 });

@@ -1,32 +1,20 @@
-import Ionicons from '@expo/vector-icons/Ionicons';
-import React, { useState, PropsWithChildren } from 'react';
-import { Animated, TouchableOpacity, useColorScheme, View, Text } from 'react-native';
-import { postCard } from '../postCard/postCard';
+// components/toEatCard/toEatDetails.tsx
+import React from 'react';
+import { View } from 'react-native';
+import { PostCard } from '../postCard/postCard';
 import { postEatButton } from './postEatButton';
 import { removeEatButton } from './removeEatButton';
-export function ToEatDetailsInfo({id, notes, categories, caption, rating, dish, username, place, image}: Post) {
+import type { PostCardProps } from '../postCard/postCard';
 
-  const theme = useColorScheme() ?? 'light';
-
+export function ToEatDetailsInfo(props: PostCardProps) {
   return (
     <View style={{ justifyContent: 'center', alignItems: 'center', paddingBottom: 30 }}>
-      <View style={{ width: "95%", borderRadius: 0, borderColor: "none" }}>
-        {postCard({
-          id:id, 
-          notes:notes,
-          caption:caption, 
-          categories:categories, 
-          dish:dish, 
-          rating:rating, 
-          username:username, 
-          place:place, 
-          image:image
-        })}
+      <View style={{ width: '95%', borderRadius: 0, borderColor: 'none' }}>
+        <PostCard {...props} />
         <View>
           {postEatButton()}
           {removeEatButton()}
         </View>
-  
       </View>
     </View>
   );

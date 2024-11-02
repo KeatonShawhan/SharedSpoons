@@ -132,7 +132,7 @@ export default function MainScreen() {
           numColumns={3}
           renderItem={({ item }) => (
             <ProfilePostSquare
-              onPress={() => navigation.navigate('PostPage')}  // Navigate to ProfilePostScreen when a post is clicked
+              onPress={() => navigation.navigate('PostPage')}
             />
           )}
           keyExtractor={item => item.id.toString()}

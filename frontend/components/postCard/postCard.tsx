@@ -1,15 +1,17 @@
 // components/post/postCard.tsx
 import React, { useState } from 'react';
-import { Animated, TouchableOpacity, View } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { Animated, TouchableOpacity, View, Text } from 'react-native';
+import { useNavigation, CompositeNavigationProp } from '@react-navigation/native';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { postHeader } from './postHeader';
 import { postImage } from './postImage';
-import { postCaption } from './postCaption';
+import { PostCaption } from './postCaption';
 import { postDescription } from './postDescription';
-import { postActions } from './postActions';
 import type { HomeScreenNavigationProp } from '@/app/(tabs)';
+import type { ProfileScreenNavigationProp } from '@/app/(tabs)/profile';
+import type { ToEatScreenNavigationProp } from '@/app/(tabs)/toeat'; 
 
-interface postCardProps {
+export interface PostCardProps {  // Exporting PostCardProps
   id: string;
   username: string;
   caption: string;
@@ -21,9 +23,16 @@ interface postCardProps {
   notes: string;
   likes?: number;
   commentsCount?: number;
+  parentTab: 'HomeTab' | 'ProfileTab' | 'ToEatTab';
 }
 
-export function postCard({
+// Combine navigation props to include Home, Profile, and ToEat tabs
+type CombinedNavigationProp = CompositeNavigationProp<
+  CompositeNavigationProp<HomeScreenNavigationProp, ProfileScreenNavigationProp>,
+  ToEatScreenNavigationProp
+>;
+
+export function PostCard({
   id,
   username,
   caption,
@@ -35,8 +44,9 @@ export function postCard({
   notes,
   likes = 0,
   commentsCount = 0,
-}: postCardProps) {
-  const navigation = useNavigation<HomeScreenNavigationProp>();
+  parentTab,
+}: PostCardProps) {
+  const navigation = useNavigation<CombinedNavigationProp>();
   const [isFlipped, setIsFlipped] = useState(false);
   const fadeAnim = useState(new Animated.Value(1))[0];
 
@@ -51,7 +61,7 @@ export function postCard({
 
   return (
     <View style={{ justifyContent: 'center', alignItems: 'center', paddingBottom: 30 }}>
-      <View style={{ width: "95%", borderRadius: 0, borderColor: "none" }}>
+      <View style={{ width: '95%', borderRadius: 0, borderColor: 'none' }}>
         <View style={{ paddingBottom: 10, paddingLeft: 0 }}>
           {postHeader({ username, place })}
         </View>
@@ -62,29 +72,32 @@ export function postCard({
               {postImage({ image })}
             </Animated.View>
 
-            <Animated.View style={{
-              opacity: isFlipped ? 1 : 0,
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0
-            }}>
+            <Animated.View
+              style={{
+                opacity: isFlipped ? 1 : 0,
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+              }}
+            >
               {postDescription({ categories, dish, notes })}
             </Animated.View>
           </View>
         </TouchableOpacity>
 
         <View style={{ paddingTop: 15, paddingLeft: 0 }}>
-          {postCaption({
-            caption,
-            dish,
-            rating,
-            postId: id,
-            likes,
-            commentsCount,
-            navigation, // Pass navigation as a prop
-          })}
+          <PostCaption
+            caption={caption}
+            dish={dish}
+            rating={rating}
+            postId={id}
+            likes={likes}
+            commentsCount={commentsCount}
+            navigation={navigation} 
+            parentTab={parentTab} 
+          />
         </View>
       </View>
     </View>

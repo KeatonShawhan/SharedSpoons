@@ -27,39 +27,25 @@ export default function LoginPage ({ setIsAuthenticated, toggleAuthPage }) {
     }
   }, [loginContext.accessToken]);
 
+  
   const sendLoginRequest = () => {
-    // Validate form fields
-    if (!user.username || !user.password) {
-      Alert.alert("Validation Error", "Please enter both username and password.");
-      return;
-    }
-    fetch(API_URL + 'auth/login', {
-      method: 'POST',
-      body: JSON.stringify(user),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((res) => {
-        if (!res.ok) {
-          setBadLogin(true);
-          return res.text();
-        }
-        return res.json();
-      })
-      .then((json) => {
-        console.log(json);
-        // localStorage.setItem('userId', JSON.stringify(json.user.id));
-      
-        loginContext.setAccessToken(json.accessToken);
-        // localStorage.setItem('username', JSON.stringify(json.user.credentials.username));
-      })
-      .catch((err) => {
-        setBadLogin(true);
-        console.log(err);
-      });
+    // Bypass actual validation and assume login is successful
+    setBadLogin(false);
+  
+    // Mock token
+    const mockAccessToken = "dummy_access_token";
+  
+    // Set token in context and local storage (if needed)
+    loginContext.setAccessToken(mockAccessToken);
+    setIsAuthenticated(true);
+  
+    // Optionally store the token in AsyncStorage if you need it for persistence
+    AsyncStorage.setItem('accessToken', mockAccessToken)
+      .then(() => console.log("Mock token saved"))
+      .catch((err) => console.log("Error saving token", err));
   };
-
+  
+  
 
   return (
     <View style={styles.container}>
@@ -138,4 +124,3 @@ const styles = StyleSheet.create({
         zIndex: 1,
       },
   });
-  

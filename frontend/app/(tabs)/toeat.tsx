@@ -1,22 +1,26 @@
-import { createStackNavigator } from '@react-navigation/stack'; // Ensure you're using this
-import React from 'react';
-import ToEatPage from '../pages/toEatPage'; 
-import ToEatDetails from '../pages/toEatDetails';
-const Stack = createStackNavigator();
+// app/(tabs)/toEat.tsx
+import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-navigation/native-stack';
+import ToEatPage from '@/app/pages/toeat/toEatPage';
+import ToEatDetails from '@/app/pages/toeat/toEatDetails';
+import { PostStackNavigator, PostStackParamList } from '../navigation/PostStackNavigator';
+import { NavigatorScreenParams } from '@react-navigation/native';
+
+export type ToEatStackParamList = {
+  ToEatList: undefined;
+  ToEatDetails: { id: string };
+  PostStack: NavigatorScreenParams<PostStackParamList>; 
+};
+
+export type ToEatScreenNavigationProp = NativeStackNavigationProp<ToEatStackParamList>;
+
+const Stack = createNativeStackNavigator<ToEatStackParamList>();
 
 export default function ToEatTab() {
   return (
-    <Stack.Navigator>
-      <Stack.Screen 
-        name="ToEatList" 
-        component={ToEatPage} 
-        options={{ title: 'To-Eat' }} 
-      />
-      <Stack.Screen 
-        name="PostDetails" 
-        component={ToEatDetails} 
-        options={{ title: 'Post Details' }} 
-      />
+    <Stack.Navigator initialRouteName="ToEatList" screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="ToEatList" component={ToEatPage} />
+      <Stack.Screen name="ToEatDetails" component={ToEatDetails} />
+      <Stack.Screen name="PostStack" component={PostStackNavigator} />
     </Stack.Navigator>
   );
 }
