@@ -39,12 +39,13 @@ const styles = StyleSheet.create({
   },
   header: {
     padding: 16,
-    alignItems: 'center',
+    marginBottom: 10,
     borderBottomWidth: 0.5,
   },
   headerTitle: {
-    fontSize: 24,
+    fontSize: 34,
     fontWeight: 'bold',
+    paddingLeft: 5,
   },
   contentContainer: {
     paddingTop: 10,

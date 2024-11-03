@@ -1,6 +1,10 @@
 // components/post/postDescription.tsx
 import { View, Text } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
+import { useColorScheme } from '@/hooks/useColorScheme';
+import { Colors } from '@/constants/Colors';
+
+const ORANGE_COLOR = '#FF9F45';
 
 interface postDescriptionProps {
   categories: string[];
@@ -9,6 +13,8 @@ interface postDescriptionProps {
 }
 
 export function postDescription({ categories, notes, dish }: postDescriptionProps): React.JSX.Element {
+  const colorScheme = useColorScheme();
+  const themeColors = Colors[colorScheme];
   const catString = categories.join(', ');
 
   return (
@@ -25,17 +31,18 @@ export function postDescription({ categories, notes, dish }: postDescriptionProp
           width: '100%',
           height: '100%',
           borderWidth: 2,
-          borderColor: 'black',
+          borderColor: ORANGE_COLOR,  
           borderRadius: 20,
           padding: 20,
+          backgroundColor: themeColors.background,
         }}>
-          <Text style={{fontWeight:'bold', fontSize: 24, flexWrap:'wrap'}}>
+          <Text style={{ fontWeight: 'bold', fontSize: 24, color: themeColors.text, flexWrap: 'wrap' }}>
             {dish}
           </Text>
-          <Text style={{fontSize: 16, flexWrap:'wrap', paddingTop: 10}}>
+          <Text style={{ fontSize: 16, color: themeColors.text, flexWrap: 'wrap', paddingTop: 10 }}>
             Categories: {catString}
           </Text>
-          <Text style={{fontSize: 16, flexWrap:'wrap', paddingTop: 10}}>
+          <Text style={{ fontSize: 16, color: themeColors.text, flexWrap: 'wrap', paddingTop: 10 }}>
             Additional Notes: {notes}
           </Text>
         </View>

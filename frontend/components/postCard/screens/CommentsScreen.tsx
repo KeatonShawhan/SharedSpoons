@@ -201,13 +201,13 @@ const styles = StyleSheet.create({
     marginRight: 12,
     paddingHorizontal: 15,
     paddingVertical: 8,
-    marginBottom: 5,
+    marginBottom: 12,
     borderRadius: 20,
     fontSize: 16,
     maxHeight: 100,
   },
   sendButton: {
     padding: 8,
-    marginBottom: 5,
+    marginBottom: 12,
   },
 });

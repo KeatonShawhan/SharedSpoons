@@ -11,7 +11,7 @@ import type { HomeScreenNavigationProp } from '@/app/(tabs)';
 import type { ProfileScreenNavigationProp } from '@/app/(tabs)/profile';
 import type { ToEatScreenNavigationProp } from '@/app/(tabs)/toeat'; 
 
-export interface PostCardProps {  // Exporting PostCardProps
+export interface PostCardProps {  
   id: string;
   username: string;
   caption: string;

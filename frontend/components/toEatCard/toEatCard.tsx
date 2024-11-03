@@ -5,6 +5,8 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
+const ORANGE_COLOR = '#FF9F45';
+
 export function toEatCard({
   id,
   dish,
@@ -28,7 +30,7 @@ export function toEatCard({
           style={[
             styles.card,
             {
-              borderColor: themeColors.icon,
+              borderColor: ORANGE_COLOR,
               backgroundColor: themeColors.background,
             },
           ]}

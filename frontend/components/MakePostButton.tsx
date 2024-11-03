@@ -2,11 +2,18 @@ import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { Colors } from '@/constants/Colors';
+import { useColorScheme } from '@/hooks/useColorScheme';
 
 export const MakePostButton = ({ color, focused }) => {
+  const colorScheme = useColorScheme();
+
   return (
-    <View style={focused ? styles.focusedContainer : styles.container}>
-      <AntDesign name="plussquare" size={28} color={'grey'} />
+    <View style={[styles.container, focused && styles.focusedContainer]}>
+      <AntDesign 
+        name="plussquare" 
+        size={28} 
+        color={focused ? Colors[colorScheme].tint : 'grey'} 
+      />
     </View>
   );
 };
@@ -18,14 +25,14 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 10, // Adjust the position to float over the tab bar
+    marginTop: 10, 
   },
   focusedContainer: {
-    width: 35,
-    height: 35,
-    borderRadius: 32.5,
+    width: 45,
+    height: 45,
+    borderRadius: 22.5,
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 10,
-  }
+  },
 });
