@@ -1,19 +1,19 @@
-// components/makePost/CaptionInputBox.tsx
+// components/makePost/NotesInputBox.tsx
 import React from 'react';
 import { TextInput, StyleSheet } from 'react-native';
 
-type CaptionInputBoxProps = {
-  caption: string;
-  setCaption: (text: string) => void;
+type NotesInputBoxProps = {
+  notes: string;
+  setNotes: (text: string) => void;
 };
 
-export function CaptionInputBox({ caption, setCaption }: CaptionInputBoxProps) {
+export function NotesInputBox({ notes, setNotes }: NotesInputBoxProps) {
   return (
     <TextInput
       style={styles.input}
-      placeholder="Write a caption..."
-      value={caption}
-      onChangeText={setCaption}
+      placeholder="Notes about the dish"
+      value={notes}
+      onChangeText={setNotes}
       multiline
     />
   );
@@ -22,7 +22,7 @@ export function CaptionInputBox({ caption, setCaption }: CaptionInputBoxProps) {
 const styles = StyleSheet.create({
   input: {
     width: '100%',
-    minHeight: 60,
+    minHeight: 80,
     backgroundColor: '#f9f9f9',
     borderRadius: 8,
     padding: 12,

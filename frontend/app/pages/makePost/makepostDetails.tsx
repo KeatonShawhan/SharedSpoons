@@ -1,25 +1,40 @@
+// app/pages/makePost/makepostDetails.tsx
 import React, { useState } from 'react';
-import { StyleSheet, View, ScrollView, Button, Alert } from 'react-native';
+import { StyleSheet, View, ScrollView, Alert, TouchableOpacity, Text } from 'react-native';
 import { Header } from '@/components/home/Header';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/constants/Colors';
-import { ImagePickerBox } from '@/components/makePost/ImagePickerBox';
-import { CaptionInputBox } from '@/components/makePost/CaptionInputBox';
 import { StarRating } from '@/components/makePost/StarRating';
-import { useNavigation } from '@react-navigation/native';
+import { RestaurantInputBox } from '@/components/makePost/RestaurantInputBox';
+import { DishNameInputBox } from '@/components/makePost/DishNameInputBox';
+import { CategoryInputBox } from '@/components/makePost/CategoryInputBox';
+import { NotesInputBox } from '@/components/makePost/NotesInputBox';
+import { RouteProp } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { MakePostScreenStackParamList } from '@/app/(tabs)/makePostMain';
 
 const HEADER_HEIGHT = 80; // Match this to your Header component's actual height
 
-export default function MakePost() {
+type MakePostDetailsRouteProp = RouteProp<MakePostScreenStackParamList, 'Details'>;
+type MakePostDetailsNavigationProp = NativeStackNavigationProp<MakePostScreenStackParamList, 'Details'>;
+
+type Props = {
+  route: MakePostDetailsRouteProp;
+  navigation: MakePostDetailsNavigationProp;
+};
+
+export default function MakePostDetails({ route, navigation }: Props) {
   const colorScheme = useColorScheme();
-  const navigation = useNavigation();
-  const [caption, setCaption] = useState('');
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const { selectedImage, caption } = route.params;
   const [rating, setRating] = useState(0);
+  const [restaurant, setRestaurant] = useState('');
+  const [dishName, setDishName] = useState('');
+  const [category, setCategory] = useState('');
+  const [notes, setNotes] = useState('');
 
   const handleSubmit = async () => {
-    if (!selectedImage || !caption.trim() || rating === 0) {
-      Alert.alert('Incomplete Information', 'Please select an image, enter a caption, and provide a rating.');
+    if (!rating || !restaurant.trim() || !dishName.trim() || !category.trim()) {
+      Alert.alert('Incomplete Information', 'Please provide all required information.');
       return;
     }
 
@@ -33,8 +48,12 @@ export default function MakePost() {
     } as any); // Add 'as any' to fix TypeScript type issue
 
     // Append other fields
-    formData.append('caption', caption.trim());
+    formData.append('caption', caption);
     formData.append('rating', rating.toString());
+    formData.append('restaurant', restaurant.trim());
+    formData.append('dishName', dishName.trim());
+    formData.append('category', category.trim());
+    formData.append('notes', notes.trim());
 
     try {
       const response = await fetch('https://your-backend-api.com/posts', {
@@ -48,7 +67,9 @@ export default function MakePost() {
 
       if (response.ok) {
         console.log('Post submitted successfully');
-        navigation.goBack();
+        Alert.alert('Success', 'Your post has been submitted successfully.', [
+          { text: 'OK', onPress: () => navigation.navigate('Main') },
+        ]);
       } else {
         const errorData = await response.json();
         console.error('Error submitting post:', errorData);
@@ -69,14 +90,15 @@ export default function MakePost() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        <ImagePickerBox
-          selectedImage={selectedImage}
-          setSelectedImage={setSelectedImage}
-        />
-        <CaptionInputBox caption={caption} setCaption={setCaption} />
         <StarRating rating={rating} setRating={setRating} />
+        <RestaurantInputBox restaurant={restaurant} setRestaurant={setRestaurant} />
+        <DishNameInputBox dishName={dishName} setDishName={setDishName} />
+        <CategoryInputBox category={category} setCategory={setCategory} />
+        <NotesInputBox notes={notes} setNotes={setNotes} />
         <View style={styles.buttonContainer}>
-          <Button title="Submit" onPress={handleSubmit} />
+          <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+            <Text style={styles.buttonText}>Post</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </View>
@@ -84,6 +106,7 @@ export default function MakePost() {
 }
 
 const styles = StyleSheet.create({
+  // ... existing styles ...
   container: {
     flex: 1,
   },
@@ -95,7 +118,7 @@ const styles = StyleSheet.create({
     zIndex: 100,
   },
   scrollContent: {
-    paddingTop: HEADER_HEIGHT + 50,
+    paddingTop: HEADER_HEIGHT + 20, // Adjusted padding to prevent overlapping
     paddingHorizontal: 16,
     paddingBottom: 16,
   },
@@ -104,7 +127,15 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     width: '100%',
   },
-  firstComponent: {
-    marginTop: 16,
+  button: {
+    backgroundColor: '#32CD32', // Button background color (example: LimeGreen)
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#FFFFFF', // Text color set to white
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });

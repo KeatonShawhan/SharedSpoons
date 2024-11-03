@@ -1,25 +1,23 @@
-// app/(tabs)/profile.tsx
+// makePostMain.tsx
 import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { NavigatorScreenParams } from '@react-navigation/native';
-import MainScreen from '@/app/pages/profile/MainScreen';
-import FriendsScreen from '@/app/pages/profile/FriendsScreen';
-import PostPage from '@/app/pages/profilePost/ProfilePostScreen';
-import { PostStackNavigator, PostStackParamList } from '../navigation/PostStackNavigator';
 import MakePost from '@/app/pages/makePost/makepost';
 import MakePostDetails from '@/app/pages/makePost/makepostDetails';
 
-// Define ProfileStack params, including nested PostStack as PostPage's child route
-export type ProfileStackParamList = {
+// Define the navigation parameter list
+export type MakePostScreenStackParamList = {
   Main: undefined;
-  Details: undefined;
+  Details: {
+    selectedImage: string;
+    caption: string;
+  };
 };
 
-// Export the navigation prop type
-export type PostScreenNavigationProp = NativeStackNavigationProp<ProfileStackParamList>;
+// Export the navigation prop type for the 'Main' screen
+export type PostScreenNavigationProp = NativeStackNavigationProp<MakePostScreenStackParamList, 'Main'>;
 
-const Stack = createNativeStackNavigator<ProfileStackParamList>();
+const Stack = createNativeStackNavigator<MakePostScreenStackParamList>();
 
-export default function ProfileTab() {
+export default function MakePostMain() {
   return (
     <Stack.Navigator initialRouteName="Main" screenOptions={{ headerShown: false }}>
       <Stack.Screen name="Main" component={MakePost} />

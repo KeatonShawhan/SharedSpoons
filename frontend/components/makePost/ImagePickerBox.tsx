@@ -1,19 +1,20 @@
-// components/ImagePickerBox.tsx
+// components/makePost/ImagePickerBox.tsx
 import React from 'react';
-import { TouchableOpacity, StyleSheet, Image, View, Text } from 'react-native';
+import { TouchableOpacity, StyleSheet, Image, View, Text, StyleProp, ViewStyle } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 
 type ImagePickerBoxProps = {
   selectedImage: string | null;
   setSelectedImage: (uri: string) => void;
+  style?: StyleProp<ViewStyle>;
 };
 
-export function ImagePickerBox({ selectedImage, setSelectedImage }: ImagePickerBoxProps) {
+export function ImagePickerBox({ selectedImage, setSelectedImage, style }: ImagePickerBoxProps) {
   const openImagePicker = async () => {
     // Request permission to access media library
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
-    if (!permissionResult.granted) {
+    if (permissionResult.status !== 'granted') {
       alert('Permission to access camera roll is required!');
       return;
     }
@@ -21,6 +22,7 @@ export function ImagePickerBox({ selectedImage, setSelectedImage }: ImagePickerB
     // Open image picker
     const pickerResult = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 1,
     });
 
     if (!pickerResult.canceled && pickerResult.assets && pickerResult.assets.length > 0) {
@@ -29,7 +31,7 @@ export function ImagePickerBox({ selectedImage, setSelectedImage }: ImagePickerB
   };
 
   return (
-    <TouchableOpacity style={styles.container} onPress={openImagePicker}>
+    <TouchableOpacity style={[styles.container, style]} onPress={openImagePicker}>
       {selectedImage ? (
         <Image source={{ uri: selectedImage }} style={styles.image} />
       ) : (

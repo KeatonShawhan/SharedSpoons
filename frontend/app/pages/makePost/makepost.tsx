@@ -1,65 +1,36 @@
+// app/pages/makePost/makepost.tsx
 import React, { useState } from 'react';
-import { StyleSheet, View, ScrollView, Button, Alert } from 'react-native';
+import { StyleSheet, View, ScrollView, Alert, TouchableOpacity, Text } from 'react-native';
 import { Header } from '@/components/home/Header';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/constants/Colors';
 import { ImagePickerBox } from '@/components/makePost/ImagePickerBox';
 import { CaptionInputBox } from '@/components/makePost/CaptionInputBox';
-import { StarRating } from '@/components/makePost/StarRating';
 import { useNavigation } from '@react-navigation/native';
-import { PostScreenNavigationProp } from '@/app/(tabs)/makePostMain';
-
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { MakePostScreenStackParamList } from '@/app/(tabs)/makePostMain';
 
 const HEADER_HEIGHT = 80; // Match this to your Header component's actual height
 
+type MakePostNavigationProp = NativeStackNavigationProp<MakePostScreenStackParamList, 'Main'>;
+
 export default function MakePost() {
   const colorScheme = useColorScheme();
-  const navigation = useNavigation<PostScreenNavigationProp>();
+  const navigation = useNavigation<MakePostNavigationProp>();
   const [caption, setCaption] = useState('');
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [rating, setRating] = useState(0);
 
-  const handleSubmit = async () => {
-    if (!selectedImage || !caption.trim() || rating === 0) {
-      Alert.alert('Incomplete Information', 'Please select an image, enter a caption, and provide a rating.');
+  const handleNext = () => {
+    if (!selectedImage || !caption.trim()) {
+      Alert.alert('Incomplete Information', 'Please select an image and enter a caption.');
       return;
     }
 
-    const formData = new FormData();
-
-    // Append image
-    formData.append('image', {
-      uri: selectedImage,
-      name: 'photo.jpg',
-      type: 'image/jpeg',
-    } as any); // Add 'as any' to fix TypeScript type issue
-
-    // Append other fields
-    formData.append('caption', caption.trim());
-    formData.append('rating', rating.toString());
-
-    try {
-      const response = await fetch('https://your-backend-api.com/posts', {
-        method: 'POST',
-        headers: {
-          // 'Content-Type': 'multipart/form-data', // Let fetch set this automatically
-          // Include authentication headers if necessary
-        },
-        body: formData,
-      });
-
-      if (response.ok) {
-        console.log('Post submitted successfully');
-        navigation.navigate('Details');
-      } else {
-        const errorData = await response.json();
-        console.error('Error submitting post:', errorData);
-        Alert.alert('Submission Failed', 'Failed to submit post. Please try again.');
-      }
-    } catch (error) {
-      console.error('Error submitting post:', error);
-      Alert.alert('An Error Occurred', 'Please try again.');
-    }
+    // Navigate to 'Details' screen, passing selectedImage and caption
+    navigation.navigate('Details', {
+      selectedImage,
+      caption: caption.trim(),
+    });
   };
 
   return (
@@ -76,9 +47,10 @@ export default function MakePost() {
           setSelectedImage={setSelectedImage}
         />
         <CaptionInputBox caption={caption} setCaption={setCaption} />
-        <StarRating rating={rating} setRating={setRating} />
         <View style={styles.buttonContainer}>
-          <Button title="Submit" onPress={handleSubmit} />
+          <TouchableOpacity style={styles.button} onPress={handleNext}>
+            <Text style={styles.buttonText}>Next</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </View>
@@ -86,6 +58,7 @@ export default function MakePost() {
 }
 
 const styles = StyleSheet.create({
+  // ... existing styles ...
   container: {
     flex: 1,
   },
@@ -106,7 +79,15 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     width: '100%',
   },
-  firstComponent: {
-    marginTop: 16,
+  button: {
+    backgroundColor: Colors.light.secondaryColor, // Button background color
+    paddingVertical: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: Colors.light.primaryColor, // Text color
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
