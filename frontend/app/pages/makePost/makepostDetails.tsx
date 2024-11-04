@@ -82,13 +82,10 @@ export default function MakePostDetails({ route, navigation }: Props) {
     }
 
     const postData = {
-      user: userId,
-      data: {
-        rating: rating,
-        restaurant: restaurant.trim(),
-        dish: dishName.trim(),
-        caption: caption,
-      },
+      rating: rating,
+      restaurant: restaurant.trim(),
+      dish: dishName.trim(),
+      caption: caption,
     };
 
     const formData = new FormData();
