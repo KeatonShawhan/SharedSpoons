@@ -11,7 +11,6 @@ import { pool } from "../db";
 
 interface Account {
   id: string;
-  name: string;
   username: string;
 }
 

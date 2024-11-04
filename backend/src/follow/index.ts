@@ -1,6 +1,8 @@
 import { UUID } from '../types';
   
-export interface SentRequest {
+export interface Account {
     id: UUID,
-    name: string,
+    firstname: string,
+    lastname: string,
+    username: string
 }

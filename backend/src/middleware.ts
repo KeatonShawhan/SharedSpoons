@@ -1,34 +1,32 @@
 import { Request, Response, NextFunction } from 'express';
 import { AccountService } from './account/service';
+import { SessionUser } from './types';
+
 
 // Authentication middleware that conforms to TSOA's expected signature
 export const expressAuthentication = async (
-  req: Request,
-  securityName: string, 
-  scopes?: string[],
-  res?: Response
-): Promise<void> => {
+    req: Request,
+    securityName: string, 
+    scopes?: string[]
+  ): Promise<SessionUser> => {
   const accessToken = req.headers['authorization']?.split(' ')[1];
-  console.log(accessToken);
-
   const openRoutes = ['/auth/login', '/auth/signup'];
   if (openRoutes.includes(req.path)) {
-    return;
+    return {} as SessionUser; 
   }
   
   if (!accessToken) {
-    if (res) {
-      res.status(401).send("Unauthorized");
-    }
-    return;
+    throw new Error("Unauthorized");
   }
 
   try {
     const account = await new AccountService().check(accessToken.toString());
-    req.user = account;
-  } catch (error) {
-    if (res) {
-      res.status(401).send("Unauthorized");
+    if (!account) {
+      throw new Error("Unauthorized");
     }
+    return account;  
+  } catch (error) {
+    console.error(error);
+    throw new Error("Unauthorized");
   }
 };
