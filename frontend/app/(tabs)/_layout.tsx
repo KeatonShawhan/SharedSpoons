@@ -10,6 +10,8 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import CenterButton from '@/components/CenterButton';
 import { TouchableOpacity } from 'react-native';
 import { MakePostButton } from '@/components/MakePostButton';
+import LoginPage from '../pages/login/LoginPage';
+import { LoginProvider } from '@/contexts/loginContext';
 
 
 export default function TabLayout() {
