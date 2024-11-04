@@ -1,25 +1,32 @@
 // components/makePost/ImagePickerBox.tsx
+
 import React from 'react';
-import { TouchableOpacity, StyleSheet, Image, View, Text, StyleProp, ViewStyle } from 'react-native';
+import { TouchableOpacity, StyleSheet, Image, View, Text, StyleProp, ViewStyle, useColorScheme } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import { Colors } from '@/constants/Colors';
+
+const ORANGE_COLOR = '#FF9F45';
 
 type ImagePickerBoxProps = {
   selectedImage: string | null;
   setSelectedImage: (uri: string) => void;
   style?: StyleProp<ViewStyle>;
+  isDisabled?: boolean;
 };
 
-export function ImagePickerBox({ selectedImage, setSelectedImage, style }: ImagePickerBoxProps) {
-  const openImagePicker = async () => {
-    // Request permission to access media library
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+export function ImagePickerBox({ selectedImage, setSelectedImage, style, isDisabled }: ImagePickerBoxProps) {
+  const colorScheme = useColorScheme();
+  const themeColors = Colors[colorScheme || 'light'];
 
+  const openImagePicker = async () => {
+    if (isDisabled) return; // Prevent interaction if disabled
+
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (permissionResult.status !== 'granted') {
       alert('Permission to access camera roll is required!');
       return;
     }
 
-    // Open image picker
     const pickerResult = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 1,
@@ -31,12 +38,20 @@ export function ImagePickerBox({ selectedImage, setSelectedImage, style }: Image
   };
 
   return (
-    <TouchableOpacity style={[styles.container, style]} onPress={openImagePicker}>
+    <TouchableOpacity
+      style={[
+        styles.container,
+        style,
+        { backgroundColor: themeColors.background },
+      ]}
+      onPress={openImagePicker}
+      disabled={isDisabled}
+    >
       {selectedImage ? (
         <Image source={{ uri: selectedImage }} style={styles.image} />
       ) : (
         <View style={styles.placeholder}>
-          <Text style={styles.placeholderText}>Tap to select an image</Text>
+          <Text style={[styles.placeholderText, { color: themeColors.icon }]}>Tap to select an image</Text>
         </View>
       )}
     </TouchableOpacity>
@@ -45,12 +60,13 @@ export function ImagePickerBox({ selectedImage, setSelectedImage, style }: Image
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
+    width: '95%',
     aspectRatio: 1, // Makes the box square
-    backgroundColor: '#e0e0e0',
-    borderRadius: 8,
+    borderColor: ORANGE_COLOR,
+    borderWidth: 2,
+    borderRadius: 30,
     overflow: 'hidden',
-    marginTop: 16,
+    marginTop: 60,
   },
   placeholder: {
     flex: 1,
@@ -58,7 +74,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   placeholderText: {
-    color: '#888',
     fontSize: 16,
   },
   image: {

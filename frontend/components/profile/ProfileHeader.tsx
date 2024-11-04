@@ -45,7 +45,6 @@ const styles = StyleSheet.create({
     width: width * 0.25,
     height: width * 0.25,
     borderRadius: width * 0.125,
-    borderWidth: 1,
   },
   name: {
     fontSize: width * 0.08,

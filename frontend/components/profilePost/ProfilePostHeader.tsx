@@ -16,12 +16,12 @@ const ProfilePostHeader: React.FC<ProfilePostHeaderProps> = ({ onBackPress }) =>
   const themeColors = Colors[colorScheme];
 
   return (
-    <View style={[styles.container, { backgroundColor: themeColors.background }]}>
+    <View style={[styles.container, { backgroundColor: themeColors.background, borderBottomColor: themeColors.icon }]}>
       <TouchableOpacity onPress={onBackPress} style={styles.button}>
         <Ionicons name="arrow-back" size={24} color={themeColors.text} />
       </TouchableOpacity>
       <Text style={[styles.title, { color: themeColors.text }]}>Post Details</Text>
-      <View style={styles.button} />
+      <View style={[styles.button, { backgroundColor: themeColors.icon }]} />
     </View>
   );
 };
@@ -35,8 +35,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderBottomWidth: 1,
-    borderBottomColor: ORANGE_COLOR, 
+    borderBottomWidth: 1, // Leave color dynamically set in render
   },
   button: {
     width: 40,

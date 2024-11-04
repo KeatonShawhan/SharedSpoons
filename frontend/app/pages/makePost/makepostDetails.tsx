@@ -1,9 +1,10 @@
-// app/pages/makePost/makepostDetails.tsx
-import React, { useState } from 'react';
-import { StyleSheet, View, ScrollView, Alert, TouchableOpacity, Text } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { StyleSheet, View, ScrollView, Alert, TouchableOpacity, Text, Image, Animated, TouchableWithoutFeedback } from 'react-native';
+import { BlurView } from 'expo-blur';
 import { Header } from '@/components/home/Header';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/constants/Colors';
+import { Ionicons } from '@expo/vector-icons';
 import { StarRating } from '@/components/makePost/StarRating';
 import { RestaurantInputBox } from '@/components/makePost/RestaurantInputBox';
 import { DishNameInputBox } from '@/components/makePost/DishNameInputBox';
@@ -12,8 +13,9 @@ import { NotesInputBox } from '@/components/makePost/NotesInputBox';
 import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { MakePostScreenStackParamList } from '@/app/(tabs)/makePostMain';
+import MakePostHeader from '@/components/makePost/MakePostHeader';
 
-const HEADER_HEIGHT = 80; // Match this to your Header component's actual height
+const HEADER_HEIGHT = 80;
 
 type MakePostDetailsRouteProp = RouteProp<MakePostScreenStackParamList, 'Details'>;
 type MakePostDetailsNavigationProp = NativeStackNavigationProp<MakePostScreenStackParamList, 'Details'>;
@@ -25,12 +27,36 @@ type Props = {
 
 export default function MakePostDetails({ route, navigation }: Props) {
   const colorScheme = useColorScheme();
-  const { selectedImage, caption } = route.params;
+  const themeColors = Colors[colorScheme || 'light'];
+  const { selectedImage } = route.params;
+  const [caption] = useState(route.params.caption);
   const [rating, setRating] = useState(0);
   const [restaurant, setRestaurant] = useState('');
   const [dishName, setDishName] = useState('');
   const [category, setCategory] = useState('');
   const [notes, setNotes] = useState('');
+  
+  const [showCaptionBox, setShowCaptionBox] = useState(false);
+  const captionAnim = useRef(new Animated.Value(0)).current;
+
+  const handlePlusPress = () => {
+    setShowCaptionBox(true);
+    Animated.timing(captionAnim, {
+      toValue: 1,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handleOutsideClick = () => {
+    Animated.timing(captionAnim, {
+      toValue: 0,
+      duration: 300,
+      useNativeDriver: true,
+    }).start(() => {
+      setShowCaptionBox(false);
+    });
+  };
 
   const handleSubmit = async () => {
     if (!rating || !restaurant.trim() || !dishName.trim() || !category.trim()) {
@@ -39,15 +65,7 @@ export default function MakePostDetails({ route, navigation }: Props) {
     }
 
     const formData = new FormData();
-
-    // Append image
-    formData.append('image', {
-      uri: selectedImage,
-      name: 'photo.jpg',
-      type: 'image/jpeg',
-    } as any); // Add 'as any' to fix TypeScript type issue
-
-    // Append other fields
+    formData.append('image', { uri: selectedImage, name: 'photo.jpg', type: 'image/jpeg' } as any);
     formData.append('caption', caption);
     formData.append('rating', rating.toString());
     formData.append('restaurant', restaurant.trim());
@@ -58,69 +76,150 @@ export default function MakePostDetails({ route, navigation }: Props) {
     try {
       const response = await fetch('https://your-backend-api.com/posts', {
         method: 'POST',
-        headers: {
-          // 'Content-Type': 'multipart/form-data', // Let fetch set this automatically
-          // Include authentication headers if necessary
-        },
         body: formData,
       });
-
       if (response.ok) {
-        console.log('Post submitted successfully');
         Alert.alert('Success', 'Your post has been submitted successfully.', [
           { text: 'OK', onPress: () => navigation.navigate('Main') },
         ]);
       } else {
         const errorData = await response.json();
-        console.error('Error submitting post:', errorData);
         Alert.alert('Submission Failed', 'Failed to submit post. Please try again.');
       }
     } catch (error) {
-      console.error('Error submitting post:', error);
       Alert.alert('An Error Occurred', 'Please try again.');
     }
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: Colors[colorScheme].background }]}>
-      <View style={styles.headerContainer}>
-        <Header colorScheme={colorScheme} />
+    <View style={[styles.container, { backgroundColor: themeColors.background }]}>
+      <View style={[styles.headerContainer, { zIndex: showCaptionBox ? 0 : 1 }]}>
+        <MakePostHeader />
       </View>
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
-        <StarRating rating={rating} setRating={setRating} />
+      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+        
+        {/* Image with Plus Button */}
+        <View style={styles.imageAndRatingContainer}>
+          <View style={styles.imageContainer}>
+            <Image source={{ uri: selectedImage }} style={styles.image} />
+            <TouchableOpacity style={styles.plusButton} onPress={handlePlusPress}>
+              <Ionicons name="add-circle" size={32} color={themeColors.tint} />
+            </TouchableOpacity>
+          </View>
+
+          {/* Rating Section to the right of the image */}
+          <View style={styles.ratingContainer}>
+            <Text style={[styles.ratingText, { color: themeColors.text }]}>Enter a Rating:</Text>
+            <StarRating rating={rating} setRating={setRating} />
+          </View>
+        </View>
+
+        {/* Form Fields */}
         <RestaurantInputBox restaurant={restaurant} setRestaurant={setRestaurant} />
         <DishNameInputBox dishName={dishName} setDishName={setDishName} />
         <CategoryInputBox category={category} setCategory={setCategory} />
         <NotesInputBox notes={notes} setNotes={setNotes} />
+
+        {/* Submit Button */}
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={handleSubmit}>
             <Text style={styles.buttonText}>Post</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
+
+      {/* Blur Overlay and Caption Text Only */}
+      {showCaptionBox && (
+        <TouchableWithoutFeedback onPress={handleOutsideClick}>
+          <View style={StyleSheet.absoluteFill}>
+            <BlurView intensity={40} tint="dark" style={StyleSheet.absoluteFill} />
+            <Animated.View
+              style={[
+                styles.captionInputContainer,
+                {
+                  opacity: captionAnim,
+                  transform: [{ scale: captionAnim }],
+                  backgroundColor: themeColors.background,
+                },
+              ]}
+            >
+              <Text
+                style={[styles.captionText, { color: themeColors.text }]}
+                numberOfLines={4} // Adjust as needed
+              >
+                {caption}
+              </Text>
+            </Animated.View>
+          </View>
+        </TouchableWithoutFeedback>
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  // ... existing styles ...
   container: {
     flex: 1,
   },
   headerContainer: {
     position: 'absolute',
-    top: 0,
+    top: 40,
     left: 0,
     right: 0,
-    zIndex: 100,
   },
   scrollContent: {
-    paddingTop: HEADER_HEIGHT + 20, // Adjusted padding to prevent overlapping
+    paddingTop: HEADER_HEIGHT,
     paddingHorizontal: 16,
     paddingBottom: 16,
+  },
+  imageAndRatingContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 20,
+    marginTop: 70,
+  },
+  imageContainer: {
+    width: '30%',
+    aspectRatio: 1,
+    borderRadius: 15,
+    overflow: 'hidden',
+    position: 'relative',
+  },
+  image: {
+    width: '100%',
+    height: '100%',
+  },
+  plusButton: {
+    position: 'absolute',
+    top: 5,
+    right: 5,
+  },
+  ratingContainer: {
+    flex: 1,
+    alignItems: 'flex-start',
+    paddingLeft: 16,
+  },
+  ratingText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  captionInputContainer: {
+    position: 'absolute',
+    padding: 10,
+    borderRadius: 30,
+    alignSelf: 'center',
+    maxWidth: '80%',
+    top: '19%',
+    left: '25%',
+  },
+  captionText: {
+    fontSize: 16,
+    lineHeight: 20,
+    textAlign: 'center',
+    borderRadius: 30,
+    padding: 10,
   },
   buttonContainer: {
     marginTop: 24,
@@ -128,13 +227,13 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   button: {
-    backgroundColor: '#32CD32', // Button background color (example: LimeGreen)
+    backgroundColor: Colors.light.primaryColor,
     paddingVertical: 12,
     borderRadius: 8,
     alignItems: 'center',
   },
   buttonText: {
-    color: '#FFFFFF', // Text color set to white
+    color: '#FFFFFF',
     fontSize: 18,
     fontWeight: 'bold',
   },

@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 10, 
+    marginTop: 7, 
   },
   focusedContainer: {
     width: 45,
@@ -33,6 +33,6 @@ const styles = StyleSheet.create({
     borderRadius: 22.5,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 7,
   },
 });
