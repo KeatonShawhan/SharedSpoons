@@ -29,9 +29,7 @@ export type URLString = string;
 
 // add id to this
 export type SessionUser = {
-    id: UUID,
-    email: string,
-    name: string
+    id: UUID
   }
   
   declare global {

@@ -5,6 +5,7 @@
         "outDir": "./build",
         "types": ["node", "jest"],
         "strict": true,
+        "lib": ["es2021", "dom"],
         "esModuleInterop": true,
         "skipLibCheck": true,
         "forceConsistentCasingInFileNames": true,
