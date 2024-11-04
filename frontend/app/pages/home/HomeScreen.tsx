@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useContext, useRef } from 'react';
 import { Animated, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { PostCard } from '@/components/postCard/postCard';
@@ -7,6 +7,7 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { Header } from '@/components/home/Header';
 import { Colors } from '@/constants/Colors';
 import type { HomeScreenNavigationProp } from '@/app/(tabs)';
+import LoginContext, { LoginProvider } from '@/contexts/loginContext';
 
 const HEADER_HEIGHT = 80; 
 const SCROLL_THRESHOLD = 50; 
@@ -28,7 +29,7 @@ const DUMMY_POSTS = [
   },
   {
     id: "81c689b1-b7a7-4100-8b2d-309908b444f5",
-    user_id: "83c689b1-b7a7-4100-8b2d-309908b444f5",
+    user_id: "85c689b1-b7a7-4100-8b2d-309908b444f5",
     username: "Keaton Shawhan",
     caption: "had e coli :/",
     dish: "big mac",
@@ -43,7 +44,7 @@ const DUMMY_POSTS = [
   {
     id: "83c689b1-b7a7-4100-8b2d-309908b444f5",
     username: "Luca Schram",
-    user_name: "83c689b1-b7a7-4100-8b2d-309908b444f5",
+    user_name: "89c689b1-b7a7-4100-8b2d-309908b444f5",
     caption: ":p",
     dish: "Italian Sandwich #13 with no ham add roast beef",
     rating: 4,
@@ -59,6 +60,7 @@ const DUMMY_POSTS = [
 export default function HomeScreen() {
   const navigation = useNavigation<HomeScreenNavigationProp>();
   const colorScheme = useColorScheme();
+  const loginContext = useContext(LoginContext)
 
   // Use a ref to track the scroll position
   const scrollYRef = useRef(new Animated.Value(0)).current;
@@ -77,6 +79,7 @@ export default function HomeScreen() {
   });
 
   return (
+    <LoginProvider>
     <SafeAreaView 
       edges={['top']}
       style={[
@@ -110,14 +113,12 @@ export default function HomeScreen() {
             key={post.id}  // Ensure each postCard has a unique key
             id={post.id}
             user_id={post.user_id}
-            username={post.username}
+            username={loginContext.accessToken}
             caption={post.caption}
             dish={post.dish}
             rating={post.rating}
             place={post.place}
             image={post.image}
-            categories={post.categories}
-            notes={post.notes}
             likes={post.likes}
             commentsCount={post.commentsCount}
             parentTab="HomeTab" // Specify HomeTab as the parent for navigation
@@ -125,6 +126,7 @@ export default function HomeScreen() {
         ))}
       </Animated.ScrollView>
     </SafeAreaView>
+    </LoginProvider>
   );
 }
 

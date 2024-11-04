@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity } from "react-native";
 import Icon from 'react-native-vector-icons/Ionicons';
-import LoginContext from "@/contexts/loginContext";
+import LoginContext, { LoginProvider } from "@/contexts/loginContext";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import API_URL from '../../../config'
 
@@ -49,9 +49,11 @@ export default function LoginPage ({ setIsAuthenticated, toggleAuthPage }) {
       })
       .then((json) => {
         console.log(json);
+        
         // localStorage.setItem('userId', JSON.stringify(json.user.id));
       
         loginContext.setAccessToken(json.accessToken);
+        loginContext.setUserId('hi')
         // localStorage.setItem('username', JSON.stringify(json.user.credentials.username));
       })
       .catch((err) => {
@@ -62,6 +64,7 @@ export default function LoginPage ({ setIsAuthenticated, toggleAuthPage }) {
 
 
   return (
+    <LoginProvider>
     <View style={styles.container}>
       <Text style={styles.title}>Log In</Text>
       {badLogin ? 
@@ -94,6 +97,7 @@ export default function LoginPage ({ setIsAuthenticated, toggleAuthPage }) {
       <Button title="Continue" onPress={sendLoginRequest} color="#FF9900" />
       <Button title="Sign Up" onPress={toggleAuthPage} />
     </View>
+    </LoginProvider>
   );
 };
 

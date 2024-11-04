@@ -10,6 +10,7 @@ import { postDescription } from './postDescription';
 import type { HomeScreenNavigationProp } from '@/app/(tabs)';
 import type { ProfileScreenNavigationProp } from '@/app/(tabs)/profile';
 import type { ToEatScreenNavigationProp } from '@/app/(tabs)/toeat'; 
+import LoginContext from '@/contexts/loginContext';
 
 export interface PostCardProps {  
   id: string;
