@@ -1,6 +1,7 @@
 export interface Authenticated {
     id: string,
-    name: string,
+    firstname: string,
+    lastname: string,
     accessToken: string
   }
   

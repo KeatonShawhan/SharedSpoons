@@ -4,9 +4,9 @@ import { AccountService } from './account/service';
 // Authentication middleware that conforms to TSOA's expected signature
 export const expressAuthentication = async (
   req: Request,
-  securityName: string,  // This is what TSOA expects
-  scopes?: string[],      // This is also expected
-  res?: Response          // Optional response object
+  securityName: string, 
+  scopes?: string[],
+  res?: Response
 ): Promise<void> => {
   const accessToken = req.headers['authorization']?.split(' ')[1];
   console.log(accessToken);
@@ -25,9 +25,9 @@ export const expressAuthentication = async (
 
   try {
     const account = await new AccountService().check(accessToken.toString());
-    req.user = account;  // Attach user to request object
+    req.user = account;
   } catch (error) {
-    if (res) {  // If response is provided, send 401 status
+    if (res) {
       res.status(401).send("Unauthorized");
     }
   }

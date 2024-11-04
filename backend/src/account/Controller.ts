@@ -89,19 +89,4 @@ import {
           return undefined;
         });
     }
-  
-    @Get("/IDuserInfo")
-    @Response("404", "Not Found")
-    public async IDuserInfo(
-      @Query() id: string
-    ): Promise<UserIdInfo | undefined> {
-      return new AccountService()
-        .IDuserInfo(id)
-        .then(async (account: UserIdInfo | undefined): Promise<UserIdInfo | undefined> => {
-          if (!account) {
-            this.setStatus(404);
-          }
-          return account;
-        });
-    }
   }

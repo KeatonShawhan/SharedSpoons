@@ -49,14 +49,14 @@ export class AccountService {
         }
         let user = row[0].user;
         const accessToken = jwt.sign(
-            { id: user.id, username: user.username, name: user.name },
+            { id: user.id, username: user.username, firstname: user.firstname, lastname: user.lastname},
             `${process.env.HASH_MASTER_SECRET}`,
             {
               expiresIn: "7d",
               algorithm: "HS256",
             }
           );
-          return { id: user.id, name: user.name, accessToken: accessToken };
+          return { id: user.id, firstname: user.name, lastname: user.lastname, accessToken: accessToken };
     } catch (err) {
         console.error(err);
         return undefined;
@@ -153,19 +153,27 @@ export class AccountService {
           if (account == undefined){
             reject(err);
           } else {
-            const select = `SELECT id, data->>'name' as name FROM app_user WHERE id = $1`;
+            const select = `SELECT id, data as user FROM app_user WHERE id = $1`;
             const query = {
               text: select,
               values: [account.id],
             };
             const { rows } = await pool.query(query);
-            resolve({ id: account.id, name: rows[0].name, accessToken: accessToken});
+            let user = rows[0].user;
+            resolve({
+                id: account.id,
+                firstname: user.firstname,
+                lastname: user.lastname,
+                accessToken: accessToken,
+            });
           }
         }
       );
     });
   }
 
+  // 2 of the same endpoints??
+  /*
   public async IDuserInfo(id: string): Promise<UserIdInfo | undefined> {
     const select = `SELECT id, data->>'name' as name FROM app_user WHERE id = $1`;
     const query = {
@@ -178,4 +186,5 @@ export class AccountService {
     }
     return { id: id, name: rows[0].name};
   };
+  */
 }
