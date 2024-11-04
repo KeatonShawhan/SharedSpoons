@@ -11,6 +11,7 @@ import { UserItem } from 'components/friends/UserItem';
 import { SuggestedHeader } from 'components/friends/SuggestedHeader';
 import { SuggestedUsers } from 'components/friends/SuggestedUsers';
 import type { ProfileStackParamList, ProfileScreenNavigationProp } from '@/app/(tabs)/profile';
+import { Alert } from 'react-native';
 
 const DUMMY_USERS = [
   { id: '1', name: 'John Doe', username: '@johndoe' },
@@ -70,7 +71,15 @@ export default function FriendsScreen() {
               <UserItem
                 user={item}
                 colorScheme={colorScheme}
-                onPress={() => {}}
+                onPress={() => {
+                  Alert.alert(
+                    "Alert Title",
+                    "This is your alert message",
+                    [
+                      { text: "OK", onPress: () => navigation.navigate('Friends', { initialTab: 'followers' }) }
+                    ]
+                  );
+                }}
               />
             )}
             keyExtractor={item => item.id}

@@ -16,6 +16,7 @@ export interface PostCardProps {
   username: string;
   caption: string;
   dish: string;
+  user_id: string;
   rating: number;
   place: string;
   image: string;
@@ -34,6 +35,7 @@ type CombinedNavigationProp = CompositeNavigationProp<
 
 export function PostCard({
   id,
+  user_id,
   username,
   caption,
   dish,
@@ -63,7 +65,7 @@ export function PostCard({
     <View style={{ justifyContent: 'center', alignItems: 'center', paddingBottom: 30 }}>
       <View style={{ width: '95%', borderRadius: 0, borderColor: 'none' }}>
         <View style={{ paddingBottom: 10, paddingLeft: 0 }}>
-          {postHeader({ username, place })}
+          {postHeader({ username, place, user_id })}
         </View>
 
         <TouchableOpacity onPress={handlePress}>

@@ -14,6 +14,7 @@ const SCROLL_THRESHOLD = 50;
 const DUMMY_POSTS = [
   {
     id: "83c689b1-b7a7-4100-8b2d-309908b444f5",
+    user_id: "83c689b1-b7a7-4100-8b2d-309908b444f5",
     username: "Zoe Feller",
     caption: "yum!",
     dish: "pepperoni pizza",
@@ -27,6 +28,7 @@ const DUMMY_POSTS = [
   },
   {
     id: "81c689b1-b7a7-4100-8b2d-309908b444f5",
+    user_id: "83c689b1-b7a7-4100-8b2d-309908b444f5",
     username: "Keaton Shawhan",
     caption: "had e coli :/",
     dish: "big mac",
@@ -41,6 +43,7 @@ const DUMMY_POSTS = [
   {
     id: "83c689b1-b7a7-4100-8b2d-309908b444f5",
     username: "Luca Schram",
+    user_name: "83c689b1-b7a7-4100-8b2d-309908b444f5",
     caption: ":p",
     dish: "Italian Sandwich #13 with no ham add roast beef",
     rating: 4,
@@ -106,6 +109,7 @@ export default function HomeScreen() {
           <PostCard 
             key={post.id}  // Ensure each postCard has a unique key
             id={post.id}
+            user_id={post.user_id}
             username={post.username}
             caption={post.caption}
             dish={post.dish}
