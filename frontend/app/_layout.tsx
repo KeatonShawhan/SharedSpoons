@@ -9,7 +9,7 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import LoginPage from '@/app/pages/login/LoginPage';
 import { LoginProvider } from "@/contexts/loginContext";
 import SignUpPage from './pages/signup/SignUpPage';
-
+import LoginContext from '@/contexts/loginContext';
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
@@ -37,6 +37,7 @@ export default function RootLayout() {
   };
 
   return (
+    <LoginProvider>
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       {/* Conditional rendering based on authentication state */}
       {isAuthenticated ? (
@@ -54,5 +55,6 @@ export default function RootLayout() {
         </LoginProvider>
       )}
     </ThemeProvider>
+    </LoginProvider>
   );
 }

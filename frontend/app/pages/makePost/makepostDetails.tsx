@@ -8,8 +8,9 @@ import { Ionicons } from '@expo/vector-icons';
 import { StarRating } from '@/components/makePost/StarRating';
 import { RestaurantInputBox } from '@/components/makePost/RestaurantInputBox';
 import { DishNameInputBox } from '@/components/makePost/DishNameInputBox';
-import { CategoryInputBox } from '@/components/makePost/CategoryInputBox';
-import { NotesInputBox } from '@/components/makePost/NotesInputBox';
+//removed for endpoint purposes. Leaving them in here incase we need to go back
+//import { CategoryInputBox } from '@/components/makePost/CategoryInputBox';
+//import { NotesInputBox } from '@/components/makePost/NotesInputBox';
 import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { MakePostScreenStackParamList } from '@/app/(tabs)/makePostMain';
@@ -33,8 +34,6 @@ export default function MakePostDetails({ route, navigation }: Props) {
   const [rating, setRating] = useState(0);
   const [restaurant, setRestaurant] = useState('');
   const [dishName, setDishName] = useState('');
-  const [category, setCategory] = useState('');
-  const [notes, setNotes] = useState('');
   
   const [showCaptionBox, setShowCaptionBox] = useState(false);
   const captionAnim = useRef(new Animated.Value(0)).current;
@@ -59,7 +58,7 @@ export default function MakePostDetails({ route, navigation }: Props) {
   };
 
   const handleSubmit = async () => {
-    if (!rating || !restaurant.trim() || !dishName.trim() || !category.trim()) {
+    if (!rating || !restaurant.trim() || !dishName.trim()) {
       Alert.alert('Incomplete Information', 'Please provide all required information.');
       return;
     }
@@ -70,8 +69,6 @@ export default function MakePostDetails({ route, navigation }: Props) {
     formData.append('rating', rating.toString());
     formData.append('restaurant', restaurant.trim());
     formData.append('dishName', dishName.trim());
-    formData.append('category', category.trim());
-    formData.append('notes', notes.trim());
 
     try {
       const response = await fetch('https://your-backend-api.com/posts', {
@@ -117,9 +114,6 @@ export default function MakePostDetails({ route, navigation }: Props) {
         {/* Form Fields */}
         <RestaurantInputBox restaurant={restaurant} setRestaurant={setRestaurant} />
         <DishNameInputBox dishName={dishName} setDishName={setDishName} />
-        <CategoryInputBox category={category} setCategory={setCategory} />
-        <NotesInputBox notes={notes} setNotes={setNotes} />
-
         {/* Submit Button */}
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={handleSubmit}>

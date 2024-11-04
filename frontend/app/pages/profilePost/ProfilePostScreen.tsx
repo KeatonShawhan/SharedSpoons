@@ -13,6 +13,7 @@ export default function PostPage() {
     // Dummy data for the postCard
     const postData = {
         id: '1',
+        user_id: '1',
         username: 'User123',
         caption: 'Great dish!',
         dish: 'Spaghetti Carbonara',

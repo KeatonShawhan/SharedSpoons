@@ -10,17 +10,17 @@ import { postDescription } from './postDescription';
 import type { HomeScreenNavigationProp } from '@/app/(tabs)';
 import type { ProfileScreenNavigationProp } from '@/app/(tabs)/profile';
 import type { ToEatScreenNavigationProp } from '@/app/(tabs)/toeat'; 
+import LoginContext from '@/contexts/loginContext';
 
 export interface PostCardProps {  
   id: string;
   username: string;
   caption: string;
   dish: string;
+  user_id: string;
   rating: number;
   place: string;
   image: string;
-  categories: string[];
-  notes: string;
   likes?: number;
   commentsCount?: number;
   parentTab: 'HomeTab' | 'ProfileTab' | 'ToEatTab';
@@ -34,14 +34,13 @@ type CombinedNavigationProp = CompositeNavigationProp<
 
 export function PostCard({
   id,
+  user_id,
   username,
   caption,
   dish,
   rating,
   place,
   image,
-  categories,
-  notes,
   likes = 0,
   commentsCount = 0,
   parentTab,
@@ -63,7 +62,7 @@ export function PostCard({
     <View style={{ justifyContent: 'center', alignItems: 'center', paddingBottom: 30 }}>
       <View style={{ width: '95%', borderRadius: 0, borderColor: 'none' }}>
         <View style={{ paddingBottom: 10, paddingLeft: 0 }}>
-          {postHeader({ username, place })}
+          {postHeader({ username, place, user_id })}
         </View>
 
         <TouchableOpacity onPress={handlePress}>
@@ -82,14 +81,13 @@ export function PostCard({
                 bottom: 0,
               }}
             >
-              {postDescription({ categories, dish, notes })}
+              {postDescription({ caption, dish })}
             </Animated.View>
           </View>
         </TouchableOpacity>
 
         <View style={{ paddingTop: 15, paddingLeft: 0 }}>
           <PostCaption
-            caption={caption}
             dish={dish}
             rating={rating}
             postId={id}

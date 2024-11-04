@@ -9,9 +9,10 @@ import { Image } from 'react-native';
 interface postHeaderProps {
   username: string;
   place: string;
+  user_id:string;
 }
 
-export function postHeader({ username, place }: postHeaderProps): React.JSX.Element {
+export function postHeader({ username, place, user_id }: postHeaderProps): React.JSX.Element {
   const colorScheme = useColorScheme();
 
   return (

@@ -7,16 +7,13 @@ import { Colors } from '@/constants/Colors';
 const ORANGE_COLOR = '#FF9F45';
 
 interface postDescriptionProps {
-  categories: string[];
-  notes: string;
+  caption: string;
   dish: string;
 }
 
-export function postDescription({ categories, notes, dish }: postDescriptionProps): React.JSX.Element {
+export function postDescription({ caption, dish }: postDescriptionProps): React.JSX.Element {
   const colorScheme = useColorScheme();
   const themeColors = Colors[colorScheme];
-  const catString = categories.join(', ');
-
   return (
     <ThemedView>
       <View style={{
@@ -40,10 +37,7 @@ export function postDescription({ categories, notes, dish }: postDescriptionProp
             {dish}
           </Text>
           <Text style={{ fontSize: 16, color: themeColors.text, flexWrap: 'wrap', paddingTop: 10 }}>
-            Categories: {catString}
-          </Text>
-          <Text style={{ fontSize: 16, color: themeColors.text, flexWrap: 'wrap', paddingTop: 10 }}>
-            Additional Notes: {notes}
+            {caption}
           </Text>
         </View>
       </View>

@@ -4,8 +4,8 @@ import { NavigatorScreenParams } from '@react-navigation/native';
 import MainScreen from '@/app/pages/profile/MainScreen';
 import FriendsScreen from '@/app/pages/profile/FriendsScreen';
 import PostPage from '@/app/pages/profilePost/ProfilePostScreen';
-import { PostStackNavigator, PostStackParamList } from '../navigation/PostStackNavigator';
-import ProfileScreen from '../pages/profile/profileScreen';
+import { PostStackNavigator, PostStackParamList } from '../../navigation/PostStackNavigator';
+
 // Define ProfileStack params, including nested PostStack as PostPage's child route
 export type ProfileStackParamList = {
   Main: undefined;
@@ -19,8 +19,13 @@ export type ProfileScreenNavigationProp = NativeStackNavigationProp<ProfileStack
 
 const Stack = createNativeStackNavigator<ProfileStackParamList>();
 
-export default function ProfileTab() {
+export default function ProfileScreen() {
   return (
-    <ProfileScreen/>
+    <Stack.Navigator initialRouteName="Main" screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Main" component={MainScreen} />
+      <Stack.Screen name="Friends" component={FriendsScreen} />
+      <Stack.Screen name="PostPage" component={PostPage} />
+      <Stack.Screen name="PostStack" component={PostStackNavigator} />
+    </Stack.Navigator>
   );
 }

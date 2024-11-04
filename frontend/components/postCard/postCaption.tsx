@@ -17,7 +17,6 @@ type CombinedNavigationProp = CompositeNavigationProp<
 >;
 
 interface PostCaptionProps {
-  caption: string;
   dish: string;
   rating: number;
   postId: string;
@@ -28,7 +27,6 @@ interface PostCaptionProps {
 }
 
 export function PostCaption({
-  caption,
   dish,
   rating,
   postId,
@@ -96,8 +94,6 @@ export function PostCaption({
           </TouchableOpacity>
         </View>
       </View>
-
-      <Text style={{ paddingLeft: 5, paddingTop: 5, fontSize: 16, color: 'gray' }}>{caption}</Text>
     </ThemedView>
   );
 }
