@@ -20,8 +20,6 @@ export interface PostCardProps {
   rating: number;
   place: string;
   image: string;
-  categories: string[];
-  notes: string;
   likes?: number;
   commentsCount?: number;
   parentTab: 'HomeTab' | 'ProfileTab' | 'ToEatTab';
@@ -42,8 +40,6 @@ export function PostCard({
   rating,
   place,
   image,
-  categories,
-  notes,
   likes = 0,
   commentsCount = 0,
   parentTab,
@@ -84,14 +80,13 @@ export function PostCard({
                 bottom: 0,
               }}
             >
-              {postDescription({ categories, dish, notes })}
+              {postDescription({ caption, dish })}
             </Animated.View>
           </View>
         </TouchableOpacity>
 
         <View style={{ paddingTop: 15, paddingLeft: 0 }}>
           <PostCaption
-            caption={caption}
             dish={dish}
             rating={rating}
             postId={id}
