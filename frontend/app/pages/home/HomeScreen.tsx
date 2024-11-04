@@ -110,10 +110,10 @@ export default function HomeScreen() {
       >
         {DUMMY_POSTS.map(post => (
           <PostCard 
-            key={post.id}  // Ensure each postCard has a unique key
+            key={post.id}  
             id={post.id}
             user_id={post.user_id}
-            username={loginContext.accessToken}
+            username={post.username}
             caption={post.caption}
             dish={post.dish}
             rating={post.rating}
@@ -121,7 +121,7 @@ export default function HomeScreen() {
             image={post.image}
             likes={post.likes}
             commentsCount={post.commentsCount}
-            parentTab="HomeTab" // Specify HomeTab as the parent for navigation
+            parentTab="HomeTab" 
           />
         ))}
       </Animated.ScrollView>

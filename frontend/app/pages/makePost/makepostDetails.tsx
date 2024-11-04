@@ -1,5 +1,19 @@
-import React, { useState, useRef } from 'react';
-import { StyleSheet, View, ScrollView, Alert, TouchableOpacity, Text, Image, Animated, TouchableWithoutFeedback } from 'react-native';
+// app/pages/makePost/makepostDetails.tsx
+
+import React, { useState, useRef, useContext } from 'react';
+import {
+  StyleSheet,
+  View,
+  ScrollView,
+  Alert,
+  TouchableOpacity,
+  Text,
+  Image,
+  Animated,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from 'react-native';
+// Remove BlurView import if not using it
 import { BlurView } from 'expo-blur';
 import { Header } from '@/components/home/Header';
 import { useColorScheme } from '@/hooks/useColorScheme';
@@ -8,9 +22,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { StarRating } from '@/components/makePost/StarRating';
 import { RestaurantInputBox } from '@/components/makePost/RestaurantInputBox';
 import { DishNameInputBox } from '@/components/makePost/DishNameInputBox';
-//removed for endpoint purposes. Leaving them in here incase we need to go back
-//import { CategoryInputBox } from '@/components/makePost/CategoryInputBox';
-//import { NotesInputBox } from '@/components/makePost/NotesInputBox';
+// Import LoginContext
+import LoginContext from '@/contexts/loginContext';
 import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { MakePostScreenStackParamList } from '@/app/(tabs)/makePostMain';
@@ -29,12 +42,15 @@ type Props = {
 export default function MakePostDetails({ route, navigation }: Props) {
   const colorScheme = useColorScheme();
   const themeColors = Colors[colorScheme || 'light'];
-  const { selectedImage } = route.params;
-  const [caption] = useState(route.params.caption);
+  const { selectedImage, caption } = route.params; // Destructure caption from route.params
   const [rating, setRating] = useState(0);
   const [restaurant, setRestaurant] = useState('');
   const [dishName, setDishName] = useState('');
-  
+
+  // Import accessToken and userId from LoginContext
+  const { accessToken, userId } = useContext(LoginContext);
+
+  // For the caption box animation (if needed)
   const [showCaptionBox, setShowCaptionBox] = useState(false);
   const captionAnim = useRef(new Animated.Value(0)).current;
 
@@ -63,28 +79,45 @@ export default function MakePostDetails({ route, navigation }: Props) {
       return;
     }
 
+    const postData = {
+      user: userId,
+      data: {
+        rating: rating,
+        restaurant: restaurant.trim(),
+        dish: dishName.trim(),
+        caption: caption,
+      },
+    };
+
     const formData = new FormData();
-    formData.append('image', { uri: selectedImage, name: 'photo.jpg', type: 'image/jpeg' } as any);
-    formData.append('caption', caption);
-    formData.append('rating', rating.toString());
-    formData.append('restaurant', restaurant.trim());
-    formData.append('dishName', dishName.trim());
+    formData.append('post', JSON.stringify(postData));
+    formData.append('file', {
+      uri: selectedImage,
+      name: 'photo.jpg',
+      type: 'image/jpeg',
+    } as any);
 
     try {
-      const response = await fetch('https://your-backend-api.com/posts', {
+      const response = await fetch('https://your-backend-api.com/api/v0/post/create', {
         method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          // Do not set 'Content-Type' when sending FormData
+        },
         body: formData,
       });
+
       if (response.ok) {
         Alert.alert('Success', 'Your post has been submitted successfully.', [
           { text: 'OK', onPress: () => navigation.navigate('Main') },
         ]);
       } else {
         const errorData = await response.json();
-        Alert.alert('Submission Failed', 'Failed to submit post. Please try again.');
+        Alert.alert('Submission Failed', errorData.message || 'Failed to submit post. Please try again.');
       }
     } catch (error) {
       Alert.alert('An Error Occurred', 'Please try again.');
+      console.error('Submission error:', error);
     }
   };
 
@@ -94,7 +127,6 @@ export default function MakePostDetails({ route, navigation }: Props) {
         <MakePostHeader />
       </View>
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        
         {/* Image with Plus Button */}
         <View style={styles.imageAndRatingContainer}>
           <View style={styles.imageContainer}>
@@ -122,11 +154,12 @@ export default function MakePostDetails({ route, navigation }: Props) {
         </View>
       </ScrollView>
 
-      {/* Blur Overlay and Caption Text Only */}
+      {/* Caption Box (if you're still using it) */}
       {showCaptionBox && (
         <TouchableWithoutFeedback onPress={handleOutsideClick}>
           <View style={StyleSheet.absoluteFill}>
-            <BlurView intensity={40} tint="dark" style={StyleSheet.absoluteFill} />
+            {/* Replace BlurView with a simple View if not using expo-blur */}
+            {<BlurView intensity={40} tint="dark" style={StyleSheet.absoluteFill} /> }
             <Animated.View
               style={[
                 styles.captionInputContainer,
@@ -152,6 +185,7 @@ export default function MakePostDetails({ route, navigation }: Props) {
 }
 
 const styles = StyleSheet.create({
+  // ... existing styles ...
   container: {
     flex: 1,
   },
