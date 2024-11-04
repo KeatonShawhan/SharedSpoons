@@ -3,7 +3,6 @@ import { UUID } from '../types';
 export interface PostJSON{
     image: string;
     rating: number;
-    adds: number;
     restaurant: string;
     dish: string;
     time: string;
