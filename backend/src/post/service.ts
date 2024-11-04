@@ -1,6 +1,6 @@
 import { pool } from '../db';
 import { PostContent } from '.';
-import { uuid } from 'aws-sdk/clients/customerprofiles';
+import { UUID } from '../types/index';
 
 export class postService{
 
@@ -41,26 +41,38 @@ export class postService{
         }
     }
 
-    public async deletePost(postID: string): Promise < boolean | undefined > {
+    public async deletePost(postID: UUID, userID: UUID): Promise < boolean | undefined > {
         const client = await pool.connect();
 
         try {
             await client.query('BEGIN');
 
-            const deleteQuery = `
+            const selectQuery = `
+            SELECT user_id FROM post
+            WHERE id = $1
+            `;
+            const selectRes = await client.query(selectQuery, [postID]);
+            if (selectRes.rowCount === 0) {
+                console.error('Post not found with the specified postID');
+                return undefined;
+            }
+            const postOwnerID = selectRes.rows[0].user_id;
+            if (postOwnerID !== userID) {
+                console.error('User not authorized to delete this post');
+                return undefined;
+            }
+
+
+            const deleteText = `
                 DELETE FROM post
                 WHERE id = $1
             `;
-
             const query = {
-                text: deleteQuery,
+                text: deleteText,
                 values: [postID]
             }
-
             const res = await client.query(query.text, query.values);
-
             await client.query('COMMIT');
-
             if(res.rowCount === 0) {
                 console.error('Database deletion of post failed');
                 return undefined;
@@ -77,7 +89,7 @@ export class postService{
         }
     }
 
-    public async getPost(postID: string): Promise < PostContent | undefined > {
+    public async getPost(postID: UUID): Promise < PostContent | undefined > {
         const client = await pool.connect();
 
         try {
@@ -108,7 +120,7 @@ export class postService{
         }
     }
 
-    public async getAllPosts(userID:uuid): Promise<any | undefined> {
+    public async getAllPosts(userID:UUID): Promise<any | undefined> {
         const select = `SELECT * from post WHERE user_id = $1`;
         const query = {
           text: select,
@@ -121,7 +133,53 @@ export class postService{
         console.log(rows)
         return rows;
 
-      };
+    }
     
+    public async editPost(postID: UUID, rating: number, caption: string): Promise < string | undefined > {
+        const client = await pool.connect();
+
+        try {
+            await client.query('BEGIN');
+
+            const updateQuery = `
+            UPDATE post
+            SET data = jsonb_set(
+                jsonb_set(data, '{rating}', to_jsonb($1::int), true),
+                '{caption}', to_jsonb($2::text), true
+            )
+            WHERE id = $3
+            RETURNING data->>'rating' AS rating, data->>'caption' AS caption
+            `;
+
+
+            const query = {
+                text: updateQuery,
+                values: [rating, caption, postID]
+            }
+
+            const res = await client.query(query.text, query.values);
+
+            await client.query('COMMIT');
+
+            if(res.rowCount === 0) {
+                console.error('Database update of post failed');
+                return undefined;
+            }
+
+            const updatedFields = res.rows[0];
+            return JSON.stringify({
+                rating: updatedFields.rating,
+                caption: updatedFields.caption
+            });
+
+
+        } catch (error) {
+            await client.query('ROLLBACK');
+            console.error('Error updating post:', error);
+            return undefined;
+        } finally {
+            client.release();
+        }
+    }
 
 }

@@ -50,3 +50,12 @@ CREATE TABLE recommend (
     rating INT CHECK (rating >= 0 AND rating <= 5),
     PRIMARY KEY (user_id, dish)
 );
+
+-- Comment Table
+DROP TABLE IF EXISTS comment CASCADE;
+CREATE TABLE comment (
+    id UUID UNIQUE PRIMARY KEY DEFAULT gen_random_uuid(),
+    post_id UUID REFERENCES post(id) ON DELETE CASCADE,
+    user_id UUID REFERENCES app_user(id) ON DELETE CASCADE,
+    data jsonb
+);

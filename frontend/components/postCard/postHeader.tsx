@@ -1,10 +1,12 @@
 // components/post/postHeader.tsx
-import { Text, View } from 'react-native';
+import { Text, View,StyleSheet, Dimensions  } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
 import { Avatar } from 'react-native-paper';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Image } from 'react-native';
+
+const { width } = Dimensions.get('window');
 
 interface postHeaderProps {
   username: string;
@@ -18,7 +20,9 @@ export function postHeader({ username, place, user_id }: postHeaderProps): React
   return (
     <ThemedView>
       <View style={{ flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
-        <Avatar.Icon size={42} icon="https://via.placeholder.com/150" />
+        <Image 
+        style={[styles.profileImage, { borderColor: Colors[colorScheme].icon }]}
+        source={{ uri: 'https://via.placeholder.com/150' }} />
         <View>
           <Text
             style={{
@@ -47,3 +51,11 @@ export function postHeader({ username, place, user_id }: postHeaderProps): React
     </ThemedView>
   );
 }
+
+const styles = StyleSheet.create({
+  profileImage: {
+    width: width * 0.12,
+    height: width * 0.12,
+    borderRadius: width * 0.125,
+  },
+});
