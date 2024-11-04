@@ -50,7 +50,7 @@ export default function LoginPage ({ setIsAuthenticated, toggleAuthPage }) {
       .then((json) => {
         console.log(json);
         loginContext.setAccessToken(json.accessToken);
-        loginContext.setUserId('hi')
+        loginContext.setUserId(json.id)
       })
       .catch((err) => {
         setBadLogin(true);

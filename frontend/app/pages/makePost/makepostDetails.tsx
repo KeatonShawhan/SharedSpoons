@@ -28,6 +28,7 @@ import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { MakePostScreenStackParamList } from '@/app/(tabs)/makePostMain';
 import MakePostHeader from '@/components/makePost/MakePostHeader';
+import API_URL from '@/config';
 
 const HEADER_HEIGHT = 80;
 
@@ -49,7 +50,8 @@ export default function MakePostDetails({ route, navigation }: Props) {
 
   // Import accessToken and userId from LoginContext
   const { accessToken, userId } = useContext(LoginContext);
-
+  console.log(userId);
+  console.log(accessToken);
   // For the caption box animation (if needed)
   const [showCaptionBox, setShowCaptionBox] = useState(false);
   const captionAnim = useRef(new Animated.Value(0)).current;
@@ -98,7 +100,7 @@ export default function MakePostDetails({ route, navigation }: Props) {
     } as any);
 
     try {
-      const response = await fetch('https://your-backend-api.com/api/v0/post/create', {
+      const response = await fetch(`${API_URL}post/create`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${accessToken}`,
@@ -111,6 +113,7 @@ export default function MakePostDetails({ route, navigation }: Props) {
         Alert.alert('Success', 'Your post has been submitted successfully.', [
           { text: 'OK', onPress: () => navigation.navigate('Main') },
         ]);
+        console.log(response);
       } else {
         const errorData = await response.json();
         Alert.alert('Submission Failed', errorData.message || 'Failed to submit post. Please try again.');
