@@ -12,6 +12,20 @@ let server: http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>
 beforeAll(async () => {
   server = http.createServer(app);
   server.listen();
+  jest.spyOn(S3Service.prototype, 'uploadFile').mockImplementation(async () => {
+    // Return a mock S3 key
+    return 'mock-s3-key.jpg';
+  });
+
+  jest.spyOn(S3Service.prototype, 'getFileLink').mockImplementation(async (s3Key) => {
+    // Return a mock URL for the given S3 key
+    if (s3Key === 'mock-s3-key.jpg') {
+      return 'https://mock-s3-url.com/mock-s3-key.jpg';
+    } else {
+      return undefined; // Simulate failure for other keys
+    }
+  });
+
   await db.reset();
 });
 
@@ -263,3 +277,5 @@ describe('Test Suite: Verify behavior of /all/{userID} endpoint', () => {
   });
 
 });
+
+// post/edit/{PostID} error testing suite

@@ -3,7 +3,7 @@ import { Controller, Get, Route, Request, FormField, Post, Body, UploadedFile, Q
 import * as express from 'express';
 import { S3Service } from '../s3/service'; // S3 service for handling uploads
 import { postService } from './service'; // Post service for handling post creation
-import { PostJSON, PostContent } from '.';
+import { PostJSON, PostContent, PostTotal } from '.';
 import  postDataSchema  from './validator';
 
 
@@ -158,7 +158,7 @@ export class PostController extends Controller {
     public async getAllPosts(
         @Request() request: express.Request,
         @Path() userID: string
-    ): Promise<PostContent | undefined> {
+    ): Promise<PostTotal[] | undefined> {
         if (!request.user) {
             this.setStatus(401);
             console.error('Unauthorized user');
@@ -167,14 +167,26 @@ export class PostController extends Controller {
         try{
             return new postService()
         .getAllPosts(userID)
-        .then(async (post: PostContent): Promise<PostContent | undefined> => {
-            if (!post) {
+        .then(
+            async (posts: PostTotal[] | undefined): 
+            Promise<PostTotal[]| undefined> => {
+            console.log(posts);
+            if (!posts) {
                 this.setStatus(400);
                 console.error('Could not get posts');
                 return undefined;
             }
+            for (let i = 0; i < posts.length; i++) {
+                const imageLink = await this.s3Service.getFileLink(posts[i].data.image);
+                if (imageLink === undefined) {
+                    this.setStatus(400);
+                    console.error('Could not get image link for post:' + posts[i].id);
+                    return undefined;
+                }
+                posts[i].data.image = imageLink;
+            }
             this.setStatus(200);
-            return post;
+            return posts;
           });
         } catch (error) {
             this.setStatus(500);

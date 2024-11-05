@@ -1,5 +1,5 @@
 import { pool } from '../db';
-import { PostContent } from '.';
+import { PostContent, PostTotal } from '.';
 import { UUID } from '../types/index';
 
 export class postService{
@@ -120,7 +120,7 @@ export class postService{
         }
     }
 
-    public async getAllPosts(userID:UUID): Promise<any | undefined> {
+    public async getAllPosts(userID:UUID): Promise<PostTotal[] | undefined> {
         const select = `SELECT * from post WHERE user_id = $1`;
         const query = {
           text: select,
