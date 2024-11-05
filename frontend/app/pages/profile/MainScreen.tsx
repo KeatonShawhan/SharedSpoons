@@ -14,30 +14,34 @@ import { ProfileScreenNavigationProp } from '@/app/(tabs)/profile';
 
 const { width } = Dimensions.get('window');
 
-export default function MainScreen({userid:string}) {
-  const { name } = useProfile();
+export default function MainScreen() {
+  const { 
+    name,
+    followerCount,
+    followingCount,
+    posts,
+    isLoadingPosts,
+    refreshProfile
+  } = useProfile();
   const navigation = useNavigation<ProfileScreenNavigationProp>();
-  const [bio, setBio] = useState("Loading bio...");
-  const [followerCount, setFollowerCount] = useState(0);
-  const [followingCount, setFollowingCount] = useState(0);
-  const [posts, setPosts] = useState<Array<{ id: number; imageUrl: string }>>([]);
+  
+  // Keep rank in local state
   const [rank, setRank] = useState("Loading rank...");
+  const [bio, setBio] = useState("Loading bio...");
   const [activeTab, setActiveTab] = useState<'posts' | 'achievements'>('posts');
   const [achievements, setAchievements] = useState([]);
   const colorScheme = useColorScheme();
   const slideAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    // Simulate fetching data
+    // Initial fetch of profile data
+    refreshProfile();
+    setBio("This is my test bio.");
+    // Set fake rank
+    setRank("Food Connoisseur");
+    
+    // Simulate fetching achievements data
     setTimeout(() => {
-      setBio("Here is my dynamic bio loaded from a simulated fetch.");
-      setFollowerCount(267000);
-      setFollowingCount(348);
-      setPosts(Array.from({ length: 15 }).map((_, idx) => ({
-        id: idx,
-        imageUrl: `https://placekitten.com/200/200?image=${idx}`
-      })));
-      setRank("Food Connoisseur");
       setAchievements([
         { rank: "New Foodie", progress: 25, required: 25, description: "Try your first 25 different dishes" },
         { rank: "Food Explorer", progress: 100, required: 100, description: "Discover 100 unique dishes" },
@@ -131,14 +135,17 @@ export default function MainScreen({userid:string}) {
           data={posts}
           numColumns={3}
           renderItem={({ item }) => (
-            <ProfilePostSquare
-              onPress={() => navigation.navigate('PostPage')}
-            />
+          <ProfilePostSquare
+            imageUrl={item.data.image}
+            onPress={() => navigation.navigate('PostPage', { postId: item.id })}
+          />
           )}
-          keyExtractor={item => item.id.toString()}
+          keyExtractor={item => item.id}
           contentContainerStyle={styles.listContainer}
           columnWrapperStyle={styles.postsRow}
           style={styles.flatList}
+          refreshing={isLoadingPosts}
+          onRefresh={refreshProfile}
         />
         </View>
         <View style={styles.tabContent}>

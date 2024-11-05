@@ -55,7 +55,7 @@ export class AccountService {
               algorithm: "HS256",
             }
           );
-          return { id: user.id, firstname: user.name, lastname: user.lastname, accessToken: accessToken };
+          return { id: user.id, firstname: user.firstname, lastname: user.lastname, accessToken: accessToken };
     } catch (err) {
         console.error(err);
         return undefined;

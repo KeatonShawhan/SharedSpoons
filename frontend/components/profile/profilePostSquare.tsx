@@ -1,27 +1,43 @@
 import React from 'react';
-import { View, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, Dimensions, Image } from 'react-native';
 
 const { width } = Dimensions.get('window');
 
-// Add onPress prop to the component's function signature
-const ProfilePostSquare = ({ onPress }) => {
+interface ProfilePostSquareProps {
+  onPress: () => void;
+  imageUrl?: string;
+}
+
+const ProfilePostSquare: React.FC<ProfilePostSquareProps> = ({ onPress, imageUrl }) => {
   return (
-    // Wrap the View in a TouchableOpacity to make it clickable
     <TouchableOpacity onPress={onPress} style={styles.container}>
-      <View style={styles.blackSquare} />
+      {imageUrl ? (
+        <Image 
+          source={{ uri: imageUrl }} 
+          style={styles.image}
+          resizeMode="cover"
+        />
+      ) : (
+        <View style={styles.blackSquare} />
+      )}
     </TouchableOpacity>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    width: (width / 3) - 6, // Adjust width to account for padding, assuming 3 posts per row
-    height: (width / 3) - 6, // Keep square aspect ratio, subtract the same amount as width for padding
-    padding: 5, // Maintain a small padding within each square
+    width: (width / 3) - 6,
+    height: (width / 3) - 6,
+    padding: 5,
+  },
+  image: {
+    flex: 1,
+    borderRadius: 10,
+    backgroundColor: '#333', // Placeholder color while loading
   },
   blackSquare: {
     flex: 1,
-    backgroundColor: 'black', // Inner content is black
+    backgroundColor: 'black',
     borderRadius: 10,
   },
 });

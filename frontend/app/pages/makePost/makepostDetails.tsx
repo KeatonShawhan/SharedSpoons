@@ -50,8 +50,8 @@ export default function MakePostDetails({ route, navigation }: Props) {
 
   // Import accessToken and userId from LoginContext
   const { accessToken, userId } = useContext(LoginContext);
-  console.log(userId);
-  console.log(accessToken);
+  // console.log(userId);
+  // console.log(accessToken);
   // For the caption box animation (if needed)
   const [showCaptionBox, setShowCaptionBox] = useState(false);
   const captionAnim = useRef(new Animated.Value(0)).current;
