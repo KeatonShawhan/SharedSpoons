@@ -24,7 +24,8 @@ export const expressAuthentication = async (
     if (!account) {
       throw new Error("Unauthorized");
     }
-    return account;  
+    req.user = account;
+    return account;
   } catch (error) {
     console.error(error);
     throw new Error("Unauthorized");

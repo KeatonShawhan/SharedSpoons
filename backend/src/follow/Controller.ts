@@ -4,6 +4,7 @@ import {
     Controller,
     Post,
     Get,
+    Delete,
     Response,
     Route,
     // Put,
@@ -27,53 +28,94 @@ import {
     @Get("/getFollowers")
     @Response("404", "User not found")
     public async getFollowers(
-      @Request() req: Express.Request,
-      @Request() user: SessionUser
+      @Query() user: UUID,
     ): Promise<Account[] | undefined> {
-      console.log(req.user);
-      if (!user) {
-        this.setStatus(401);
-        return;
-      }
       return new FollowService()
-        .getFollowers(user.id)
+        .getFollowers(user)
+        .then(
+            async (
+              res: Account[] | undefined
+            ): Promise<Account[] | undefined> => {
+              if (res) {
+                // List of 'Account' type users
+                return res;
+              }
+              this.setStatus(404);
+              return undefined;
+            }
+          );
+    }
+
+    @Get("/getFollowing")
+    @Response("404", "User not found")
+    public async getFollowing(
+        @Query() user: UUID,
+    ): Promise<Account[] | undefined> {
+      return new FollowService()
+        .getFollowing(user)
         .then(
           async (
             res: Account[] | undefined
           ): Promise<Account[] | undefined> => {
-            if (!res) {
-              this.setStatus(404);
+            if (res) {
+              // List of 'Account' type users
+              return res;
             }
-            // List of 'Account' type users
-            return res;
+            this.setStatus(404);
+            return undefined;
           }
         );
     }
 
-    /*
+    
     @Post("/send")
     @Response("404", "User not found")
     public async send(
-      @Body() receiver: UUID,
+      @Query() receiver: UUID,
       @Request() req: Express.Request
-    ): Promise<Account | undefined> {
+    ): Promise<boolean | undefined> {
       if (!req.user) {
         this.setStatus(401);
-        return;
+        return undefined;
       }
       return new FollowService()
         .send(req.user.id, receiver)
         .then(
           async (
-            res: Account | undefined
-          ): Promise<Account | undefined> => {
+            res: boolean
+          ): Promise<boolean | undefined> => {
             if (!res) {
               this.setStatus(404);
+              return false;
             }
             return res;
           }
         );
     }
-    */
+
+    @Delete("/remove")
+    @Response("404", "User not found")
+    public async remove(
+      @Query() receiver: UUID,
+      @Request() req: Express.Request
+    ): Promise<boolean | undefined> {
+      if (!req.user) {
+        this.setStatus(401);
+        return undefined;
+      }
+      return new FollowService()
+        .remove(req.user.id, receiver)
+        .then(
+          async (
+            res: boolean
+          ): Promise<boolean | undefined> => {
+            if (!res) {
+              this.setStatus(404);
+              return false;
+            }
+            return res;
+          }
+        );
+    }
   
   }
