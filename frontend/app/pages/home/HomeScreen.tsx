@@ -14,7 +14,7 @@ const SCROLL_THRESHOLD = 50;
 
 const DUMMY_POSTS = [
   {
-    id: "83c689b1-b7a7-4100-8b2d-309908b444f5",
+    id: "80c689b1-b7a7-4100-8b2d-309908b444f5",
     user_id: "83c689b1-b7a7-4100-8b2d-309908b444f5",
     username: "Zoe Feller",
     caption: "yum!",
@@ -42,7 +42,7 @@ const DUMMY_POSTS = [
     commentsCount: 8,
   },
   {
-    id: "83c689b1-b7a7-4100-8b2d-309908b444f5",
+    id: "86c689b1-b7a7-4100-8b2d-309908b444f5",
     username: "Luca Schram",
     user_name: "89c689b1-b7a7-4100-8b2d-309908b444f5",
     caption: ":p",
@@ -60,7 +60,9 @@ const DUMMY_POSTS = [
 export default function HomeScreen() {
   const navigation = useNavigation<HomeScreenNavigationProp>();
   const colorScheme = useColorScheme();
-  const loginContext = useContext(LoginContext)
+  const loginContext = useContext(LoginContext)!
+  
+  console.log(loginContext.accessToken)
 
   // Use a ref to track the scroll position
   const scrollYRef = useRef(new Animated.Value(0)).current;
@@ -79,7 +81,6 @@ export default function HomeScreen() {
   });
 
   return (
-    <LoginProvider>
     <SafeAreaView 
       edges={['top']}
       style={[
@@ -110,10 +111,10 @@ export default function HomeScreen() {
       >
         {DUMMY_POSTS.map(post => (
           <PostCard 
-            key={post.id}  // Ensure each postCard has a unique key
+            key={post.id}  
             id={post.id}
             user_id={post.user_id}
-            username={loginContext.accessToken}
+            username={post.username}
             caption={post.caption}
             dish={post.dish}
             rating={post.rating}
@@ -121,12 +122,11 @@ export default function HomeScreen() {
             image={post.image}
             likes={post.likes}
             commentsCount={post.commentsCount}
-            parentTab="HomeTab" // Specify HomeTab as the parent for navigation
+            parentTab="HomeTab" 
           />
         ))}
       </Animated.ScrollView>
     </SafeAreaView>
-    </LoginProvider>
   );
 }
 

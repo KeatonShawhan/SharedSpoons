@@ -4,6 +4,7 @@ import { NavigatorScreenParams } from '@react-navigation/native';
 import HomeScreen from '../pages/home/HomeScreen';
 import { PostStackNavigator } from '../navigation/PostStackNavigator';
 import { PostStackParamList } from '../navigation/PostStackNavigator';
+import { LoginProvider } from '@/contexts/loginContext';
 
 // Define HomeStack params, with nested PostStack
 export type HomeStackParamList = {
@@ -18,9 +19,9 @@ const Stack = createNativeStackNavigator<HomeStackParamList>();
 
 export default function HomeTab() {
   return (
-    <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen name="PostStack" component={PostStackNavigator} />
-    </Stack.Navigator>
+      <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="PostStack" component={PostStackNavigator} />
+      </Stack.Navigator>
   );
 }

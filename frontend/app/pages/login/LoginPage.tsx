@@ -14,7 +14,7 @@ export default function LoginPage ({ setIsAuthenticated, toggleAuthPage }) {
   const [user, setUser] = useState({ username: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [badLogin, setBadLogin] = useState(false);
-
+  console.log(loginContext.userId);
   const handleInputChange = (name: string, value: string) => {
     setUser((prevUser) => ({
       ...prevUser,
@@ -49,12 +49,8 @@ export default function LoginPage ({ setIsAuthenticated, toggleAuthPage }) {
       })
       .then((json) => {
         console.log(json);
-        
-        // localStorage.setItem('userId', JSON.stringify(json.user.id));
-      
         loginContext.setAccessToken(json.accessToken);
-        loginContext.setUserId('hi')
-        // localStorage.setItem('username', JSON.stringify(json.user.credentials.username));
+        loginContext.setUserId(json.id)
       })
       .catch((err) => {
         setBadLogin(true);
@@ -64,7 +60,6 @@ export default function LoginPage ({ setIsAuthenticated, toggleAuthPage }) {
 
 
   return (
-    <LoginProvider>
     <View style={styles.container}>
       <Text style={styles.title}>Log In</Text>
       {badLogin ? 
@@ -97,7 +92,6 @@ export default function LoginPage ({ setIsAuthenticated, toggleAuthPage }) {
       <Button title="Continue" onPress={sendLoginRequest} color="#FF9900" />
       <Button title="Sign Up" onPress={toggleAuthPage} />
     </View>
-    </LoginProvider>
   );
 };
 

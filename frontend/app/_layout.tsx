@@ -46,13 +46,11 @@ export default function RootLayout() {
           <Stack.Screen name="+not-found" />
         </Stack>
       ) : (
-        <LoginProvider>
-          {isLogin ? (
+          isLogin ? (
             <LoginPage setIsAuthenticated={setIsAuthenticated} toggleAuthPage={toggleAuthPage} />
           ) : (
             <SignUpPage setIsAuthenticated={setIsAuthenticated} toggleAuthPage={toggleAuthPage} />
-          )}
-        </LoginProvider>
+          )
       )}
     </ThemeProvider>
     </LoginProvider>

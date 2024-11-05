@@ -14,7 +14,7 @@ import { ProfileScreenNavigationProp } from '@/app/(tabs)/profile';
 
 const { width } = Dimensions.get('window');
 
-export default function MainScreen() {
+export default function MainScreen({userid:string}) {
   const { name } = useProfile();
   const navigation = useNavigation<ProfileScreenNavigationProp>();
   const [bio, setBio] = useState("Loading bio...");

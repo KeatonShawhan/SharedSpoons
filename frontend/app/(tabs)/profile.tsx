@@ -5,6 +5,7 @@ import MainScreen from '@/app/pages/profile/MainScreen';
 import FriendsScreen from '@/app/pages/profile/FriendsScreen';
 import PostPage from '@/app/pages/profilePost/ProfilePostScreen';
 import { PostStackNavigator, PostStackParamList } from '../navigation/PostStackNavigator';
+import { useProfile } from '@/contexts/profileContext';
 import ProfileScreen from '../pages/profile/profileScreen';
 // Define ProfileStack params, including nested PostStack as PostPage's child route
 export type ProfileStackParamList = {
@@ -20,7 +21,8 @@ export type ProfileScreenNavigationProp = NativeStackNavigationProp<ProfileStack
 const Stack = createNativeStackNavigator<ProfileStackParamList>();
 
 export default function ProfileTab() {
+  const {  } = useProfile();
   return (
-    <ProfileScreen/>
+    <ProfileScreen user_id={'hihihi'}/>
   );
 }

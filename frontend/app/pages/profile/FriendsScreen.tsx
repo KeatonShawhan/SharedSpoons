@@ -31,7 +31,7 @@ const SUGGESTED_USERS = [
 
 type FriendsScreenRouteProp = RouteProp<ProfileStackParamList, 'Friends'>;
 
-export default function FriendsScreen() {
+export default function FriendsScreen({user_id:string}) {
   const colorScheme = useColorScheme();
   const navigation = useNavigation<ProfileScreenNavigationProp>();
   const route = useRoute<FriendsScreenRouteProp>();
