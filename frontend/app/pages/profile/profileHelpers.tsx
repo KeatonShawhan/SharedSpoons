@@ -64,4 +64,4 @@ export const fetchAllPosts = async (userId, accessToken) => {
     console.log("Error fetching following info:", err);
     return [];
   }
-};
+}; 

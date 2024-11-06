@@ -98,7 +98,7 @@ export default function FriendsScreen() {
               <UserItem
                 user={item}
                 colorScheme={colorScheme}
-                onPress={() => {}}
+                onPress={() => navigation.navigate('Main')}
               />
             )}
             keyExtractor={item => item.id}

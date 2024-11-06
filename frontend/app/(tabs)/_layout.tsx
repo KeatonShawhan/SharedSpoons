@@ -1,5 +1,5 @@
 import { Tabs } from 'expo-router';
-import React from 'react';
+import React, { useContext } from 'react';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
@@ -10,11 +10,12 @@ import CenterButton from '@/components/CenterButton';
 import { TouchableOpacity } from 'react-native';
 import { MakePostButton } from '@/components/MakePostButton';
 import LoginPage from '../pages/login/LoginPage';
-import { LoginProvider } from '@/contexts/loginContext';
+import LoginContext, { LoginProvider } from '@/contexts/loginContext';
 
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const loginContext = useContext(LoginContext)
 
   return (
     <Tabs
@@ -60,6 +61,7 @@ export default function TabLayout() {
       />
       <Tabs.Screen
         name="profile"
+        initialParams={{ userId: loginContext.userId }}
         options={{
           title: '',
           tabBarIcon: ({ color, focused }) => (

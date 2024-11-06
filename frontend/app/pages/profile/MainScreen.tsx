@@ -12,18 +12,23 @@ import AchievementList from '../../../components/profile/AchievementList';
 import { ProfileScreenNavigationProp } from '@/app/(tabs)/profile';
 import API_URL from '@/config';
 import { fetchAllPosts, fetchFollowersInfo, fetchFollowingInfo } from './profileHelpers';
+import {useRoute, RouteProp } from '@react-navigation/native';
+import { ProfileStackParamList } from '@/app/(tabs)/profile';
 
 import LoginContext from '@/contexts/loginContext';
 
+
 const { width } = Dimensions.get('window');
 
-export default function MainScreen() {
-
+export default function MainScreen({route}) {
+  const { userId } = route.params;
   const navigation = useNavigation<ProfileScreenNavigationProp>();
+
   const loginContext = useContext(LoginContext)
   // Keep rank in local state
   const [rank, setRank] = useState("Loading rank...");
   const [bio, setBio] = useState("Loading bio...");
+
   const [activeTab, setActiveTab] = useState<'posts' | 'achievements'>('posts');
   const [achievements, setAchievements] = useState([]);
   const colorScheme = useColorScheme();
@@ -34,23 +39,30 @@ export default function MainScreen() {
   const [followingCount, setFollowingCount] = useState(0)
   const [postCount, setPostCount] = useState(0)
   const [posts, setPosts] = useState([])
+  const [profileId, setProfileId] = useState('')
+
+  if (route.params.userID == loginContext.userId) {
+    setProfileId(userId)
+  } else {
+    setProfileId(userId)
+  }
 
 
 
   // get followers and following when u open the page
   useEffect(() => {
     const getFollowers = async () => {
-      const followersData = await fetchFollowersInfo(loginContext.userId, loginContext.accessToken);
+      const followersData = await fetchFollowersInfo(profileId, loginContext.accessToken);
       setFollowerCount(followersData.length);
     };
 
     const getFollowing = async () => {
-      const followingData = await fetchFollowingInfo(loginContext.userId, loginContext.accessToken);
+      const followingData = await fetchFollowingInfo(profileId, loginContext.accessToken);
       setFollowingCount(followingData.length);
     };
 
     const getAllPosts = async () => {
-      const allPostsData = await fetchAllPosts(loginContext.userId, loginContext.accessToken);
+      const allPostsData = await fetchAllPosts(profileId, loginContext.accessToken);
       setPostCount(allPostsData.length);
       setPosts(allPostsData)
     };
@@ -109,8 +121,8 @@ export default function MainScreen() {
         followerCount={followerCount}
         followingCount={followingCount}
         colorScheme={colorScheme}
-        onFollowersPress={() => navigation.navigate('Friends', { initialTab: 'followers' })}
-        onFollowingPress={() => navigation.navigate('Friends', { initialTab: 'following' })}
+        onFollowersPress={() => navigation.navigate('Friends', {userId: profileId, initialTab: 'followers' })}
+        onFollowingPress={() => navigation.navigate('Friends', {userId: profileId, initialTab: 'following' })}
         />
         <View style={[
           styles.tabContainer, 
