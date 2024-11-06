@@ -2,6 +2,8 @@ import API_URL from '@/config';
 
 export const fetchFollowersInfo = async (userId, accessToken) => {
   try {
+    console.log(userId);
+    console.log(accessToken);
     const response = await fetch(`${API_URL}follow/getFollowers?user=${userId}`, {
       method: 'GET',
       headers: {

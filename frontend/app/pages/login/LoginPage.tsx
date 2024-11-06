@@ -1,15 +1,15 @@
 import React, { useContext, useEffect, useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity } from "react-native";
 import Icon from 'react-native-vector-icons/Ionicons';
-import LoginContext, { LoginProvider } from "@/contexts/loginContext";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import LoginContext, { LoginProvider } from "@/contexts/loginContext";
 import API_URL from '../../../config'
 
 interface LoginPageProps {
   setIsAuthenticated: (authenticated: boolean) => void;
 }
 
-export default function LoginPage ({ setIsAuthenticated, toggleAuthPage }) {
+export default function LoginPage({ setIsAuthenticated, toggleAuthPage }) {
   const loginContext = useContext(LoginContext);
   const [user, setUser] = useState({ username: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
@@ -21,18 +21,28 @@ export default function LoginPage ({ setIsAuthenticated, toggleAuthPage }) {
       [name]: value,
     }));
   };
-  useEffect(() => {
-    if (loginContext.accessToken && loginContext.accessToken.length > 0) {
-      setIsAuthenticated(true);
-    }
-  }, [loginContext.accessToken]);
 
-  const sendLoginRequest = () => {
-    // Validate form fields
+  useEffect(() => {
+    const loadToken = async () => {
+      try {
+        const storedToken = await AsyncStorage.getItem("accessToken");
+        if (storedToken) {
+          loginContext.setAccessToken(storedToken);
+          setIsAuthenticated(true);
+        }
+      } catch (error) {
+        console.log("Error loading token from AsyncStorage", error);
+      }
+    };
+    loadToken();
+  }, []);
+
+  const sendLoginRequest = async () => {
     if (!user.username || !user.password) {
       Alert.alert("Validation Error", "Please enter both username and password.");
       return;
     }
+
     fetch(API_URL + 'auth/login', {
       method: 'POST',
       body: JSON.stringify(user),
@@ -50,8 +60,10 @@ export default function LoginPage ({ setIsAuthenticated, toggleAuthPage }) {
       })
       .then((json) => {
         loginContext.setAccessToken(json.accessToken);
-        loginContext.setUserId(json.id)
-        loginContext.setUserName(json.firstname + " " +json.lastname)
+        loginContext.setUserId(json.id);
+        loginContext.setUserName(json.firstname + " " + json.lastname);
+        AsyncStorage.setItem("accessToken", json.accessToken);
+        setIsAuthenticated(true);
       })
       .catch((err) => {
         setBadLogin(true);
@@ -59,13 +71,10 @@ export default function LoginPage ({ setIsAuthenticated, toggleAuthPage }) {
       });
   };
 
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Log In</Text>
-      {badLogin ? 
-            <Text style={styles.badLogin}>Incorrect username or password</Text>
-        : undefined}
+      {badLogin && <Text style={styles.badLogin}>Incorrect username or password</Text>}
       <TextInput
         style={styles.input}
         placeholder="Username"
@@ -95,6 +104,7 @@ export default function LoginPage ({ setIsAuthenticated, toggleAuthPage }) {
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
     container: {
