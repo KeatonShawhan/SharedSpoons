@@ -124,7 +124,7 @@ export default function HomeScreen() {
             key={post.id}  
             id={post.id}
             user_id={post.user_id}
-            username={post.username}
+            username={post.firstname + " " + post.lastname}
             caption={post.data.caption}
             dish={post.data.dish}
             rating={post.data.rating}

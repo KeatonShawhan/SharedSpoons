@@ -92,6 +92,11 @@ export function PostCaption({
           </TouchableOpacity>
         </View>
       </View>
+      <View>
+        <Text style={{paddingTop: 10, fontSize: 16, fontWeight:"bold"}}>
+          {dish}
+        </Text>
+      </View>
     </ThemedView>
   );
 }

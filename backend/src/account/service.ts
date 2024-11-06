@@ -8,10 +8,22 @@ import {
   UserIdInfo,
 } from ".";
 import { pool } from "../db";
+import { UUID } from '../types/index';
 
 interface Account {
   id: string;
   username: string;
+}
+
+export default interface User {
+  id:UUID;
+  bio: string;
+  pfp: string;
+  email: string;
+  lastname: string;
+  username: string;
+  firstname: string;
+  phoneNumber: string;
 }
 
 export class AccountService {
@@ -138,38 +150,31 @@ export class AccountService {
     });
   }
 
-  public async userInfo(accessToken: string): Promise<Authenticated> {
-    return new Promise((resolve, reject) => {
-      let account;
-      jwt.verify(
-        accessToken,
-        `${process.env.HASH_MASTER_SECRET}`,
-        async (err: jwt.VerifyErrors | null, decoded?: object | string) => {
-          if (err) {
-            reject(err);
-          }
-          account = decoded as Account;
-          if (account == undefined){
-            reject(err);
-          } else {
-            const select = `SELECT id, data as user FROM app_user WHERE id = $1`;
-            const query = {
-              text: select,
-              values: [account.id],
-            };
-            const { rows } = await pool.query(query);
-            let user = rows[0].user;
-            resolve({
-                id: account.id,
-                firstname: user.firstname,
-                lastname: user.lastname,
-                accessToken: accessToken,
-            });
-          }
-        }
-      );
-    });
-  }
+  public async getUserInfo(userID:UUID): Promise<User | undefined> {
+    const select = `
+    SELECT 
+    id,
+    data->>'bio' AS bio,
+    data->>'pfp' AS pfp,
+    data->>'email' AS email,
+    data->>'lastname' AS lastname,
+    data->>'username' AS username,
+    data->>'firstname' AS firstname,
+    data->>'phoneNumber' AS phoneNumber
+    FROM app_user
+    WHERE id = $1`;
+    const query = {
+      text: select,
+      values: [userID]
+    };
+    const { rows } = await pool.query(query);
+    if (rows.length == 0) {
+      return undefined;
+    }
+    console.log(rows)
+    return rows[0];
+
+}
 
   // 2 of the same endpoints??
   /*

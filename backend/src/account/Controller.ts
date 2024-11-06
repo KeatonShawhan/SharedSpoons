@@ -8,9 +8,13 @@ import {
     Route,
     // Put,
     SuccessResponse,
+    Request, 
+    Security
     // Path
   } from "tsoa";
   
+  import * as express from 'express';
+
   import {
     Authenticated,
     Credentials,
@@ -20,7 +24,8 @@ import {
     UserIdInfo,
   } from "./index";
   import { AccountService } from "./service";
-  
+  import type User from "./service"
+
   @Route("auth")
   export class AccountController extends Controller {
     @Post("/login")
@@ -73,15 +78,18 @@ import {
           return undefined;
         });
     }
-  
+
+
     @Get("/userInfo")
+    @Security('jwt')
     @Response("401", "Unauthorized")
     public async userInfo(
-      @Query() accessToken: string
-    ): Promise<Authenticated | undefined> {
+      @Request() request: express.Request,
+      @Query() id: string
+    ): Promise<User | undefined> {
       return new AccountService()
-        .userInfo(accessToken)
-        .then(async (account: Authenticated): Promise<Authenticated> => {
+        .getUserInfo(id)
+        .then(async (account: User | undefined): Promise<User |undefined> => {
           return account;
         })
         .catch(() => {
