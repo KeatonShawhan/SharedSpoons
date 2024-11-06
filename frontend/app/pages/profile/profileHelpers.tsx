@@ -93,3 +93,37 @@ export const fetchUserInfo = async (userId, accessToken) => {
     return null;
   }
 };
+
+export const sendFollowRequest = async (userId, accessToken) => {
+  try {
+    const response = await fetch(`${API_URL}follow/send?receiver=${userId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`,
+      },
+    });
+    if (!response.ok) throw new Error(`Error following user: ${response.status}`);
+    return true;
+  } catch (err) {
+    console.error("Error sending follow request:", err);
+    return false;
+  }
+};
+
+export const removeFollowRequest = async (userId, accessToken) => {
+  try {
+    const response = await fetch(`${API_URL}follow/remove?receiver=${userId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`,
+      },
+    });
+    if (!response.ok) throw new Error(`Error unfollowing user: ${response.status}`);
+    return true;
+  } catch (err) {
+    console.error("Error removing follow request:", err);
+    return false;
+  }
+};
