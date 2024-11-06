@@ -4,7 +4,7 @@ import * as express from 'express';
 import { S3Service } from '../s3/service'; // S3 service for handling uploads
 import { postService } from './service'; // Post service for handling post creation
 import { PostJSON, PostContent, PostTotal } from '.';
-import  postDataSchema  from './validator';
+import  {postDataSchema, editPostDataSchema}  from './validator';
 
 
 @Security('jwt')
@@ -247,6 +247,12 @@ export class PostController extends Controller {
             if (!request.user) {
                 this.setStatus(401);
                 console.error('Unauthorized user');
+                return undefined;
+            }
+            const { error } = editPostDataSchema.validate({rating, caption});
+            if (error) {
+                this.setStatus(400);
+                console.error('Invalid edit data, failed verification', error);
                 return undefined;
             }
             return new postService()

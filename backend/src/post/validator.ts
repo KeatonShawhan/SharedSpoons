@@ -10,4 +10,9 @@ const postDataSchema = joi.object({
     caption: joi.string().max(750).optional()
 });
 
-export default postDataSchema;
+const editPostDataSchema = joi.object({
+    rating: joi.number().min(1).max(5).optional(),
+    caption: joi.string().max(750).optional()
+});
+
+export { editPostDataSchema, postDataSchema };

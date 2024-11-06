@@ -12,6 +12,11 @@ let server: http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>
 beforeAll(async () => {
   server = http.createServer(app);
   server.listen();
+  await db.reset();
+});
+
+beforeEach(async () => {
+  jest.clearAllMocks();
   jest.spyOn(S3Service.prototype, 'uploadFile').mockImplementation(async () => {
     // Return a mock S3 key
     return 'mock-s3-key.jpg';
@@ -25,8 +30,6 @@ beforeAll(async () => {
       return undefined; // Simulate failure for other keys
     }
   });
-
-  await db.reset();
 });
 
 afterAll((done) => {
@@ -190,7 +193,7 @@ describe('Error Test Suite: Verify error handling of post/get/{PostID}', () => {
 
   // Test for error during image link retrieval
   test('Get post with ERROR IN IMAGE LINK RETRIEVAL', async () => {
-    const mockGetFileLink = jest.spyOn(S3Service.prototype, 'getFileLink')
+    jest.spyOn(S3Service.prototype, 'getFileLink')
       .mockResolvedValue(undefined); // Simulate S3 failure by returning undefined
 
     const response = await supertest(server)
@@ -279,3 +282,54 @@ describe('Test Suite: Verify behavior of /all/{userID} endpoint', () => {
 });
 
 // post/edit/{PostID} error testing suite
+describe('Error Test Suite: Verify error handling of post/edit', () => {
+  
+    const validPostID = 'a5059ef4-971b-4e60-a692-a3af3365ba85';
+  
+    // Test for edit attempt with invalid post ID format
+    test('Edit post with INVALID POST ID FORMAT', async () => {
+      const invalidPostID = 'invalid-id';
+      const response = await supertest(server)
+        .put(`/api/v0/post/edit/${invalidPostID}`)
+        .set('Authorization', `Bearer ${lucaToken}`)
+        .query({ rating: 2, caption: 'I hate Big Macs!' })
+        .expect(400);
+    });
+  
+    // Test for edit attempt with non-existent post ID
+    test('Edit post with NON-EXISTENT POST ID', async () => {
+      const nonExistentPostID = 'b1239ef4-971b-4e60-a692-a3af3365ba99';
+      const response = await supertest(server)
+        .put(`/api/v0/post/edit/${nonExistentPostID}`)
+        .set('Authorization', `Bearer ${lucaToken}`)
+        .query({ rating: 2, caption: 'I hate Big Macs!' })
+        .expect(400);
+    });
+  
+    // Test for missing post ID
+    test('Edit post with MISSING POST ID', async () => {
+      const response = await supertest(server)
+        .put('/api/v0/post/edit/')
+        .set('Authorization', `Bearer ${lucaToken}`)
+        .query({ rating: 2, caption: 'I hate Big Macs!' })
+        .expect(404);
+    });
+  
+    // Test for edit attempt with invalid rating
+    test('Edit post with INVALID RATING', async () => {
+      const response = await supertest(server)
+        .put(`/api/v0/post/edit/${validPostID}`)
+        .set('Authorization', `Bearer ${lucaToken}`)
+        .query({ rating: 6, caption: 'I hate Big Macs!' })
+        .expect(400);
+    });
+
+    // Test for edit attempt with invalid caption
+    test('Edit post with INVALID CAPTION', async () => {
+      const response = await supertest(server)
+        .put(`/api/v0/post/edit/${validPostID}`)
+        .set('Authorization', `Bearer ${lucaToken}`)
+        .query({ rating: 2, caption: 6 })
+        .expect(400);
+    });
+  });
