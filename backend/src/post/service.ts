@@ -94,8 +94,16 @@ export class postService{
 
         try {
             const selectQuery = `
-                SELECT * FROM post
-                WHERE id = $1
+            SELECT 
+                post.*, 
+                app_user.data->>'firstname' AS firstname,
+                app_user.data->>'lastname' AS lastname
+            FROM 
+                post
+            LEFT JOIN 
+                app_user ON app_user.id = post.user_id
+            WHERE 
+                post.id = $1;
             `;
 
             const query = {
@@ -136,12 +144,19 @@ export class postService{
     }
 
     public async getAllFriendsPosts(id:UUID): Promise<PostTotal[] | undefined> {
-        console.log(id);
         const select = `
-            SELECT * 
-            FROM post
-            INNER JOIN follow ON post.user_id = follow.receiver
-            WHERE follow.sender = $1
+        SELECT 
+            post.*, 
+            app_user.data->>'firstname' AS firstname,
+            app_user.data->>'lastname' AS lastname
+        FROM 
+            post
+        INNER JOIN 
+            follow ON post.user_id = follow.receiver
+        LEFT JOIN 
+            app_user ON app_user.id = post.user_id
+        WHERE 
+            follow.sender = $1;
         `;
         const query = {
           text: select,
@@ -153,7 +168,6 @@ export class postService{
         }
         console.log(rows)
         return rows;
-
     }
     
     public async editPost(postID: UUID, rating: number, caption: string): Promise < string | undefined > {

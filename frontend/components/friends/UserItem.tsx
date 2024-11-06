@@ -1,3 +1,4 @@
+// UserItem.js
 import React from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { Colors } from '@/constants/Colors';
@@ -13,7 +14,7 @@ interface User {
 interface UserItemProps {
   user: User;
   colorScheme: string;
-  onPress: (user: User) => void;
+  onPress: (userId: string) => void;
 }
 
 export const UserItem: React.FC<UserItemProps> = ({ 
@@ -23,7 +24,7 @@ export const UserItem: React.FC<UserItemProps> = ({
 }) => (
   <TouchableOpacity 
     style={styles.userItem} 
-    onPress={() => onPress(user)}
+    onPress={() => onPress(user.id)} // Pass only the userId
   >
     <View style={styles.userInfo}>
       <Text style={[styles.userName, { color: Colors[colorScheme].text }]}>

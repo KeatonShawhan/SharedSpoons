@@ -1,8 +1,9 @@
 import { Controller, Get, Route, Request, FormField, Post, Body, UploadedFile, Query, Delete, Put, Path, Security} from 'tsoa';
 import * as express from 'express';
-import { CommentJSON } from '.';
+import { CommentJSON, CommentReturn } from '.';
 import { commentService } from './service'; // Comment service for handling comment creation
 import { UUID } from '../types';
+import { commentSchema } from './validator';
 
 @Security('jwt')
 @Route('comment')
@@ -12,11 +13,18 @@ export class CommentController extends Controller{
         @Request() request: express.Request,
         @Query() post: UUID,
         @Query() text: string,
-    ): Promise< CommentJSON | undefined > {
+    ): Promise< CommentReturn | undefined > {
         try{
             if (!request.user) {
                 this.setStatus(401);
                 console.error('Unauthorized user');
+                return undefined;
+            }
+
+            const { error } = commentSchema.validate({text: text });
+            if (error) {
+                this.setStatus(400);
+                console.error('Invalid comment data');
                 return undefined;
             }
 
@@ -60,8 +68,8 @@ export class CommentController extends Controller{
                 .then((comment) => {
                     if (comment === undefined) {
                         this.setStatus(400);
-                        console.error('Could not create comment');
-                        return false;
+                        console.error('Could not delete comment');
+                        return undefined;
                     }
                     this.setStatus(204);
                     return true;
@@ -69,7 +77,7 @@ export class CommentController extends Controller{
         } catch (error) {
             console.error('Error creating comment', error);
             this.setStatus(500);
-            return false;
+            return undefined;
         }
     }
 }

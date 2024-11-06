@@ -1,9 +1,9 @@
 import { pool } from '../db';
-import { CommentJSON } from '.';
+import { CommentJSON, CommentReturn } from '.';
 import { UUID } from '../types';
 
 export class commentService {
-    public async createComment(userID: UUID, postID: UUID, commentData: CommentJSON): Promise<CommentJSON | undefined> {
+    public async createComment(userID: UUID, postID: UUID, commentData: CommentJSON): Promise<CommentReturn | undefined> {
         const client = await pool.connect();
 
         try {
@@ -12,7 +12,7 @@ export class commentService {
             const insertQuery = `
                 INSERT INTO comment (user_id, post_id, data)
                 VALUES ($1, $2, $3)
-                RETURNING id
+                RETURNING id, user_id as user, data->>'comment' as comment, data->>'time' as time
             `;
 
             const query = {
@@ -29,7 +29,7 @@ export class commentService {
                 return undefined;
             }
 
-            return res.rows[0]; // returning ID of comment? or maybe whole comment?
+            return res.rows[0]; // returning id, user, comment, time
 
         } catch (error) {
             await client.query('ROLLBACK');
@@ -40,23 +40,23 @@ export class commentService {
         }
     }
 
-    public async deleteComment(userId: UUID, commentId: UUID): Promise<boolean> {
+    public async deleteComment(userId: UUID, commentId: UUID): Promise<boolean | undefined> {
         try {
             const deleteQuery = {
-                text: `DELETE FROM comment WHERE id = $1 AND userid = $2 RETURNING data->>'comment' as comment`,
+                text: `DELETE FROM comment WHERE id = $1 AND user_id = $2 RETURNING data->>'comment' as comment`,
                 values: [commentId, userId],
             };
             const res = await pool.query(deleteQuery);
             if(res.rowCount === 0) {
-                console.error('Deleted comment.');
-                return false;
+                console.error('Comment deletion failed.');
+                return undefined;
             }
-            console.log("Follow relationship deleted successfully");
+            console.log("Comment deleted successfully");
             return true;
 
         } catch (error) {
-            console.error("Error deleting follow relationship:", error);
-            return false;
+            console.error("Error deleting comment:", error);
+            return undefined;
         }
     }
 }
