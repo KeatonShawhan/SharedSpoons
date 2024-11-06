@@ -105,19 +105,21 @@ export default function Explore() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingTop: 7,
   },
   header: {
     height: 90, // Adjust as needed
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingTop: 40,
+    paddingTop: 0,
+    paddingLeft: 20,
   },
   headerTitle: {
-    fontSize: 24,
+    paddingTop: 55,
+    fontSize: 32,
     fontWeight: 'bold',
   },
   listContent: {
-    paddingHorizontal: 8,
+    paddingHorizontal: 0,
+    paddingTop: 15,
   },
   imageContainer: {
     flex: 1,

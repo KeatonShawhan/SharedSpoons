@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
 import { View, Animated, StyleSheet, Dimensions, TouchableOpacity, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/constants/Colors';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -10,75 +10,62 @@ import ProfileStats from '../../../components/profile/ProfileStats';
 import ProfilePostSquare from '../../../components/profile/profilePostSquare';
 import AchievementList from '../../../components/profile/AchievementList';
 import type { ProfileStackParamList, ProfileScreenNavigationProp } from './profileNavigation';
-import API_URL from '@/config';
 import { fetchAllPosts, fetchFollowersInfo, fetchFollowingInfo } from './profileHelpers';
-import {useRoute, RouteProp } from '@react-navigation/native';
-
 import LoginContext from '@/contexts/loginContext';
-
 
 const { width } = Dimensions.get('window');
 
 export default function MainScreen() {
   const navigation = useNavigation<ProfileScreenNavigationProp>();
+  
+  // Define the route type explicitly
+  const route = useRoute<RouteProp<ProfileStackParamList, 'Main'>>();
+  const loginContext = useContext(LoginContext);
 
-  const loginContext = useContext(LoginContext)
-  // Keep rank in local state
-  const [rank, setRank] = useState("Loading rank...");
+  // Use `userId` from the route if provided, otherwise fallback to logged-in user's ID
+  const profileId = route.params?.userId || loginContext.userId;
+  const isOwnProfile = profileId === loginContext.userId; // Check if the profile belongs to the logged-in user
+
+  const [userName, setUserName] = useState("Loading name...");
   const [bio, setBio] = useState("Loading bio...");
-
+  const [rank, setRank] = useState("Loading rank...");
   const [activeTab, setActiveTab] = useState<'posts' | 'achievements'>('posts');
   const [achievements, setAchievements] = useState([]);
   const colorScheme = useColorScheme();
   const slideAnim = useRef(new Animated.Value(0)).current; 
   const [followers, setFollowers] = useState([]);
   const [following, setFollowing] = useState([]);
-  const [followerCount, setFollowerCount] = useState(0)
-  const [followingCount, setFollowingCount] = useState(0)
-  const [postCount, setPostCount] = useState(0)
-  const [posts, setPosts] = useState([])
-  const [profileId, setProfileId] = useState(loginContext.userId)
+  const [followerCount, setFollowerCount] = useState(0);
+  const [followingCount, setFollowingCount] = useState(0);
+  const [postCount, setPostCount] = useState(0);
+  const [posts, setPosts] = useState([]);
 
-  // if (route.params.userID == loginContext.userId) {
-  //   setProfileId(loginContext.userId)
-  // } else {
-  //   setProfileId(loginContext.userId)
-  // }
-
-
-
-  // get followers and following when u open the page
+  // Fetch profile-specific data using profileId
   useEffect(() => {
-    const getFollowers = async () => {
+    const fetchData = async () => {
+      // Fetch basic profile info (name, bio, rank) - replace with your actual API calls
+      setUserName(isOwnProfile ? loginContext.userName : "Friend's Name");
+      setBio(isOwnProfile ? "This is my test bio." : "This is my friend's bio.");
+      setRank(isOwnProfile ? "Food Connoisseur" : "Food Enthusiast");
+
       const followersData = await fetchFollowersInfo(profileId, loginContext.accessToken);
       setFollowerCount(followersData.length);
-    };
+      setFollowers(followersData);
 
-    const getFollowing = async () => {
       const followingData = await fetchFollowingInfo(profileId, loginContext.accessToken);
       setFollowingCount(followingData.length);
-    };
+      setFollowing(followingData);
 
-    const getAllPosts = async () => {
       const allPostsData = await fetchAllPosts(profileId, loginContext.accessToken);
       setPostCount(allPostsData.length);
-      setPosts(allPostsData)
+      setPosts(allPostsData);
     };
 
-
-    getAllPosts();
-    getFollowing();
-    getFollowers();
-  }, []);
-
+    fetchData();
+  }, [profileId]); // Re-fetch data if profileId changes
 
   useEffect(() => {
-    // Initial fetch of profile data
-    setBio("This is my test bio.");
-    // Set fake rank
-    setRank("Food Connoisseur");
-    
-    // Simulate fetching achievements data
+    // Simulate fetching achievements data for demonstration purposes
     setTimeout(() => {
       setAchievements([
         { rank: "New Foodie", progress: 25, required: 25, description: "Try your first 25 different dishes" },
@@ -89,7 +76,7 @@ export default function MainScreen() {
       ]);
     }, 2000);
   }, []);
- 
+
   const handleTabSwitch = (tab: 'posts' | 'achievements') => {
     const toValue = tab === 'posts' ? 0 : width;
     
@@ -104,23 +91,22 @@ export default function MainScreen() {
   };
 
   const getIconColor = (isActive: boolean) => {
-    if (isActive) {
-      return colorScheme === 'dark' ? '#FFFFFF' : '#000000';
-    }
-    return colorScheme === 'dark' ? '#666666' : '#999999';
+    return isActive
+      ? colorScheme === 'dark' ? '#FFFFFF' : '#000000'
+      : colorScheme === 'dark' ? '#666666' : '#999999';
   };
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: Colors[colorScheme].background }]} edges={['top']}>
       <View style={styles.headerContainer}>
-        <ProfileHeader name={loginContext.userName} bio={bio} rank={rank} colorScheme={colorScheme} />
+        <ProfileHeader name={userName} bio={bio} rank={rank} colorScheme={colorScheme} />
         <ProfileStats 
-        postCount={postCount}
-        followerCount={followerCount}
-        followingCount={followingCount}
-        colorScheme={colorScheme}
-        onFollowersPress={() => navigation.navigate('Friends', {initialTab: 'followers' })}
-        onFollowingPress={() => navigation.navigate('Friends', {initialTab: 'following' })}
+          postCount={postCount}
+          followerCount={followerCount}
+          followingCount={followingCount}
+          colorScheme={colorScheme}
+          onFollowersPress={() => navigation.navigate('Friends', { initialTab: 'followers', userId: profileId })}
+          onFollowingPress={() => navigation.navigate('Friends', { initialTab: 'following', userId: profileId })}
         />
         <View style={[
           styles.tabContainer, 
@@ -168,27 +154,24 @@ export default function MainScreen() {
         }
       ]}>
         <View style={styles.tabContent}>
-        <FlatList
-          key="posts"
-          data={posts}
-          numColumns={3}
-          renderItem={({ item }) => (
-          <ProfilePostSquare
-            imageUrl={item.data.image}
-            onPress={() => navigation.navigate('PostPage', { postId: item.id })}
+          <FlatList
+            key="posts"
+            data={posts}
+            numColumns={3}
+            renderItem={({ item }) => (
+              <ProfilePostSquare
+                imageUrl={item.data.image}
+                onPress={() => navigation.navigate('PostPage', { postId: item.id })}
+              />
+            )}
+            keyExtractor={item => item.id}
+            contentContainerStyle={styles.listContainer}
+            columnWrapperStyle={styles.postsRow}
+            style={styles.flatList}
           />
-          )}
-          keyExtractor={item => item.id}
-          contentContainerStyle={styles.listContainer}
-          columnWrapperStyle={styles.postsRow}
-          style={styles.flatList}
-        />
         </View>
         <View style={styles.tabContent}>
-          <AchievementList 
-            achievements={achievements} 
-            colorScheme={colorScheme} 
-          />
+          <AchievementList achievements={achievements} colorScheme={colorScheme} />
         </View>
       </Animated.View>
     </SafeAreaView>
@@ -196,21 +179,10 @@ export default function MainScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginBottom: 0,
-  },
-  headerContainer: {
-    paddingHorizontal: 10,
-  },
-  contentContainer: {
-    flex: 1,
-    flexDirection: 'row',
-    width: width * 2,
-  },
-  tabContent: {
-    width: width,
-  },
+  container: { flex: 1, marginBottom: 0 },
+  headerContainer: { paddingHorizontal: 10 },
+  contentContainer: { flex: 1, flexDirection: 'row', width: width * 2 },
+  tabContent: { width: width },
   tabContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -220,12 +192,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     borderBottomWidth: 0.5,
   },
-  tabButton: {
-    flex: 1,
-    alignItems: 'center',
-    position: 'relative',
-    paddingVertical: 10,
-  },
+  tabButton: { flex: 1, alignItems: 'center', position: 'relative', paddingVertical: 10 },
   activeIndicator: {
     position: 'absolute',
     bottom: -0.1,
@@ -236,16 +203,7 @@ const styles = StyleSheet.create({
     left: '50%',
     marginLeft: -20,
   },
-  flatList: {
-    flex: 1,
-    width: '100%',
-  },
-  listContainer: {
-    paddingBottom: 80,
-  },
-  postsRow: {
-    paddingHorizontal: 9,
-    marginTop: 8,
-    justifyContent: 'flex-start',
-  },
+  flatList: { flex: 1, width: '100%' },
+  listContainer: { paddingBottom: 80 },
+  postsRow: { paddingHorizontal: 9, marginTop: 8, justifyContent: 'flex-start' },
 });

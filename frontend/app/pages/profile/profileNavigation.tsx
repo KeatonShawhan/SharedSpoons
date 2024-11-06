@@ -11,9 +11,9 @@ import API_URL from '@/config';
 
 // Update ProfileStack params to include postId in PostPage
 export type ProfileStackParamList = {
-  Main: undefined;
-  Friends: {initialTab: 'followers' | 'following' };
-  PostPage: { postId: UUID }; 
+  Main: { userId?: UUID };
+  Friends: { initialTab: 'followers' | 'following'; userId?: UUID }; // `userId` is now an optional parameter
+  PostPage: { postId: UUID };
   PostStack: NavigatorScreenParams<PostStackParamList>;
 };
 
