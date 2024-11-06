@@ -64,6 +64,7 @@ import {
     }
   
     @Get()
+    @Security('jwt')
     @Response("401", "Unauthorized")
     public async check(
       @Query() accessToken: string

@@ -9,6 +9,7 @@ import { Colors } from '@/constants/Colors';
 import type { HomeScreenNavigationProp } from '@/app/(tabs)';
 import LoginContext, { LoginProvider } from '@/contexts/loginContext';
 import { fetchPosts } from './homeHelpers';
+import login from '@/app/(tabs)/login';
 const HEADER_HEIGHT = 80; 
 const SCROLL_THRESHOLD = 50; 
 
@@ -62,7 +63,8 @@ export default function HomeScreen() {
   const colorScheme = useColorScheme();
   const loginContext = useContext(LoginContext)!
   const [homePosts, setHomePosts] = useState([])
-  console.log(loginContext.accessToken);
+  console.log(loginContext.userId);
+
   useEffect(() => {
     const getPosts = async () => {
       const posts = await fetchPosts(loginContext.userId, loginContext.accessToken);
@@ -71,7 +73,7 @@ export default function HomeScreen() {
     };
 
     getPosts();
-  }, []);
+  }, [loginContext.accessToken, loginContext.userId]);
 
   
   // Use a ref to track the scroll position

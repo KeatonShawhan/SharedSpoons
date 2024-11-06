@@ -10,7 +10,7 @@ import { TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LoginProvider } from '@/contexts/loginContext';
 import LoginContext from '@/contexts/loginContext';
-
+import API_URL from '@/config';
 export type RootTabParamList = {
   index: undefined; // Define your screens here
   exploreMain: undefined;
@@ -28,7 +28,31 @@ export default function TabLayout() {
   useEffect(() => {
     const checkAuth = async () => {
       const token = await AsyncStorage.getItem('accessToken');
-      loginContext.setIsAuthenticated(!!token);  // Set authentication state based on token
+      loginContext.setIsAuthenticated(!!token);
+      const temp = !!token
+      if (temp) {
+        try {
+          const response = await fetch(`${API_URL}auth?accessToken=${token}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            },
+          });
+      
+          if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+      
+          const json = await response.json();
+          loginContext.setUserId(json.id)
+          loginContext.setAccessToken(token)
+          return json;
+        } catch (err) {
+          console.log("Error fetching user info:", err);
+          return null;
+        }
+      }
     };
     checkAuth();
   }, []);
