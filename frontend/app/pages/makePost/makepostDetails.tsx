@@ -50,9 +50,7 @@ export default function MakePostDetails({ route, navigation }: Props) {
 
   // Import accessToken and userId from LoginContext
   const { accessToken, userId } = useContext(LoginContext);
-  // console.log(userId);
-  // console.log(accessToken);
-  // For the caption box animation (if needed)
+
   const [showCaptionBox, setShowCaptionBox] = useState(false);
   const captionAnim = useRef(new Animated.Value(0)).current;
 
@@ -110,7 +108,7 @@ export default function MakePostDetails({ route, navigation }: Props) {
         Alert.alert('Success', 'Your post has been submitted successfully.', [
           { text: 'OK', onPress: () => navigation.navigate('Main') },
         ]);
-        console.log(response);
+
       } else {
         const errorData = await response.json();
         Alert.alert('Submission Failed', errorData.message || 'Failed to submit post. Please try again.');

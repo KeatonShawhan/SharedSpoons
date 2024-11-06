@@ -62,8 +62,6 @@ export default function HomeScreen() {
   const colorScheme = useColorScheme();
   const loginContext = useContext(LoginContext)!
   
-  console.log(loginContext.accessToken)
-
   // Use a ref to track the scroll position
   const scrollYRef = useRef(new Animated.Value(0)).current;
 

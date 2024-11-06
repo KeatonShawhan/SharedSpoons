@@ -14,7 +14,7 @@ export default function LoginPage ({ setIsAuthenticated, toggleAuthPage }) {
   const [user, setUser] = useState({ username: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [badLogin, setBadLogin] = useState(false);
-  // console.log(loginContext.userId);
+
   const handleInputChange = (name: string, value: string) => {
     setUser((prevUser) => ({
       ...prevUser,
@@ -33,7 +33,6 @@ export default function LoginPage ({ setIsAuthenticated, toggleAuthPage }) {
       Alert.alert("Validation Error", "Please enter both username and password.");
       return;
     }
-    // console.log("user:" + JSON.stringify(user));
     fetch(API_URL + 'auth/login', {
       method: 'POST',
       body: JSON.stringify(user),
@@ -43,7 +42,6 @@ export default function LoginPage ({ setIsAuthenticated, toggleAuthPage }) {
     })
       .then((res) => {
         let out = res.json();
-        console.log(out);
         if (!res.ok) {
           setBadLogin(true);
           return res.text();
@@ -51,7 +49,6 @@ export default function LoginPage ({ setIsAuthenticated, toggleAuthPage }) {
         return out;
       })
       .then((json) => {
-        console.log(json);
         loginContext.setAccessToken(json.accessToken);
         loginContext.setUserId(json.id)
         loginContext.setUserName(json.firstname + " " +json.lastname)
