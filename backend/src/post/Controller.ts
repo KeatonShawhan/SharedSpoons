@@ -194,6 +194,47 @@ export class PostController extends Controller {
             return undefined;
         }
     }
+// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNiOWE1OGIyLTJhMDctNDVkNi04NWM5LWYxMzhkNjNjYjQ2NiIsInVzZXJuYW1lIjoia2VhdG9uc2hhd2hhbiIsImZpcnN0bmFtZSI6IktlYXRvbiIsImxhc3RuYW1lIjoiU2hhd2hhbiIsImlhdCI6MTczMDg3NTU2NiwiZXhwIjoxNzMxNDgwMzY2fQ.6rW23DocEdYt7hC5S5sQyNxyx7UXHed9dH9Q9IjERQ4
+    @Get('/all/friendsPosts/{userID}')
+    public async getFriendPosts(
+        @Request() request: express.Request,
+        @Path() userID: string
+    ): Promise<PostTotal[] | undefined> {
+        if (!request.user) {
+            this.setStatus(401);
+            console.error('Unauthorized user');
+            return undefined;
+        }
+        try{
+            return new postService()
+        .getAllFriendsPosts(userID)
+        .then(
+            async (posts: PostTotal[] | undefined): 
+            Promise<PostTotal[]| undefined> => {
+            console.log(posts);
+            if (!posts) {
+                this.setStatus(400);
+                console.error('Could not get posts');
+                return undefined;
+            }
+            for (let i = 0; i < posts.length; i++) {
+                const imageLink = await this.s3Service.getFileLink(posts[i].data.image);
+                if (imageLink === undefined) {
+                    this.setStatus(400);
+                    console.error('Could not get image link for post:' + posts[i].id);
+                    return undefined;
+                }
+                posts[i].data.image = imageLink;
+            }
+            this.setStatus(200);
+            return posts;
+          });
+        } catch (error) {
+            this.setStatus(500);
+            console.error('Error in post /post/all route:', error);
+            return undefined;
+        }
+    }
 
     @Put('/edit/{postID}')
     public async editPost(

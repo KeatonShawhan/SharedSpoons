@@ -134,6 +134,26 @@ export class postService{
         return rows;
 
     }
+
+    public async getAllFriendsPosts(id:UUID): Promise<PostTotal[] | undefined> {
+        const select = `
+            SELECT * 
+            FROM post
+            INNER JOIN follow ON post.user_id = follow.receiver
+            WHERE follow.sender = $1
+        `;
+        const query = {
+          text: select,
+          values: [id]
+        };
+        const { rows } = await pool.query(query);
+        if (rows.length == 0) {
+          return undefined;
+        }
+        console.log(rows)
+        return rows;
+
+    }
     
     public async editPost(postID: UUID, rating: number, caption: string): Promise < string | undefined > {
         const client = await pool.connect();
