@@ -5,7 +5,6 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { ProfileProvider } from '../../contexts/profileContext'; 
 import Ionicons from '@expo/vector-icons/Ionicons';
 import CenterButton from '@/components/CenterButton';
 import { TouchableOpacity } from 'react-native';
@@ -18,7 +17,6 @@ export default function TabLayout() {
   const colorScheme = useColorScheme();
 
   return (
-    <ProfileProvider> 
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
@@ -70,6 +68,5 @@ export default function TabLayout() {
         }}
       />
     </Tabs>
-    </ProfileProvider>
   );
 }

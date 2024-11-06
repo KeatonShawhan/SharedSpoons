@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { View, FlatList, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useColorScheme } from '@/hooks/useColorScheme';
@@ -11,6 +11,8 @@ import { UserItem } from 'components/friends/UserItem';
 import { SuggestedHeader } from 'components/friends/SuggestedHeader';
 import { SuggestedUsers } from 'components/friends/SuggestedUsers';
 import type { ProfileStackParamList, ProfileScreenNavigationProp } from '@/app/(tabs)/profile';
+import { fetchAllPosts, fetchFollowersInfo, fetchFollowingInfo } from './profileHelpers';
+import LoginContext from '@/contexts/loginContext';
 
 const DUMMY_USERS = [
   { id: '1', name: 'John Doe', username: '@johndoe' },
@@ -39,6 +41,32 @@ export default function FriendsScreen() {
   const [users] = useState(DUMMY_USERS);
   const [suggested_users] = useState(SUGGESTED_USERS);
 
+  const loginContext = useContext(LoginContext)
+  const [followers, setFollowers] = useState([]);
+  const [following, setFollowing] = useState([]);
+  const [followerCount, setFollowerCount] = useState(0)
+  const [followingCount, setFollowingCount] = useState(0)
+
+
+  // get followers and following when u open the page
+  useEffect(() => {
+    const getFollowers = async () => {
+      const followersData = await fetchFollowersInfo(loginContext.userId, loginContext.accessToken);
+      setFollowerCount(followersData.length);
+      setFollowers(followersData);
+    };
+
+    const getFollowing = async () => {
+      const followingData = await fetchFollowingInfo(loginContext.userId, loginContext.accessToken);
+      setFollowingCount(followingData.length);
+      setFollowing(followingData)
+    };
+
+    getFollowing();
+    getFollowers();
+  }, []);
+
+
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: Colors[colorScheme].background }]}>
       <View style={styles.header}>
@@ -65,7 +93,7 @@ export default function FriendsScreen() {
         <View style={styles.userListContainer}>
           <View style={styles.topDivider} />
           <FlatList
-            data={users}
+            data={activeTab == "followers" ? followers : following}
             renderItem={({ item }) => (
               <UserItem
                 user={item}

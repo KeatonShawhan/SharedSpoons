@@ -26,7 +26,6 @@ const reset = async () => {
 
 const shutdown = () => {
   pool.end(() => {
-    // console.log('pool has ended');
   });
 };
 

@@ -46,7 +46,7 @@ export default function SignUpPage ({ setIsAuthenticated, toggleAuthPage }) {
       Alert.alert("Validation Error", "Please fill out all fields.");
       return;
     }
-    console.log("user:" + JSON.stringify(user));
+
     fetch(API_URL + '/auth/signup', {
       method: 'POST',
       body: JSON.stringify(user),
@@ -62,7 +62,6 @@ export default function SignUpPage ({ setIsAuthenticated, toggleAuthPage }) {
         return res.json();
       })
       .then((json) => {
-        console.log(json);
         loginContext.setAccessToken(json.accessToken);
       })
       .catch((err) => {

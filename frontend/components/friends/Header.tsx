@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Colors } from '@/constants/Colors';
-import { useProfile } from '@/contexts/profileContext';
+import LoginContext from '@/contexts/loginContext';
 
 const ORANGE_COLOR = '#FF9F45';
 
@@ -12,8 +12,8 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ onBack, colorScheme }) => {
-  const { name } = useProfile();
-  const firstName = name.split(' ')[0];
+  const loginContext = useContext(LoginContext)
+  const firstName = loginContext.userName.split(' ')[0];
 
   return (
     <View style={styles.titleContainer}>
