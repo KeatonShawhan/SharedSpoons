@@ -5,7 +5,7 @@ import ProfilePostHeader from '@/components/profilePost/ProfilePostHeader';
 import { PostCard, PostCardProps } from '@/components/postCard/postCard';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { ProfileStackParamList } from '@/app/(tabs)/profile';
+import { ProfileStackParamList } from '../profile/profileNavigation';
 import LoginContext from '@/contexts/loginContext';
 import API_URL from '@/config';
 
@@ -23,6 +23,8 @@ interface PostApiResponse {
     time: string;
     caption: string;
   };
+  firstname: string;
+  lastname:string;
 }
 
 export default function PostPage() {
@@ -62,15 +64,13 @@ export default function PostPage() {
             const transformedData: PostCardProps = {
                 id: apiData.id,
                 user_id: apiData.user_id,
-                username: 'User', // You might want to fetch this separately or get from context
+                username: apiData.firstname + " " + apiData.lastname, // You might want to fetch this separately or get from context
                 caption: apiData.data.caption,
                 dish: apiData.data.dish,
                 rating: apiData.data.rating,
                 place: apiData.data.restaurant,
                 image: apiData.data.image,
-                likes: 0, // Add if your API provides these
-                commentsCount: 0, // Add if your API provides these
-                parentTab: 'ProfileTab' // Since we're in the profile tab
+                parentTab: 'ProfileTab' 
             };
             
             setPostData(transformedData);

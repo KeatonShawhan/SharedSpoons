@@ -94,8 +94,16 @@ export class postService{
 
         try {
             const selectQuery = `
-                SELECT * FROM post
-                WHERE id = $1
+            SELECT 
+                post.*, 
+                app_user.data->>'firstname' AS firstname,
+                app_user.data->>'lastname' AS lastname
+            FROM 
+                post
+            LEFT JOIN 
+                app_user ON app_user.id = post.user_id
+            WHERE 
+                post.id = $1;
             `;
 
             const query = {
