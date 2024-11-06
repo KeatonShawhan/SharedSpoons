@@ -9,11 +9,10 @@ import ProfileHeader from '../../../components/profile/ProfileHeader';
 import ProfileStats from '../../../components/profile/ProfileStats';
 import ProfilePostSquare from '../../../components/profile/profilePostSquare';
 import AchievementList from '../../../components/profile/AchievementList';
-import { ProfileScreenNavigationProp } from '@/app/(tabs)/profile';
+import type { ProfileStackParamList, ProfileScreenNavigationProp } from './profileNavigation';
 import API_URL from '@/config';
 import { fetchAllPosts, fetchFollowersInfo, fetchFollowingInfo } from './profileHelpers';
 import {useRoute, RouteProp } from '@react-navigation/native';
-import { ProfileStackParamList } from '@/app/(tabs)/profile';
 
 import LoginContext from '@/contexts/loginContext';
 

@@ -8,36 +8,14 @@ import { UUID } from '../../../backend/src/types';
 import LoginContext from '@/contexts/loginContext';
 import { useContext, useEffect } from 'react';
 import API_URL from '@/config';
+import ProfileNavigation from '../pages/profile/profileNavigation';
 
-// Update ProfileStack params to include postId in PostPage
-export type ProfileStackParamList = {
-  Main: undefined;
-  Friends: {initialTab: 'followers' | 'following' };
-  PostPage: { postId: UUID }; 
-  PostStack: NavigatorScreenParams<PostStackParamList>;
-};
 
-// Export the navigation prop type
-export type ProfileScreenNavigationProp = NativeStackNavigationProp<ProfileStackParamList>;
-
-const Stack = createNativeStackNavigator<ProfileStackParamList>();
 
 export default function ProfileTab() {
 
   
   return (
-    <Stack.Navigator initialRouteName="Main" screenOptions={{ headerShown: false }}>
-      <Stack.Screen 
-        name="Main" 
-        component={MainScreen} 
-      />
-      <Stack.Screen 
-        name="Friends" 
-        component={FriendsScreen} 
-        initialParams={{initialTab: 'followers' }} // Pass userID to FriendsScreen
-      />
-      <Stack.Screen name="PostPage" component={PostPage} />
-      <Stack.Screen name="PostStack" component={PostStackNavigator} />
-    </Stack.Navigator>
+    <ProfileNavigation/>
   );
 }

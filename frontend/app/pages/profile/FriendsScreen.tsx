@@ -10,7 +10,7 @@ import { Tabs } from 'components/friends/Tabs';
 import { UserItem } from 'components/friends/UserItem';
 import { SuggestedHeader } from 'components/friends/SuggestedHeader';
 import { SuggestedUsers } from 'components/friends/SuggestedUsers';
-import type { ProfileStackParamList, ProfileScreenNavigationProp } from '@/app/(tabs)/profile';
+import type { ProfileStackParamList, ProfileScreenNavigationProp } from './profileNavigation';
 import { fetchAllPosts, fetchFollowersInfo, fetchFollowingInfo } from './profileHelpers';
 import LoginContext from '@/contexts/loginContext';
 
