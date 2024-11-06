@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from 'react';
+import React, { useContext, useRef, useState, useEffect } from 'react';
 import { Animated, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { PostCard } from '@/components/postCard/postCard';
@@ -8,7 +8,7 @@ import { Header } from '@/components/home/Header';
 import { Colors } from '@/constants/Colors';
 import type { HomeScreenNavigationProp } from '@/app/(tabs)';
 import LoginContext, { LoginProvider } from '@/contexts/loginContext';
-
+import { fetchPosts } from './homeHelpers';
 const HEADER_HEIGHT = 80; 
 const SCROLL_THRESHOLD = 50; 
 
@@ -61,6 +61,18 @@ export default function HomeScreen() {
   const navigation = useNavigation<HomeScreenNavigationProp>();
   const colorScheme = useColorScheme();
   const loginContext = useContext(LoginContext)!
+  const [homePosts, setHomePosts] = useState([])
+  console.log(loginContext.userId);
+  useEffect(() => {
+    const getPosts = async () => {
+      const posts = await fetchPosts(loginContext.userId, loginContext.accessToken);
+      setHomePosts(posts);
+      //console.log(homePosts);
+    };
+
+    getPosts();
+  }, []);
+
   
   // Use a ref to track the scroll position
   const scrollYRef = useRef(new Animated.Value(0)).current;
@@ -107,19 +119,17 @@ export default function HomeScreen() {
         )}
         scrollEventThrottle={16}
       >
-        {DUMMY_POSTS.map(post => (
+        {homePosts.map(post => (
           <PostCard 
             key={post.id}  
             id={post.id}
             user_id={post.user_id}
             username={post.username}
-            caption={post.caption}
-            dish={post.dish}
-            rating={post.rating}
-            place={post.place}
-            image={post.image}
-            likes={post.likes}
-            commentsCount={post.commentsCount}
+            caption={post.data.caption}
+            dish={post.data.dish}
+            rating={post.data.rating}
+            place={post.data.restaurant}
+            image={post.data.image}
             parentTab="HomeTab" 
           />
         ))}

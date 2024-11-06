@@ -6,7 +6,7 @@ import { starDisplay } from './starDisplay';
 import { ThemedView } from '@/components/ThemedView';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import type { HomeScreenNavigationProp } from '@/app/(tabs)';
-import type { ProfileScreenNavigationProp } from '@/app/(tabs)/profile';
+import { ProfileScreenNavigationProp } from '@/app/pages/profile/profileNavigation';
 import type { ToEatScreenNavigationProp } from '@/app/(tabs)/toeat'; 
 
 const ORANGE_COLOR = '#FF9F45';
@@ -20,8 +20,6 @@ interface PostCaptionProps {
   dish: string;
   rating: number;
   postId: string;
-  likes?: number;
-  commentsCount?: number;
   navigation: CombinedNavigationProp;
   parentTab: 'HomeTab' | 'ProfileTab' | 'ToEatTab' | 'ExploreTab';
 }
@@ -30,14 +28,14 @@ export function PostCaption({
   dish,
   rating,
   postId,
-  likes = 0,
-  commentsCount = 0,
   navigation,
   parentTab,
 }: PostCaptionProps) {
   const [isLiked, setIsLiked] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
-  const [likeCount, setLikeCount] = useState(likes);
+  const [likeCount, setLikeCount] = useState(0);
+  const [commentCount, setCommentCount] = useState(0);
+
 
   const handleLike = () => {
     setIsLiked(!isLiked);
@@ -86,7 +84,7 @@ export function PostCaption({
             <TouchableOpacity onPress={handleComment}>
               <Ionicons name="chatbubble-outline" size={22} color="gray" />
             </TouchableOpacity>
-            {commentsCount > 0 && <Text style={{ fontSize: 14, color: 'gray', marginLeft: 4 }}>{commentsCount}</Text>}
+            {commentCount > 0 && <Text style={{ fontSize: 14, color: 'gray', marginLeft: 4 }}>{commentCount}</Text>}
           </View>
 
           <TouchableOpacity onPress={handleSave}>

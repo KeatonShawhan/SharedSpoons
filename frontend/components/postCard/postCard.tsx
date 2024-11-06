@@ -8,7 +8,7 @@ import { postImage } from './postImage';
 import { PostCaption } from './postCaption';
 import { postDescription } from './postDescription';
 import type { HomeScreenNavigationProp } from '@/app/(tabs)';
-import type { ProfileScreenNavigationProp } from '@/app/(tabs)/profile';
+import { ProfileScreenNavigationProp } from '@/app/pages/profile/profileNavigation';
 import type { ToEatScreenNavigationProp } from '@/app/(tabs)/toeat'; 
 import LoginContext from '@/contexts/loginContext';
 
@@ -21,8 +21,6 @@ export interface PostCardProps {
   rating: number;
   place: string;
   image: string;
-  likes?: number;
-  commentsCount?: number;
   parentTab: 'HomeTab' | 'ProfileTab' | 'ToEatTab' | 'ExploreTab';
 }
 
@@ -41,8 +39,6 @@ export function PostCard({
   rating,
   place,
   image,
-  likes = 0,
-  commentsCount = 0,
   parentTab,
 }: PostCardProps) {
   const navigation = useNavigation<CombinedNavigationProp>();
@@ -91,8 +87,6 @@ export function PostCard({
             dish={dish}
             rating={rating}
             postId={id}
-            likes={likes}
-            commentsCount={commentsCount}
             navigation={navigation} 
             parentTab={parentTab} 
           />

@@ -136,6 +136,7 @@ export class postService{
     }
 
     public async getAllFriendsPosts(id:UUID): Promise<PostTotal[] | undefined> {
+        console.log(id);
         const select = `
             SELECT * 
             FROM post
