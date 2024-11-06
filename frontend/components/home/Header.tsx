@@ -1,23 +1,23 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Colors } from '@/constants/Colors';
+import LoginContext from '@/contexts/loginContext';
 
 const ORANGE_COLOR = '#FF9F45';
 
 interface HeaderProps {
   colorScheme: string;
-  onLogout: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ colorScheme, onLogout }) => {
-  
+export const Header: React.FC<HeaderProps> = ({ colorScheme}) => {
+  const loginContext = useContext(LoginContext)
+
   const handleLogout = async () => {
-    // Clear the token from AsyncStorage
     await AsyncStorage.removeItem("accessToken");
-    // Call the onLogout function passed from the parent to handle further logout actions
-    onLogout();
+    loginContext.setAccessToken('');
+    //onLogout();
   };
 
   return (
@@ -32,12 +32,14 @@ export const Header: React.FC<HeaderProps> = ({ colorScheme, onLogout }) => {
           color={Colors[colorScheme].text} 
           style={styles.icon}
         />
+        <TouchableOpacity onPress={handleLogout} style={styles.icon}>
         <Ionicons 
           name="log-out-outline" 
-          size={28} 
+          size={28}
           color={Colors[colorScheme].text} 
           style={styles.icon}
         />
+        </TouchableOpacity>
       </View>
       <View style={styles.divider} />
     </View>

@@ -23,6 +23,13 @@ export default function LoginPage({ setIsAuthenticated, toggleAuthPage }) {
   };
 
   useEffect(() => {
+    console.log("AT: " + loginContext.accessToken);
+    if (loginContext.accessToken === ''){
+      setIsAuthenticated(false);
+    }
+  }, [loginContext.accessToken]);
+
+  useEffect(() => {
     const loadToken = async () => {
       try {
         const storedToken = await AsyncStorage.getItem("accessToken");
