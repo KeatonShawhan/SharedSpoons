@@ -23,7 +23,7 @@ export interface PostCardProps {
   image: string;
   likes?: number;
   commentsCount?: number;
-  parentTab: 'HomeTab' | 'ProfileTab' | 'ToEatTab';
+  parentTab: 'HomeTab' | 'ProfileTab' | 'ToEatTab' | 'ExploreTab';
 }
 
 // Combine navigation props to include Home, Profile, and ToEat tabs

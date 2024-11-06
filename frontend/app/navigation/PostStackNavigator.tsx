@@ -5,7 +5,7 @@ import { CommentsScreen } from '@/components/postCard/screens/CommentsScreen';
 export type PostStackParamList = {
   Comments: { 
     postId: string;
-    parentTab: 'HomeTab' | 'ProfileTab' | 'ToEatTab';
+    parentTab: 'HomeTab' | 'ProfileTab' | 'ToEatTab' | 'ExploreTab';
   };
 };
 
