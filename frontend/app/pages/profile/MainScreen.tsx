@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import { View, Animated, StyleSheet, Dimensions, TouchableOpacity, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -11,31 +11,57 @@ import ProfileStats from '../../../components/profile/ProfileStats';
 import ProfilePostSquare from '../../../components/profile/profilePostSquare';
 import AchievementList from '../../../components/profile/AchievementList';
 import { ProfileScreenNavigationProp } from '@/app/(tabs)/profile';
+import API_URL from '@/config';
+import { fetchAllPosts, fetchFollowersInfo, fetchFollowingInfo } from './profileHelpers';
+
+import LoginContext from '@/contexts/loginContext';
 
 const { width } = Dimensions.get('window');
 
 export default function MainScreen() {
-  const { 
-    name,
-    followerCount,
-    followingCount,
-    posts,
-    isLoadingPosts,
-    refreshProfile
-  } = useProfile();
+
   const navigation = useNavigation<ProfileScreenNavigationProp>();
-  
+  const loginContext = useContext(LoginContext)
   // Keep rank in local state
   const [rank, setRank] = useState("Loading rank...");
   const [bio, setBio] = useState("Loading bio...");
   const [activeTab, setActiveTab] = useState<'posts' | 'achievements'>('posts');
   const [achievements, setAchievements] = useState([]);
   const colorScheme = useColorScheme();
-  const slideAnim = useRef(new Animated.Value(0)).current;
+  const slideAnim = useRef(new Animated.Value(0)).current; 
+  const [followers, setFollowers] = useState([]);
+  const [following, setFollowing] = useState([]);
+  const [followerCount, setFollowerCount] = useState(0)
+  const [followingCount, setFollowingCount] = useState(0)
+  const [postCount, setPostCount] = useState(0)
+
+
+  // get followers and following when u open the page
+  useEffect(() => {
+    const getFollowers = async () => {
+      const followersData = await fetchFollowersInfo(loginContext.userId, loginContext.accessToken);
+      setFollowerCount(followersData.length);
+    };
+
+    const getFollowing = async () => {
+      const followingData = await fetchFollowingInfo(loginContext.userId, loginContext.accessToken);
+      setFollowingCount(followingData.length);
+    };
+
+    const getAllPosts = async () => {
+      const allPostsData = await fetchAllPosts(loginContext.userId, loginContext.accessToken);
+      setPostCount(allPostsData.length);
+    };
+
+
+    getAllPosts();
+    getFollowing();
+    getFollowers();
+  }, []);
+
 
   useEffect(() => {
     // Initial fetch of profile data
-    refreshProfile();
     setBio("This is my test bio.");
     // Set fake rank
     setRank("Food Connoisseur");
@@ -51,7 +77,7 @@ export default function MainScreen() {
       ]);
     }, 2000);
   }, []);
-
+ 
   const handleTabSwitch = (tab: 'posts' | 'achievements') => {
     const toValue = tab === 'posts' ? 0 : width;
     
@@ -75,9 +101,9 @@ export default function MainScreen() {
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: Colors[colorScheme].background }]} edges={['top']}>
       <View style={styles.headerContainer}>
-        <ProfileHeader name={name} bio={bio} rank={rank} colorScheme={colorScheme} />
+        <ProfileHeader name={loginContext.userName} bio={bio} rank={rank} colorScheme={colorScheme} />
         <ProfileStats 
-        postCount={posts.length}
+        postCount={postCount}
         followerCount={followerCount}
         followingCount={followingCount}
         colorScheme={colorScheme}
@@ -132,7 +158,7 @@ export default function MainScreen() {
         <View style={styles.tabContent}>
         <FlatList
           key="posts"
-          data={posts}
+          data={[]}
           numColumns={3}
           renderItem={({ item }) => (
           <ProfilePostSquare
@@ -144,8 +170,6 @@ export default function MainScreen() {
           contentContainerStyle={styles.listContainer}
           columnWrapperStyle={styles.postsRow}
           style={styles.flatList}
-          refreshing={isLoadingPosts}
-          onRefresh={refreshProfile}
         />
         </View>
         <View style={styles.tabContent}>
