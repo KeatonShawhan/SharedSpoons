@@ -6,23 +6,20 @@ import { useEffect, useState, useContext } from 'react';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
-import LoginPage from '@/app/pages/login/LoginPage';
+import LoginPage from '@/app/(tabs)/login';
 import { LoginProvider } from "@/contexts/loginContext";
-import SignUpPage from './pages/signup/SignUpPage';
-import LoginContext from '@/contexts/loginContext';
+import SignUpPage from './(tabs)/signup';
+// import LoginContext from '@/contexts/loginContext';
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
-  const loginContext = useContext(LoginContext)
+  // const loginContext = useContext(LoginContext)
 
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
-
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLogin, setIsLogin] = useState(true);
 
   useEffect(() => {
     if (loaded) {
@@ -34,28 +31,14 @@ export default function RootLayout() {
     return null;
   }
 
-  const toggleAuthPage = () => {
-    setIsLogin((prev) => !prev);
-  };
-
-
   return (
     <LoginProvider>
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      {/* Conditional rendering based on authentication state */}
-      {isAuthenticated ? (
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="+not-found" />
-        </Stack>
-      ) : (
-          isLogin ? (
-            <LoginPage setIsAuthenticated={setIsAuthenticated} toggleAuthPage={toggleAuthPage} />
-          ) : (
-            <SignUpPage setIsAuthenticated={setIsAuthenticated} toggleAuthPage={toggleAuthPage} />
-          )
-      )}
-    </ThemeProvider>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="+not-found" />
+          </Stack>
+      </ThemeProvider>
     </LoginProvider>
   );
 }

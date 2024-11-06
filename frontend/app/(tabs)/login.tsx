@@ -3,17 +3,17 @@ import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity } fr
 import Icon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoginContext, { LoginProvider } from "@/contexts/loginContext";
-import API_URL from '../../../config'
+import API_URL from '../../config'
+import { useNavigation } from "expo-router";
+import { RootTabParamList } from './_layout';
+import { StackNavigationProp } from "@react-navigation/stack";
 
-interface LoginPageProps {
-  setIsAuthenticated: (authenticated: boolean) => void;
-}
-
-export default function LoginPage({ setIsAuthenticated, toggleAuthPage }) {
+export default function login({}) {
   const loginContext = useContext(LoginContext);
   const [user, setUser] = useState({ username: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [badLogin, setBadLogin] = useState(false);
+  const navigation = useNavigation<StackNavigationProp<RootTabParamList>>(); // Use the correct type here
 
   const handleInputChange = (name: string, value: string) => {
     setUser((prevUser) => ({
@@ -23,19 +23,12 @@ export default function LoginPage({ setIsAuthenticated, toggleAuthPage }) {
   };
 
   useEffect(() => {
-    console.log("AT: " + loginContext.accessToken);
-    if (loginContext.accessToken === ''){
-      setIsAuthenticated(false);
-    }
-  }, [loginContext.accessToken]);
-
-  useEffect(() => {
     const loadToken = async () => {
       try {
         const storedToken = await AsyncStorage.getItem("accessToken");
         if (storedToken) {
           loginContext.setAccessToken(storedToken);
-          setIsAuthenticated(true);
+          loginContext.setIsAuthenticated(true);
         }
       } catch (error) {
         console.log("Error loading token from AsyncStorage", error);
@@ -70,13 +63,18 @@ export default function LoginPage({ setIsAuthenticated, toggleAuthPage }) {
         loginContext.setUserId(json.id);
         loginContext.setUserName(json.firstname + " " + json.lastname);
         AsyncStorage.setItem("accessToken", json.accessToken);
-        setIsAuthenticated(true);
+        loginContext.setIsAuthenticated(true);
+        navigation.navigate('index')
       })
       .catch((err) => {
         setBadLogin(true);
         console.log(err);
       });
   };
+
+  const toggleAuthPage = () => {
+    loginContext.setIsLogin(!loginContext.isLogin);
+  }
 
   return (
     <View style={styles.container}>

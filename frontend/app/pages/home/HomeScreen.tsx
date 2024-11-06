@@ -62,7 +62,7 @@ export default function HomeScreen() {
   const colorScheme = useColorScheme();
   const loginContext = useContext(LoginContext)!
   const [homePosts, setHomePosts] = useState([])
-  console.log(loginContext.userId);
+  console.log(loginContext.accessToken);
   useEffect(() => {
     const getPosts = async () => {
       const posts = await fetchPosts(loginContext.userId, loginContext.accessToken);
@@ -124,7 +124,7 @@ export default function HomeScreen() {
             key={post.id}  
             id={post.id}
             user_id={post.user_id}
-            username={post.username}
+            username={post.data.username}
             caption={post.data.caption}
             dish={post.data.dish}
             rating={post.data.rating}

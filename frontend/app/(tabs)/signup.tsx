@@ -2,17 +2,18 @@ import React, { useContext, useState, useEffect } from "react";
 import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity } from "react-native";
 import Icon from 'react-native-vector-icons/Ionicons';
 import LoginContext from "@/contexts/loginContext";
-import API_URL from '../../../config'
+import API_URL from '../../config';
+import { useNavigation } from "expo-router";
+import { RootTabParamList } from './_layout';
+import { StackNavigationProp } from "@react-navigation/stack";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-interface LoginPageProps {
-  setIsAuthenticated: (authenticated: boolean) => void;
-}
-
-export default function SignUpPage ({ setIsAuthenticated, toggleAuthPage }) {
+export default function signup ({}) {
   const loginContext = useContext(LoginContext);
   const [user, setUser] = useState({ username: "", password: "", phoneNumber: "", firstname: "", lastname: "", email: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [badSignup, setBadSignup] = useState(false);
+  const navigation = useNavigation<StackNavigationProp<RootTabParamList>>(); // Use the correct type here
 
   const formatPhoneNumber = (phone: string) => {
     const cleaned = phone.replace(/\D/g, "");
@@ -37,7 +38,7 @@ export default function SignUpPage ({ setIsAuthenticated, toggleAuthPage }) {
 
   useEffect(() => {
     if (loginContext.accessToken && loginContext.accessToken.length > 0) {
-      setIsAuthenticated(true);
+      loginContext.setIsAuthenticated(true);
     }
   }, [loginContext.accessToken]);
 
@@ -63,12 +64,21 @@ export default function SignUpPage ({ setIsAuthenticated, toggleAuthPage }) {
       })
       .then((json) => {
         loginContext.setAccessToken(json.accessToken);
+        loginContext.setUserId(json.id);
+        loginContext.setUserName(json.firstname + " " + json.lastname);
+        AsyncStorage.setItem("accessToken", json.accessToken);
+        loginContext.setIsAuthenticated(true);
+        navigation.navigate('index')
       })
       .catch((err) => {
         setBadSignup(true);
         console.log(err);
       });
   };
+
+  const toggleAuthPage = () => {
+    loginContext.setIsLogin(!loginContext.isLogin);
+  }
 
   return (
     <View style={styles.container}>

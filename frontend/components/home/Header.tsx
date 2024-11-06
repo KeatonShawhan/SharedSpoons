@@ -4,6 +4,9 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Colors } from '@/constants/Colors';
 import LoginContext from '@/contexts/loginContext';
+import { useNavigation } from "expo-router";
+import { RootTabParamList } from '@/app/(tabs)/_layout';
+import { StackNavigationProp } from "@react-navigation/stack";
 
 const ORANGE_COLOR = '#FF9F45';
 
@@ -13,10 +16,12 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ colorScheme}) => {
   const loginContext = useContext(LoginContext)
+  const navigation = useNavigation<StackNavigationProp<RootTabParamList>>(); // Use the correct type here
 
   const handleLogout = async () => {
     await AsyncStorage.removeItem("accessToken");
     loginContext.setAccessToken('');
+    navigation.navigate('login');
     //onLogout();
   };
 

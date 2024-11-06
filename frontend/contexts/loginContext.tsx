@@ -8,6 +8,10 @@ interface LoginContextType {
   setUserId: (userId: string) => void;
   userName: string;
   setUserName: (userId: string) => void;
+  isAuthenticated: boolean;
+  setIsAuthenticated: (isAuthenticated: boolean) => void;
+  isLogin: boolean;
+  setIsLogin: (isLogin: boolean) => void;
 }
 
 const LoginContext = createContext<LoginContextType | undefined>(undefined);
@@ -16,9 +20,11 @@ export const LoginProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [accessToken, setAccessToken] = useState<string>('');
   const [userId, setUserId] = useState<string>('');
   const [userName, setUserName] = useState<string>('')
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isLogin, setIsLogin] = useState<boolean>(true);
 
   return (
-    <LoginContext.Provider value={{ userName, setUserName, accessToken, setAccessToken, userId, setUserId }}>
+    <LoginContext.Provider value={{ userName, setUserName, accessToken, setAccessToken, userId, setUserId, isAuthenticated, setIsAuthenticated, isLogin, setIsLogin }}>
       {children}
     </LoginContext.Provider>
   );
