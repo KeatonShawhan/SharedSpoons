@@ -20,8 +20,7 @@ import LoginContext from '@/contexts/loginContext';
 
 const { width } = Dimensions.get('window');
 
-export default function MainScreen({route}) {
-  const { userId } = route.params;
+export default function MainScreen() {
   const navigation = useNavigation<ProfileScreenNavigationProp>();
 
   const loginContext = useContext(LoginContext)
@@ -39,13 +38,13 @@ export default function MainScreen({route}) {
   const [followingCount, setFollowingCount] = useState(0)
   const [postCount, setPostCount] = useState(0)
   const [posts, setPosts] = useState([])
-  const [profileId, setProfileId] = useState('')
+  const [profileId, setProfileId] = useState(loginContext.userId)
 
-  if (route.params.userID == loginContext.userId) {
-    setProfileId(userId)
-  } else {
-    setProfileId(userId)
-  }
+  // if (route.params.userID == loginContext.userId) {
+  //   setProfileId(loginContext.userId)
+  // } else {
+  //   setProfileId(loginContext.userId)
+  // }
 
 
 
@@ -121,8 +120,8 @@ export default function MainScreen({route}) {
         followerCount={followerCount}
         followingCount={followingCount}
         colorScheme={colorScheme}
-        onFollowersPress={() => navigation.navigate('Friends', {userId: profileId, initialTab: 'followers' })}
-        onFollowingPress={() => navigation.navigate('Friends', {userId: profileId, initialTab: 'following' })}
+        onFollowersPress={() => navigation.navigate('Friends', {initialTab: 'followers' })}
+        onFollowingPress={() => navigation.navigate('Friends', {initialTab: 'following' })}
         />
         <View style={[
           styles.tabContainer, 

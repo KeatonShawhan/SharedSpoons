@@ -11,9 +11,9 @@ import API_URL from '@/config';
 
 // Update ProfileStack params to include postId in PostPage
 export type ProfileStackParamList = {
-  Main: {userId : UUID};
-  Friends: {userId:UUID, initialTab: 'followers' | 'following' };
-  PostPage: { postId: UUID }; // Add postId parameter
+  Main: undefined;
+  Friends: {initialTab: 'followers' | 'following' };
+  PostPage: { postId: UUID }; 
   PostStack: NavigatorScreenParams<PostStackParamList>;
 };
 
@@ -22,8 +22,7 @@ export type ProfileScreenNavigationProp = NativeStackNavigationProp<ProfileStack
 
 const Stack = createNativeStackNavigator<ProfileStackParamList>();
 
-export default function ProfileTab({route}) {
-  const { userId } = route.params;
+export default function ProfileTab() {
 
   
   return (
@@ -31,12 +30,11 @@ export default function ProfileTab({route}) {
       <Stack.Screen 
         name="Main" 
         component={MainScreen} 
-        initialParams={{ userId }} // Pass userID to MainScreen
       />
       <Stack.Screen 
         name="Friends" 
         component={FriendsScreen} 
-        initialParams={{ userId, initialTab: 'followers' }} // Pass userID to FriendsScreen
+        initialParams={{initialTab: 'followers' }} // Pass userID to FriendsScreen
       />
       <Stack.Screen name="PostPage" component={PostPage} />
       <Stack.Screen name="PostStack" component={PostStackNavigator} />
