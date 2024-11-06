@@ -42,4 +42,34 @@ export class CommentController extends Controller{
             return undefined;
         }
     }
+
+    @Delete('/delete')
+    public async deleteComment(
+        @Request() request: express.Request,
+        @Query() commentId: UUID,
+    ): Promise< boolean | undefined > {
+        try{
+            if (!request.user) {
+                this.setStatus(401);
+                console.error('Unauthorized user');
+                return undefined;
+            }
+
+            return new commentService()
+                .deleteComment(request.user.id, commentId)
+                .then((comment) => {
+                    if (comment === undefined) {
+                        this.setStatus(400);
+                        console.error('Could not create comment');
+                        return false;
+                    }
+                    this.setStatus(204);
+                    return true;
+                })
+        } catch (error) {
+            console.error('Error creating comment', error);
+            this.setStatus(500);
+            return false;
+        }
+    }
 }

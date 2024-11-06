@@ -39,4 +39,24 @@ export class commentService {
             client.release();
         }
     }
+
+    public async deleteComment(userId: UUID, commentId: UUID): Promise<boolean> {
+        try {
+            const deleteQuery = {
+                text: `DELETE FROM comment WHERE id = $1 AND userid = $2 RETURNING data->>'comment' as comment`,
+                values: [commentId, userId],
+            };
+            const res = await pool.query(deleteQuery);
+            if(res.rowCount === 0) {
+                console.error('Deleted comment.');
+                return false;
+            }
+            console.log("Follow relationship deleted successfully");
+            return true;
+
+        } catch (error) {
+            console.error("Error deleting follow relationship:", error);
+            return false;
+        }
+    }
 }

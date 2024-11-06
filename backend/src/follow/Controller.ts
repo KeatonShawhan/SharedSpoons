@@ -46,6 +46,26 @@ import {
           );
     }
 
+    @Get("/getFollowersCount")
+    @Response("404", "User not found")
+    public async getFollowersCount(
+      @Query() user: UUID,
+    ): Promise<number | undefined> {
+      return new FollowService()
+        .getFollowersCount(user)
+        .then(
+            async (
+              res: number | undefined
+            ): Promise<number | undefined> => {
+              if (typeof res === 'number' && !isNaN(res)) {
+                return res;
+              }
+              this.setStatus(404);
+              return undefined;
+            }
+          );
+    }
+
     @Get("/getFollowing")
     @Response("404", "User not found")
     public async getFollowing(
@@ -65,6 +85,26 @@ import {
             return undefined;
           }
         );
+    }
+
+    @Get("/getFollowingCount")
+    @Response("404", "User not found")
+    public async getFollowingCount(
+      @Query() user: UUID,
+    ): Promise<number | undefined> {
+      return new FollowService()
+        .getFollowingCount(user)
+        .then(
+            async (
+              res: number | undefined
+            ): Promise<number | undefined> => {
+              if (typeof res === 'number' && !isNaN(res)) {
+                return res;
+              }
+              this.setStatus(404);
+              return undefined;
+            }
+          );
     }
 
     

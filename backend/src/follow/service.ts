@@ -47,6 +47,36 @@ export class FollowService {
         }
       }
 
+    public async getFollowersCount(user: UUID): Promise<number | undefined> {
+        const select = `
+        SELECT 
+            COUNT(*) AS follower_count
+        FROM follow
+        WHERE follow.receiver = $1;
+        `;
+        
+        const query = {
+        text: select,
+        values: [user],
+        };
+
+        try {
+            const { rows } = await pool.query(query);
+
+            if (rows.length === 0) {
+                console.log("No followers found for user:", user);
+                return 0;
+            }
+
+            const followerCount = rows[0].follower_count;
+            return parseInt(followerCount, 10);
+            
+        } catch (err) {
+            console.error("Error fetching followers count:", err);
+            return undefined;
+        }
+      }
+
       public async getFollowing(user: UUID): Promise<Account[] | undefined> {
         const select = `
           SELECT 
@@ -85,6 +115,36 @@ export class FollowService {
         } catch (err) {
           console.error("Error fetching followers:", err);
           return undefined;
+        }
+      }
+
+      public async getFollowingCount(user: UUID): Promise<number | undefined> {
+        const select = `
+        SELECT 
+            COUNT(*) AS follower_count
+        FROM follow
+        WHERE follow.sender = $1;
+        `;
+        
+        const query = {
+        text: select,
+        values: [user],
+        };
+
+        try {
+            const { rows } = await pool.query(query);
+
+            if (rows.length === 0) {
+                console.log("User following nobody");
+                return 0;
+            }
+
+            const followerCount = rows[0].follower_count;
+            return parseInt(followerCount, 10);
+            
+        } catch (err) {
+            console.error("Error fetching following count:", err);
+            return undefined;
         }
       }
 
