@@ -10,22 +10,20 @@ import ProfileStats from '../../../components/profile/ProfileStats';
 import ProfilePostSquare from '../../../components/profile/profilePostSquare';
 import AchievementList from '../../../components/profile/AchievementList';
 import type { ProfileStackParamList, ProfileScreenNavigationProp } from './profileNavigation';
-import { fetchAllPosts, fetchFollowersInfo, fetchFollowingInfo } from './profileHelpers';
+import { fetchAllPosts, fetchFollowersInfo, fetchFollowingInfo, fetchUserInfo } from './profileHelpers'; // Import fetchUserInfo
 import LoginContext from '@/contexts/loginContext';
 
 const { width } = Dimensions.get('window');
 
 export default function MainScreen() {
   const navigation = useNavigation<ProfileScreenNavigationProp>();
-  
-  // Define the route type explicitly
   const route = useRoute<RouteProp<ProfileStackParamList, 'Main'>>();
   const loginContext = useContext(LoginContext);
 
-  // Use `userId` from the route if provided, otherwise fallback to logged-in user's ID
   const profileId = route.params?.userId || loginContext.userId;
-  const isOwnProfile = profileId === loginContext.userId; // Check if the profile belongs to the logged-in user
+  const isOwnProfile = profileId === loginContext.userId;
 
+  // State for user details
   const [userName, setUserName] = useState("Loading name...");
   const [bio, setBio] = useState("Loading bio...");
   const [rank, setRank] = useState("Loading rank...");
@@ -40,31 +38,38 @@ export default function MainScreen() {
   const [postCount, setPostCount] = useState(0);
   const [posts, setPosts] = useState([]);
 
-  // Fetch profile-specific data using profileId
   useEffect(() => {
     const fetchData = async () => {
-      setUserName(isOwnProfile ? loginContext.userName : "Friend's Name");
-      setBio(isOwnProfile ? "This is my test bio." : "This is my friend's bio.");
-      setRank(isOwnProfile ? "Food Connoisseur" : "Food Enthusiast");
+      try {
+        // Fetch user info
+        const userData = await fetchUserInfo(profileId, loginContext.accessToken);
+        setUserName(`${userData.firstname} ${userData.lastname}`);
+        setBio(userData.bio || 'No bio available');
+        setRank(isOwnProfile ? "Food Connoisseur" : "Food Enthusiast");
 
-      const followersData = await fetchFollowersInfo(profileId, loginContext.accessToken);
-      setFollowerCount(followersData.length);
-      setFollowers(followersData);
+        // Fetch followers and following data
+        const followersData = await fetchFollowersInfo(profileId, loginContext.accessToken);
+        setFollowerCount(followersData.length);
+        setFollowers(followersData);
 
-      const followingData = await fetchFollowingInfo(profileId, loginContext.accessToken);
-      setFollowingCount(followingData.length);
-      setFollowing(followingData);
+        const followingData = await fetchFollowingInfo(profileId, loginContext.accessToken);
+        setFollowingCount(followingData.length);
+        setFollowing(followingData);
 
-      const allPostsData = await fetchAllPosts(profileId, loginContext.accessToken);
-      setPostCount(allPostsData.length);
-      setPosts(allPostsData);
+        // Fetch all posts
+        const allPostsData = await fetchAllPosts(profileId, loginContext.accessToken);
+        setPostCount(allPostsData.length);
+        setPosts(allPostsData);
+      } catch (error) {
+        console.error("Error fetching profile data:", error);
+      }
     };
 
     fetchData();
-  }, [profileId]); // Re-fetch data if profileId changes
+  }, [profileId]);
 
   useEffect(() => {
-    // Simulate fetching achievements data for demonstration purposes
+    // Simulate fetching achievements data
     setTimeout(() => {
       setAchievements([
         { rank: "New Foodie", progress: 25, required: 25, description: "Try your first 25 different dishes" },
@@ -78,14 +83,12 @@ export default function MainScreen() {
 
   const handleTabSwitch = (tab: 'posts' | 'achievements') => {
     const toValue = tab === 'posts' ? 0 : width;
-    
     Animated.spring(slideAnim, {
       toValue,
       useNativeDriver: true,
       tension: 68,
       friction: 12
     }).start();
-    
     setActiveTab(tab);
   };
 
@@ -103,14 +106,13 @@ export default function MainScreen() {
           bio={bio} 
           rank={rank} 
           colorScheme={colorScheme} 
-          showBackButton={!isOwnProfile} // Show back button if viewing another user's profile
+          showBackButton={!isOwnProfile}
         />
         <ProfileStats 
           postCount={postCount}
           followerCount={followerCount}
           followingCount={followingCount}
           colorScheme={colorScheme}
-          // Use `navigation.push` instead of `navigate` to add a new `FriendsScreen` to the stack
           onFollowersPress={() => navigation.push('Friends', { initialTab: 'followers', userId: profileId })}
           onFollowingPress={() => navigation.push('Friends', { initialTab: 'following', userId: profileId })}
         />
@@ -184,6 +186,7 @@ export default function MainScreen() {
   );
 }
 
+// Style definitions (same as provided)
 const styles = StyleSheet.create({
   container: { flex: 1, marginBottom: 0 },
   headerContainer: { paddingHorizontal: 10 },

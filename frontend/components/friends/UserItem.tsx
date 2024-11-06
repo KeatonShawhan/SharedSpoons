@@ -7,7 +7,8 @@ const ORANGE_COLOR = '#FF9F45';
 
 interface User {
   id: string;
-  name: string;
+  firstname: string;
+  lastname: string;
   username: string;
 }
 
@@ -24,13 +25,17 @@ export const UserItem: React.FC<UserItemProps> = ({
 }) => (
   <TouchableOpacity 
     style={styles.userItem} 
-    onPress={() => onPress(user.id)} // Pass only the userId
+    onPress={() => onPress(user.id)}
   >
     <View style={styles.userInfo}>
-      <Text style={[styles.userName, { color: Colors[colorScheme].text }]}>
-        {user.name}
+      {/* Display full name */}
+      <Text style={[styles.userFullName, { color: Colors[colorScheme].text }]}>
+        {`${user.firstname} ${user.lastname}`}
       </Text>
-      <Text style={styles.userHandle}>{user.username}</Text>
+      {/* Display username */}
+      <Text style={[styles.userHandle, { color: Colors[colorScheme].text }]}>
+        {user.username}
+      </Text>
     </View>
     <View style={styles.circleProfile} />
   </TouchableOpacity>
@@ -46,7 +51,7 @@ const styles = StyleSheet.create({
   userInfo: {
     flex: 1,
   },
-  userName: {
+  userFullName: {
     fontSize: 16,
     fontWeight: '600',
   },
@@ -64,3 +69,5 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
 });
+
+export default UserItem;

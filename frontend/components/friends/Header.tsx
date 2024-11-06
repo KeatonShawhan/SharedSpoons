@@ -1,24 +1,19 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Colors } from '@/constants/Colors';
-import LoginContext from '@/contexts/loginContext';
-
-const ORANGE_COLOR = '#FF9F45';
 
 interface HeaderProps {
   onBack: () => void;
   colorScheme: string;
+  firstName: string;
 }
 
-export const Header: React.FC<HeaderProps> = ({ onBack, colorScheme }) => {
-  const loginContext = useContext(LoginContext)
-  const firstName = loginContext.userName.split(' ')[0];
-
+export const Header: React.FC<HeaderProps> = ({ onBack, colorScheme, firstName }) => {
   return (
-    <View style={styles.titleContainer}>
-      <TouchableOpacity onPress={onBack} style={styles.backButton}>
-        <Ionicons name="arrow-back" size={32} color={Colors[colorScheme].text} />
+    <View style={styles.container}>
+      <TouchableOpacity onPress={onBack} style={styles.backButtonContainer}>
+        <Ionicons name="arrow-back" size={28} color={Colors[colorScheme].text} />
       </TouchableOpacity>
       
       <Text style={[styles.title, { color: Colors[colorScheme].text }]}>
@@ -29,22 +24,23 @@ export const Header: React.FC<HeaderProps> = ({ onBack, colorScheme }) => {
 };
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    position: 'absolute',
-    right: 20,
-    top: 10,
-    padding: 10,
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 10,
   },
-  backButton: {
-    position: 'absolute',
-    left: -115, // Fixed padding from left edge
-    top: 12,
-    zIndex: 1, // Ensure button stays above title if they overlap
+  backButtonContainer: {
+    padding: 8, // Increase the clickable area
+    borderRadius: 20, // Optional, for a circular touch area
+    marginBottom: 30,
   },
   title: {
-    fontSize: 32,
+    flex: 1,
+    fontSize: 30,
     fontWeight: '800',
     textAlign: 'right',
-    marginBottom: 5,
+    paddingBottom: 30,
   },
 });
+
+export default Header;

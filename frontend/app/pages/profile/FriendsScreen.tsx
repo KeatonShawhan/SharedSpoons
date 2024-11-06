@@ -12,7 +12,7 @@ import { UserItem } from 'components/friends/UserItem';
 import { SuggestedHeader } from 'components/friends/SuggestedHeader';
 import { SuggestedUsers } from 'components/friends/SuggestedUsers';
 import type { ProfileStackParamList, ProfileScreenNavigationProp } from './profileNavigation';
-import { fetchFollowersInfo, fetchFollowingInfo } from './profileHelpers';
+import { fetchFollowersInfo, fetchFollowingInfo, fetchUserInfo } from './profileHelpers'; // Import fetchUserInfo
 import LoginContext from '@/contexts/loginContext';
 
 const SUGGESTED_USERS = [
@@ -31,29 +31,36 @@ export default function FriendsScreen() {
   const route = useRoute<FriendsScreenRouteProp>();
   const loginContext = useContext(LoginContext);
 
-  // Use the userId from route if provided, otherwise fallback to the logged-in user's ID
   const profileId = route.params?.userId || loginContext.userId;
+  const isOwnProfile = profileId === loginContext.userId;
 
   const [activeTab, setActiveTab] = useState(route.params.initialTab);
   const [searchQuery, setSearchQuery] = useState('');
   const [followers, setFollowers] = useState([]);
   const [following, setFollowing] = useState([]);
   const [suggested_users] = useState(SUGGESTED_USERS);
+  const [firstName, setFirstName] = useState(loginContext.userName.split(' ')[0]); // Default to logged-in user
 
   // Fetch followers and following when the page opens
   useEffect(() => {
-    const getFollowers = async () => {
+    const fetchData = async () => {
+      if (!isOwnProfile) {
+        // Fetch first name of the user if viewing someone else's profile
+        const userInfo = await fetchUserInfo(profileId, loginContext.accessToken);
+        setFirstName(userInfo.firstname || "User");
+      } else {
+        setFirstName(loginContext.userName.split(' ')[0]);
+      }
+
+      // Fetch followers and following data
       const followersData = await fetchFollowersInfo(profileId, loginContext.accessToken);
       setFollowers(followersData);
-    };
 
-    const getFollowing = async () => {
       const followingData = await fetchFollowingInfo(profileId, loginContext.accessToken);
       setFollowing(followingData);
     };
 
-    getFollowing();
-    getFollowers();
+    fetchData();
   }, [profileId]); // Re-fetch data when profileId changes
 
   return (
@@ -62,6 +69,7 @@ export default function FriendsScreen() {
         <Header 
           onBack={() => navigation.goBack()} 
           colorScheme={colorScheme}
+          firstName={firstName} // Pass correct firstName
         />
         
         <SearchBar
@@ -121,6 +129,7 @@ export default function FriendsScreen() {
   );
 }
 
+// Style definitions remain the same
 const styles = StyleSheet.create({
   container: { flex: 1 },
   header: { padding: 16, height: 180 },
