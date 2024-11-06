@@ -14,3 +14,9 @@ export interface PostContent {
     user: UUID;
     data: PostJSON;
 }
+
+export interface PostTotal {
+  id: UUID;
+  user: UUID;
+  data: PostJSON;
+}

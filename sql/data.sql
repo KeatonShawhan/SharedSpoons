@@ -13,8 +13,9 @@ SELECT
         'lastname', 'Schram', 
         'email', 'lschram@ucsc.edu', 
         'username', 'lucaschram',
+        'bio', 'I love dogs',
         'phoneNumber', '(123) 123-1232',
-        'pfp', 'https://imgur.com/a/zazu-soldier-cat-two-thousand-yard-stare-meme-restoration-0UhrRnU',
+        'pfp', '10bc9173-ff57-4bd6-8e79-10339a57cc4c.jpg',
         'pwhash', crypt('lucasucks123', salt.salt), 
         'salt', salt.salt
     )
@@ -27,8 +28,9 @@ SELECT
         'lastname', 'Shawhan', 
         'email', 'kshawhan@ucsc.edu', 
         'username', 'keatonshawhan',
+        'bio', 'I love cats',
         'phoneNumber', '(858) 688-4237',
-        'pfp', 'https://imgur.com/a/zazu-soldier-cat-two-thousand-yard-stare-meme-restoration-0UhrRnU',
+        'pfp', '10bc9173-ff57-4bd6-8e79-10339a57cc4c.jpg',
         'pwhash', crypt('keatoniscool123', salt.salt), 
         'salt', salt.salt
     )
@@ -36,17 +38,17 @@ FROM salt;
 -- Insert data into post table
 INSERT INTO post (id, user_id, data) VALUES
     ('a5059ef4-971b-4e60-a692-a3af3365ba85', (SELECT id FROM app_user WHERE data->>'email' = 'lschram@ucsc.edu'), 
-    json_build_object('image', 'https://imgur.com/a/zazu-soldier-cat-two-thousand-yard-stare-meme-restoration-0UhrRnU', 
+    json_build_object('image', '10bc9173-ff57-4bd6-8e79-10339a57cc4c.jpg', 
                       'rating', 4, 'adds', 2, 'restaurant', 'CatFood', 'dish', 'Stare', 'time', '2024-10-24T12:45:00.000Z', 'caption', 'look at cat')),
     ('a9359ef4-971b-4e60-a692-a3af3365ba85', (SELECT id FROM app_user WHERE data->>'email' = 'kshawhan@ucsc.edu'), 
-    json_build_object('image', 'https://imgur.com/a/zazu-soldier-cat-two-thousand-yard-stare-meme-restoration-0UhrRnU', 
+    json_build_object('image', '10bc9173-ff57-4bd6-8e79-10339a57cc4c.jpg', 
                       'rating', 3, 'adds', 1, 'restaurant', 'CatFood', 'dish', 'Stare', 'time', '2024-10-24T11:23:44.336Z', 'caption', 'cat!'));
 
 -- Insert data into sponsor table
 INSERT INTO sponsor (data, active) VALUES
-    (json_build_object('image', 'https://imgur.com/a/zazu-soldier-cat-two-thousand-yard-stare-meme-restoration-0UhrRnU', 
+    (json_build_object('image', '10bc9173-ff57-4bd6-8e79-10339a57cc4c.jpg', 
                        'adds', 3, 'restaurant', 'CatPlace', 'dish', 'catnip', 'start', '2024-10-22T12:45:00.000Z', 'end', '2024-10-25T12:45:00.000Z'), true),
-    (json_build_object('image', 'https://imgur.com/a/zazu-soldier-cat-two-thousand-yard-stare-meme-restoration-0UhrRnU', 
+    (json_build_object('image', '10bc9173-ff57-4bd6-8e79-10339a57cc4c.jpg', 
                        'adds', 5, 'restaurant', 'war.', 'dish', 'death', 'start', '2024-10-21T12:45:00.000Z', 'end', '2024-10-24T12:45:00.000Z'), false);
 
 -- Insert data into follow table
