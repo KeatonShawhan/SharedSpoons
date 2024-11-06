@@ -1,4 +1,5 @@
 import React, { useContext, useState, useEffect } from 'react';
+import { CommonActions } from '@react-navigation/native';
 import { View, FlatList, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useColorScheme } from '@/hooks/useColorScheme';
@@ -83,11 +84,24 @@ export default function FriendsScreen() {
           <FlatList
             data={activeTab === "followers" ? followers : following}
             renderItem={({ item }) => (
-              <UserItem
-                user={item}
-                colorScheme={colorScheme}
-                onPress={(userId) => navigation.navigate('Main', { userId })} // Navigate to MainScreen with userId
-              />
+            <UserItem
+              user={item}
+              colorScheme={colorScheme}
+              onPress={(userId) => {
+                if (userId === loginContext.userId) {
+                  // Reset the navigation stack to only have the Main screen for the logged-in user
+                  navigation.dispatch(
+                    CommonActions.reset({
+                      index: 0,
+                      routes: [{ name: 'Main', params: { userId: loginContext.userId } }],
+                    })
+                  );
+                } else {
+                  // Otherwise, push a new instance of MainScreen for the selected user
+                  navigation.push('Main', { userId });
+                }
+              }}
+            />
             )}
             keyExtractor={(item) => item.id}
             contentContainerStyle={styles.listContent}

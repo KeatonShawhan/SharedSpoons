@@ -43,7 +43,6 @@ export default function MainScreen() {
   // Fetch profile-specific data using profileId
   useEffect(() => {
     const fetchData = async () => {
-      // Fetch basic profile info (name, bio, rank) - replace with your actual API calls
       setUserName(isOwnProfile ? loginContext.userName : "Friend's Name");
       setBio(isOwnProfile ? "This is my test bio." : "This is my friend's bio.");
       setRank(isOwnProfile ? "Food Connoisseur" : "Food Enthusiast");
@@ -99,14 +98,21 @@ export default function MainScreen() {
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: Colors[colorScheme].background }]} edges={['top']}>
       <View style={styles.headerContainer}>
-        <ProfileHeader name={userName} bio={bio} rank={rank} colorScheme={colorScheme} />
+        <ProfileHeader 
+          name={userName} 
+          bio={bio} 
+          rank={rank} 
+          colorScheme={colorScheme} 
+          showBackButton={!isOwnProfile} // Show back button if viewing another user's profile
+        />
         <ProfileStats 
           postCount={postCount}
           followerCount={followerCount}
           followingCount={followingCount}
           colorScheme={colorScheme}
-          onFollowersPress={() => navigation.navigate('Friends', { initialTab: 'followers', userId: profileId })}
-          onFollowingPress={() => navigation.navigate('Friends', { initialTab: 'following', userId: profileId })}
+          // Use `navigation.push` instead of `navigate` to add a new `FriendsScreen` to the stack
+          onFollowersPress={() => navigation.push('Friends', { initialTab: 'followers', userId: profileId })}
+          onFollowingPress={() => navigation.push('Friends', { initialTab: 'following', userId: profileId })}
         />
         <View style={[
           styles.tabContainer, 
