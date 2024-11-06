@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect, useContext } from 'react';
 import { View, Animated, StyleSheet, Dimensions, TouchableOpacity, FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-import { useProfile } from '@/contexts/profileContext';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/constants/Colors';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -34,6 +33,8 @@ export default function MainScreen() {
   const [followerCount, setFollowerCount] = useState(0)
   const [followingCount, setFollowingCount] = useState(0)
   const [postCount, setPostCount] = useState(0)
+  const [posts, setPosts] = useState([])
+
 
 
   // get followers and following when u open the page
@@ -51,6 +52,7 @@ export default function MainScreen() {
     const getAllPosts = async () => {
       const allPostsData = await fetchAllPosts(loginContext.userId, loginContext.accessToken);
       setPostCount(allPostsData.length);
+      setPosts(allPostsData)
     };
 
 
@@ -158,7 +160,7 @@ export default function MainScreen() {
         <View style={styles.tabContent}>
         <FlatList
           key="posts"
-          data={[]}
+          data={posts}
           numColumns={3}
           renderItem={({ item }) => (
           <ProfilePostSquare
