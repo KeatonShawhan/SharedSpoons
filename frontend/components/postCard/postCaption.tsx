@@ -23,7 +23,7 @@ interface PostCaptionProps {
   likes?: number;
   commentsCount?: number;
   navigation: CombinedNavigationProp;
-  parentTab: 'HomeTab' | 'ProfileTab' | 'ToEatTab';
+  parentTab: 'HomeTab' | 'ProfileTab' | 'ToEatTab' | 'ExploreTab';
 }
 
 export function PostCaption({
