@@ -20,8 +20,6 @@ import {
     Credentials,
     SessionUser,
     UserSignUp,
-    SignUpRet,
-    UserIdInfo,
   } from "./index";
   import { AccountService } from "./service";
   import type User from "./service"

@@ -1,5 +1,4 @@
 import {
-    Body,
     Query,
     Controller,
     Post,
@@ -8,7 +7,6 @@ import {
     Response,
     Route,
     // Put,
-    SuccessResponse,
     // Path
     Request,
     Security
@@ -20,7 +18,6 @@ import {
 
   import { FollowService } from "./service";
   import { UUID } from '../types';
-  import { SessionUser } from '../types';
   
   @Security('jwt', ['member'])
   @Route("follow")

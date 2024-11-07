@@ -1,4 +1,4 @@
-import { Controller, Get, Route, Request, FormField, Post, Body, UploadedFile, Query, Delete, Put, Path, Security} from 'tsoa';
+import { Controller, Route, Request, Post, Query, Delete, Security} from 'tsoa';
 import * as express from 'express';
 import { CommentJSON, CommentReturn } from '.';
 import { commentService } from './service'; // Comment service for handling comment creation

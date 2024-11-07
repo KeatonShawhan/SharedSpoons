@@ -5,7 +5,6 @@ import {
   SessionUser,
   UserSignUp,
   SignUpRet,
-  UserIdInfo,
 } from ".";
 import { pool } from "../db";
 import { UUID } from '../types/index';
@@ -58,7 +57,7 @@ export class AccountService {
         if (row.length != 1) {
           return undefined;
         }
-        let user = row[0].user;
+        const user = row[0].user;
         const accessToken = jwt.sign(
             { id: user.id, username: user.username, firstname: user.firstname, lastname: user.lastname},
             `${process.env.HASH_MASTER_SECRET}`,

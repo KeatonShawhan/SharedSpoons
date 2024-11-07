@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import { View, ScrollView, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Colors } from '@/constants/Colors';
 
 const ORANGE_COLOR = '#FF9F45';

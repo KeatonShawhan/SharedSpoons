@@ -9,7 +9,7 @@ interface ProfilePostHeaderProps {
   onBackPress: () => void;
 }
 
-const ORANGE_COLOR = '#FF9F45';
+// const ORANGE_COLOR = '#FF9F45';
 
 const ProfilePostHeader: React.FC<ProfilePostHeaderProps> = ({ onBackPress }) => {
   const colorScheme = useColorScheme();

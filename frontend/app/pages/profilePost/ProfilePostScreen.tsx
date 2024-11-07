@@ -122,7 +122,7 @@ export default function PostPage() {
     );
 }
 
-const getStyles = (colors: any) => StyleSheet.create({
+const getStyles = (colors: { [key: string]: string }) => StyleSheet.create({
     container: {
         flex: 1,
         width: '100%',

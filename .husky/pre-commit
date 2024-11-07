@@ -1,0 +1,4 @@
+# .husky/pre-commit
+
+# Run lint before commit
+npm run lint

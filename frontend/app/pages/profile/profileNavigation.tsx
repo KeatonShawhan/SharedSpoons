@@ -5,9 +5,6 @@ import FriendsScreen from '@/app/pages/profile/FriendsScreen';
 import PostPage from '@/app/pages/profilePost/ProfilePostScreen';
 import { PostStackNavigator, PostStackParamList } from '../../navigation/PostStackNavigator';
 import { UUID } from '../../../../backend/src/types';
-import LoginContext from '@/contexts/loginContext';
-import { useContext, useEffect } from 'react';
-import API_URL from '@/config';
 
 // Update ProfileStack params to include postId in PostPage
 export type ProfileStackParamList = {

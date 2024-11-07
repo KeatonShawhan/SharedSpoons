@@ -4,12 +4,12 @@ import app from '../src/app'; // Adjust path as needed to your Express app
 
 let server: http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>;
 
-beforeAll((done:any) => {
+beforeAll((done:() => void) => {
   server = http.createServer(app);
   server.listen(done);
 });
 
-afterAll((done:any) => {
+afterAll((done:() => void) => {
   server.close(done);
 });
 

@@ -8,7 +8,6 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 const ORANGE_COLOR = '#FF9F45';
 
 export function toEatCard({
-  id,
   dish,
   place,
   image,

@@ -1,5 +1,5 @@
 import { Tabs } from 'expo-router';
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Colors } from '@/constants/Colors';
@@ -8,7 +8,6 @@ import { TabBarIcon } from '@/components/navigation/TabBarIcon';
 import { MakePostButton } from '@/components/MakePostButton';
 import { TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { LoginProvider } from '@/contexts/loginContext';
 import LoginContext from '@/contexts/loginContext';
 import API_URL from '@/config';
 export type RootTabParamList = {
@@ -88,8 +87,8 @@ export default function TabLayout() {
         name="makePostMain"
         options={{
           tabBarLabel: '',
-          tabBarIcon: ({ color, focused }) => (
-            <MakePostButton color={color} focused={focused} />
+          tabBarIcon: ({ focused }) => (
+            <MakePostButton focused={focused} />
           ),
           tabBarButton: (props) => <TouchableOpacity {...props} />,
         }}
@@ -98,7 +97,7 @@ export default function TabLayout() {
         name="toeat"
         options={{
           title: '',
-          tabBarIcon: ({ color, focused }) => (
+          tabBarIcon: ({ color }) => (
             <MaterialCommunityIcons name="silverware-fork-knife" style={{ paddingTop: 8 }} size={24} color={color} />
           ),
         }}
@@ -108,7 +107,7 @@ export default function TabLayout() {
         initialParams={{ userId: loginContext.userId }}
         options={{
           title: '',
-          tabBarIcon: ({ color, focused }) => (
+          tabBarIcon: ({ color }) => (
             <Ionicons name="person-outline" size={24} style={{ paddingTop: 8 }} color={color} />
           ),
         }}

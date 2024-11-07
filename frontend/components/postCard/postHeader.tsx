@@ -1,7 +1,6 @@
 // components/post/postHeader.tsx
 import { Text, View,StyleSheet, Dimensions  } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
-import { Avatar } from 'react-native-paper';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Image } from 'react-native';
@@ -14,7 +13,7 @@ interface postHeaderProps {
   user_id:string;
 }
 
-export function postHeader({ username, place, user_id }: postHeaderProps): React.JSX.Element {
+export function postHeader({ username, place }: postHeaderProps): React.JSX.Element {
   const colorScheme = useColorScheme();
 
   return (

@@ -2,11 +2,11 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, FlatList, KeyboardAvoidingView, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import type { CommentsScreenNavigationProp, CommentsScreenRouteProp } from '../postNavigator';
+import type { CommentsScreenNavigationProp } from '../postNavigator';
 
 interface Comment {
   id: string;
@@ -17,9 +17,7 @@ interface Comment {
 
 export function CommentsScreen() {
   const navigation = useNavigation<CommentsScreenNavigationProp>();
-  const route = useRoute<CommentsScreenRouteProp>();
   const colorScheme = useColorScheme();
-  const { postId, parentTab } = route.params; // Access params from the route
   const [newComment, setNewComment] = useState('');
   
   // Dummy comments

@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { View, Text, TouchableOpacity } from 'react-native';
 
 
 export function removeEatButton() {

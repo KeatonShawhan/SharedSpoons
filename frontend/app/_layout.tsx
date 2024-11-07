@@ -2,13 +2,11 @@ import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect, useState, useContext } from 'react';
+import { useEffect } from 'react';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
-import LoginPage from '@/app/(tabs)/login';
 import { LoginProvider } from "@/contexts/loginContext";
-import SignUpPage from './(tabs)/signup';
 // import LoginContext from '@/contexts/loginContext';
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -18,6 +16,7 @@ export default function RootLayout() {
   // const loginContext = useContext(LoginContext)
 
   const [loaded] = useFonts({
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
 

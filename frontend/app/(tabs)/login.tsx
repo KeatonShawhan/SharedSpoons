@@ -2,13 +2,13 @@ import React, { useContext, useEffect, useState } from "react";
 import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity } from "react-native";
 import Icon from 'react-native-vector-icons/Ionicons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import LoginContext, { LoginProvider } from "@/contexts/loginContext";
+import LoginContext from "@/contexts/loginContext";
 import API_URL from '../../config'
 import { useNavigation } from "expo-router";
 import { RootTabParamList } from './_layout';
 import { StackNavigationProp } from "@react-navigation/stack";
 
-export default function login({}) {
+export default function login() {
   const loginContext = useContext(LoginContext);
   const [user, setUser] = useState({ username: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
@@ -51,7 +51,7 @@ export default function login({}) {
       },
     })
       .then((res) => {
-        let out = res.json();
+        const out = res.json();
         if (!res.ok) {
           setBadLogin(true);
           return res.text();

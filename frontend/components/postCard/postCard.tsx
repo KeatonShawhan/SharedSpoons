@@ -1,8 +1,7 @@
 // components/post/postCard.tsx
 import React, { useState } from 'react';
-import { Animated, TouchableOpacity, View, Text } from 'react-native';
+import { Animated, TouchableOpacity, View } from 'react-native';
 import { useNavigation, CompositeNavigationProp } from '@react-navigation/native';
-import Ionicons from '@expo/vector-icons/Ionicons';
 import { postHeader } from './postHeader';
 import { postImage } from './postImage';
 import { PostCaption } from './postCaption';
@@ -10,7 +9,6 @@ import { postDescription } from './postDescription';
 import type { HomeScreenNavigationProp } from '@/app/(tabs)';
 import { ProfileScreenNavigationProp } from '@/app/pages/profile/profileNavigation';
 import type { ToEatScreenNavigationProp } from '@/app/(tabs)/toeat'; 
-import LoginContext from '@/contexts/loginContext';
 
 export interface PostCardProps {  
   id: string;

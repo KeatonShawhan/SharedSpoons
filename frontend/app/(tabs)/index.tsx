@@ -4,7 +4,6 @@ import { NavigatorScreenParams } from '@react-navigation/native';
 import HomeScreen from '../pages/home/HomeScreen';
 import { PostStackNavigator } from '../navigation/PostStackNavigator';
 import { PostStackParamList } from '../navigation/PostStackNavigator';
-import { LoginProvider } from '@/contexts/loginContext';
 
 // Define HomeStack params, with nested PostStack
 export type HomeStackParamList = {

@@ -6,7 +6,6 @@ import * as db from '../db';
 import { S3Service } from '../../src/s3/service';
 import jwt from 'jsonwebtoken';
 import {UUID} from '../../src/types/index';
-import { userInfo } from 'os';
 let server: http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>;
 
 beforeAll(async () => {
@@ -176,7 +175,7 @@ describe('Error Test Suite: Verify error handling of post/get/{PostID}', () => {
   // Test for retrieval attempt with invalid post ID format
   test('Get post with INVALID POST ID FORMAT', async () => {
     const invalidPostID = 'invalid-id';
-    const response = await supertest(server)
+    await supertest(server)
       .get(`/api/v0/post/postID/${invalidPostID}`)
       .set('Authorization', `Bearer ${lucaToken}`)
       .expect(400);
@@ -185,7 +184,7 @@ describe('Error Test Suite: Verify error handling of post/get/{PostID}', () => {
   // Test for retrieval attempt with non-existent post ID
   test('Get post with NON-EXISTENT POST ID', async () => {
     const nonExistentPostID = 'b1239ef4-971b-4e60-a692-a3af3365ba99';
-    const response = await supertest(server)
+    await supertest(server)
       .get(`/api/v0/post/postID/${nonExistentPostID}`)
       .set('Authorization', `Bearer ${lucaToken}`)
       .expect(400);
@@ -196,7 +195,7 @@ describe('Error Test Suite: Verify error handling of post/get/{PostID}', () => {
     jest.spyOn(S3Service.prototype, 'getFileLink')
       .mockResolvedValue(undefined); // Simulate S3 failure by returning undefined
 
-    const response = await supertest(server)
+    await supertest(server)
       .get(`/api/v0/post/postID/${validPostID}`)
       .set('Authorization', `Bearer ${lucaToken}`)
       .expect(400);
@@ -221,7 +220,7 @@ describe('Error Test Suite: Verify error handling of post/delete', () => {
   // Test for deletion attempt with invalid post ID format
   test('Delete post with INVALID POST ID FORMAT', async () => {
     const invalidPostID = 'invalid-id';
-    const response = await supertest(server)
+    await supertest(server)
       .delete('/api/v0/post/delete')
       .set('Authorization', `Bearer ${lucaToken}`)
       .query({ postID: invalidPostID })
@@ -231,7 +230,7 @@ describe('Error Test Suite: Verify error handling of post/delete', () => {
   // Test for deletion attempt with non-existent post ID
   test('Delete post with NON-EXISTENT POST ID', async () => {
     const nonExistentPostID = 'b1239ef4-971b-4e60-a692-a3af3365ba99';
-    const response = await supertest(server)
+    await supertest(server)
       .delete('/api/v0/post/delete')
       .set('Authorization', `Bearer ${lucaToken}`)
       .query({ postID: nonExistentPostID })
@@ -240,7 +239,7 @@ describe('Error Test Suite: Verify error handling of post/delete', () => {
 
   // Test for missing post ID
   test('Delete post with MISSING POST ID', async () => {
-    const response = await supertest(server)
+    await supertest(server)
       .delete('/api/v0/post/delete')
       .set('Authorization', `Bearer ${lucaToken}`)
       .expect(400);
@@ -248,7 +247,7 @@ describe('Error Test Suite: Verify error handling of post/delete', () => {
 
   // Test for user deleting post that isn't theirs
   test('Delete post with UNAUTHORIZED USER', async () => {
-    const response = await supertest(server)
+    await supertest(server)
       .delete('/api/v0/post/delete')
       .set('Authorization', `Bearer ${lucaToken}`)
       .query({ postID: validKeatonpostID })
@@ -273,7 +272,7 @@ describe('Test Suite: Verify behavior of /all/{userID} endpoint', () => {
   // Test for retrieval attempt with invalid user ID format
   test('Get all posts with INVALID USER ID FORMAT', async () => {
     const invalidUserID = 'invalid-id';
-    const response = await supertest(server)
+    await supertest(server)
       .get(`/api/v0/post/all/${invalidUserID}`)
       .set('Authorization', `Bearer ${lucaToken}`)
       .expect(500);
@@ -289,7 +288,7 @@ describe('Error Test Suite: Verify error handling of post/edit', () => {
     // Test for edit attempt with invalid post ID format
     test('Edit post with INVALID POST ID FORMAT', async () => {
       const invalidPostID = 'invalid-id';
-      const response = await supertest(server)
+      await supertest(server)
         .put(`/api/v0/post/edit/${invalidPostID}`)
         .set('Authorization', `Bearer ${lucaToken}`)
         .query({ rating: 2, caption: 'I hate Big Macs!' })
@@ -299,7 +298,7 @@ describe('Error Test Suite: Verify error handling of post/edit', () => {
     // Test for edit attempt with non-existent post ID
     test('Edit post with NON-EXISTENT POST ID', async () => {
       const nonExistentPostID = 'b1239ef4-971b-4e60-a692-a3af3365ba99';
-      const response = await supertest(server)
+      await supertest(server)
         .put(`/api/v0/post/edit/${nonExistentPostID}`)
         .set('Authorization', `Bearer ${lucaToken}`)
         .query({ rating: 2, caption: 'I hate Big Macs!' })
@@ -308,7 +307,7 @@ describe('Error Test Suite: Verify error handling of post/edit', () => {
   
     // Test for missing post ID
     test('Edit post with MISSING POST ID', async () => {
-      const response = await supertest(server)
+      await supertest(server)
         .put('/api/v0/post/edit/')
         .set('Authorization', `Bearer ${lucaToken}`)
         .query({ rating: 2, caption: 'I hate Big Macs!' })
@@ -317,7 +316,7 @@ describe('Error Test Suite: Verify error handling of post/edit', () => {
   
     // Test for edit attempt with invalid rating
     test('Edit post with INVALID RATING', async () => {
-      const response = await supertest(server)
+      await supertest(server)
         .put(`/api/v0/post/edit/${validPostID}`)
         .set('Authorization', `Bearer ${lucaToken}`)
         .query({ rating: 6, caption: 'I hate Big Macs!' })
@@ -326,7 +325,7 @@ describe('Error Test Suite: Verify error handling of post/edit', () => {
 
     // Test for edit attempt with invalid caption
     test('Edit post with INVALID CAPTION', async () => {
-      const response = await supertest(server)
+      await supertest(server)
         .put(`/api/v0/post/edit/${validPostID}`)
         .set('Authorization', `Bearer ${lucaToken}`)
         .query({ rating: 2, caption: 6 })

@@ -1,7 +1,7 @@
 // components/makePost/CaptionInputBox.tsx
 
 import React from 'react';
-import { TextInput, StyleSheet, TextInputProps, useColorScheme } from 'react-native';
+import { TextInput, StyleSheet, useColorScheme } from 'react-native';
 import { Colors } from '@/constants/Colors';
 
 const ORANGE_COLOR = '#FF9F45';

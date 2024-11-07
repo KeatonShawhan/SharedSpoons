@@ -4,8 +4,11 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
-export const MakePostButton = ({ color, focused }) => {
-  const colorScheme = useColorScheme();
+interface MakePostButtonProps {
+  focused: boolean;
+}
+
+export const MakePostButton: React.FC<MakePostButtonProps> = ({ focused }) => {  const colorScheme = useColorScheme();
 
   return (
     <View style={[styles.container, focused && styles.focusedContainer]}>

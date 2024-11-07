@@ -11,11 +11,9 @@ import {
   Image,
   Animated,
   TouchableWithoutFeedback,
-  Keyboard,
 } from 'react-native';
 // Remove BlurView import if not using it
 import { BlurView } from 'expo-blur';
-import { Header } from '@/components/home/Header';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
@@ -49,7 +47,7 @@ export default function MakePostDetails({ route, navigation }: Props) {
   const [dishName, setDishName] = useState('');
 
   // Import accessToken and userId from LoginContext
-  const { accessToken, userId } = useContext(LoginContext);
+  const { accessToken } = useContext(LoginContext);
 
   const [showCaptionBox, setShowCaptionBox] = useState(false);
   const captionAnim = useRef(new Animated.Value(0)).current;
@@ -88,11 +86,15 @@ export default function MakePostDetails({ route, navigation }: Props) {
 
     const formData = new FormData();
     formData.append('post', JSON.stringify(postData));
-    formData.append('file', {
-      uri: selectedImage,
-      name: 'photo.jpg',
-      type: 'image/jpeg',
-    } as any);
+
+    // Create a proper File object
+    const file = new File(
+      [selectedImage],
+      'photo.jpg',
+      { type: 'image/jpeg' }
+    );
+
+formData.append('file', file);
 
     try {
       const response = await fetch(`${API_URL}post/create`, {

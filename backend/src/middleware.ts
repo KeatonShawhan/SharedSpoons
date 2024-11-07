@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request } from 'express';
 import { AccountService } from './account/service';
 import { SessionUser } from './types';
 
@@ -6,8 +6,6 @@ import { SessionUser } from './types';
 // Authentication middleware that conforms to TSOA's expected signature
 export const expressAuthentication = async (
     req: Request,
-    securityName: string, 
-    scopes?: string[]
   ): Promise<SessionUser> => {
   const accessToken = req.headers['authorization']?.split(' ')[1];
   const openRoutes = ['/auth/login', '/auth/signup'];

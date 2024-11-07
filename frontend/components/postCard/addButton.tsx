@@ -1,13 +1,12 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useState } from 'react';
-import {TouchableOpacity, useColorScheme} from 'react-native';
+import {TouchableOpacity} from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
 
 type IoniconNames = 'add-circle-sharp' | 'checkmark-circle-outline';
 
 export function addButton() {
   const [currentIcon, setCurrentIcon] = useState<IoniconNames>('add-circle-sharp');
-  const theme = useColorScheme() ?? 'light';
 
   const added = () => {
     setCurrentIcon('checkmark-circle-outline')

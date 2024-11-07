@@ -51,6 +51,7 @@ export function PostCaption({
       screen: 'Comments',
       params: { postId, parentTab },
     });
+    setCommentCount(commentCount+1);
   };
 
   return (

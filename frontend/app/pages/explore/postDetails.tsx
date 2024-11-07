@@ -139,7 +139,7 @@ export default function PostDetails({ route }: Props) {
   );
 }
 
-const getStyles = (colors: any) =>
+const getStyles = (colors: { [key: string]: string }) =>
   StyleSheet.create({
     container: {
       flex: 1,

@@ -8,7 +8,7 @@ import { RootTabParamList } from './_layout';
 import { StackNavigationProp } from "@react-navigation/stack";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function signup ({}) {
+export default function signup () {
   const loginContext = useContext(LoginContext);
   const [user, setUser] = useState({ username: "", password: "", phoneNumber: "", firstname: "", lastname: "", email: "" });
   const [showPassword, setShowPassword] = useState(false);

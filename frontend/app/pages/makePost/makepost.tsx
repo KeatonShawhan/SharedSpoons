@@ -80,16 +80,15 @@ export default function MakePost() {
 
   // Keyboard event listeners
   useEffect(() => {
-    let keyboardWillShowSub: EmitterSubscription;
-    let keyboardWillHideSub: EmitterSubscription;
 
-    keyboardWillShowSub = Keyboard.addListener('keyboardWillShow', () => {
+    const keyboardWillShowSub: EmitterSubscription = Keyboard.addListener('keyboardWillShow', () => {
       animateCaption(true);
     });
-
-    keyboardWillHideSub = Keyboard.addListener('keyboardWillHide', () => {
+  
+    const keyboardWillHideSub: EmitterSubscription = Keyboard.addListener('keyboardWillHide', () => {
       animateCaption(false);
     });
+  
 
     return () => {
       keyboardWillShowSub.remove();
@@ -118,11 +117,6 @@ export default function MakePost() {
   const translateY = captionPosition.interpolate({
     inputRange: [0, 1],
     outputRange: [0, -200], // Adjust -200 to move the caption higher or lower
-  });
-
-  const scale = captionPosition.interpolate({
-    inputRange: [0, 1],
-    outputRange: [1, 1], // Keep scale at 1
   });
 
   return (

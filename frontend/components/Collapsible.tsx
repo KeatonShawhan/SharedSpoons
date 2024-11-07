@@ -5,7 +5,6 @@ import { StyleSheet, TouchableOpacity, useColorScheme } from 'react-native';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { Colors } from '@/constants/Colors';
-import { ActivityIndicator, MD2Colors } from 'react-native-paper';
 
 
 export function Collapsible({ children, title }: PropsWithChildren & { title: string }) {
