@@ -127,3 +127,47 @@ export const removeFollowRequest = async (userId, accessToken) => {
     return false;
   }
 };
+
+export const fetchFollowerCount = async (userId, accessToken) => {
+  try {
+    const response = await fetch(`${API_URL}follow/getFollowersCount?user=${userId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`, 
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const json = await response.json();
+    return json;
+  } catch (err) {
+    console.log("Error fetching follower count:", err);
+    return [];
+  }
+};
+
+export const fetchFollowingCount = async (userId, accessToken) => {
+  try {
+    const response = await fetch(`${API_URL}follow/getFollowingCount?user=${userId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`, 
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const json = await response.json();
+    return json;
+  } catch (err) {
+    console.log("Error fetching following count:", err);
+    return [];
+  }
+};

@@ -10,7 +10,7 @@ import ProfileStats from '../../../components/profile/ProfileStats';
 import ProfilePostSquare from '../../../components/profile/profilePostSquare';
 import AchievementList from '../../../components/profile/AchievementList';
 import type { ProfileStackParamList, ProfileScreenNavigationProp } from './profileNavigation';
-import { fetchAllPosts, fetchFollowersInfo, fetchFollowingInfo, fetchUserInfo } from './profileHelpers'; // Import fetchUserInfo
+import { fetchAllPosts, fetchFollowerCount, fetchFollowingCount, fetchUserInfo } from './profileHelpers'; // Import fetchUserInfo
 import LoginContext from '@/contexts/loginContext';
 
 const { width } = Dimensions.get('window');
@@ -31,8 +31,6 @@ export default function MainScreen() {
   const [achievements, setAchievements] = useState([]);
   const colorScheme = useColorScheme();
   const slideAnim = useRef(new Animated.Value(0)).current; 
-  const [followers, setFollowers] = useState([]);
-  const [following, setFollowing] = useState([]);
   const [followerCount, setFollowerCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
   const [postCount, setPostCount] = useState(0);
@@ -48,13 +46,12 @@ export default function MainScreen() {
         setRank(isOwnProfile ? "Food Connoisseur" : "Food Enthusiast");
 
         // Fetch followers and following data
-        const followersData = await fetchFollowersInfo(profileId, loginContext.accessToken);
-        setFollowerCount(followersData.length);
-        setFollowers(followersData);
+        const followersData = await fetchFollowerCount(profileId, loginContext.accessToken);
+        console.log(followersData);
+        setFollowerCount(followersData);
 
-        const followingData = await fetchFollowingInfo(profileId, loginContext.accessToken);
-        setFollowingCount(followingData.length);
-        setFollowing(followingData);
+        const followingData = await fetchFollowingCount(profileId, loginContext.accessToken);
+        setFollowingCount(followingData);
 
         // Fetch all posts
         const allPostsData = await fetchAllPosts(profileId, loginContext.accessToken);

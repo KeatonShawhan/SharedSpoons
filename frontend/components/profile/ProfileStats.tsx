@@ -38,13 +38,13 @@ const ProfileStats: React.FC<ProfileStatsProps> = ({
       </View>
       <TouchableOpacity style={styles.statsBox} onPress={onFollowersPress}>
         <Text style={[styles.statAmount, { color: Colors[colorScheme].text }]}>
-          {formatNumber(followerCount)}
+          {(followerCount)}
         </Text>
         <Text style={[styles.statTitle, { color: Colors[colorScheme].tabIconDefault }]}>Followers</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.statsBox} onPress={onFollowingPress}>
         <Text style={[styles.statAmount, { color: Colors[colorScheme].text }]}>
-          {formatNumber(followingCount)}
+          {(followingCount)}
         </Text>
         <Text style={[styles.statTitle, { color: Colors[colorScheme].tabIconDefault }]}>Following</Text>
       </TouchableOpacity>
