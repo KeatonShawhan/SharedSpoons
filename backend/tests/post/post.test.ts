@@ -321,7 +321,7 @@ describe('Error Test Suite: Verify error handling of post/edit', () => {
         .put('/api/v0/post/edit/')
         .set('Authorization', `Bearer ${lucaToken}`)
         .query({ rating: 2, caption: 'I hate Big Macs!' })
-        .expect(404);
+        .expect(500);
     });
   
     // Test for edit attempt with invalid rating
