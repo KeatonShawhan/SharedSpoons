@@ -4,7 +4,6 @@ import { NavigatorScreenParams } from '@react-navigation/native';
 import HomeScreen from '../pages/home/HomeScreen';
 import ProfileTab, { ProfileTabParamList } from './profile';  // Import ProfileTabParamList
 import { PostStackNavigator, PostStackParamList } from '../navigation/PostStackNavigator';
-import { ProfileStackParamList } from '../pages/profile/profileNavigation';
 
 // Define HomeStack params, with nested ProfileNavigation and PostStack
 export type HomeStackParamList = {

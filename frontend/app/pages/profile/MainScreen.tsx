@@ -59,6 +59,9 @@ export default function MainScreen() {
         setFollowingCount(followingData.length);
         setFollowing(followingData);
 
+        console.log(followers);
+        console.log(following);
+
         // Fetch all posts
         const allPostsData = await fetchAllPosts(profileId, loginContext.accessToken);
         setPostCount(allPostsData.length);
