@@ -2,13 +2,17 @@
 import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { NavigatorScreenParams } from '@react-navigation/native';
 import HomeScreen from '../pages/home/HomeScreen';
-import { PostStackNavigator } from '../navigation/PostStackNavigator';
-import { PostStackParamList } from '../navigation/PostStackNavigator';
-import { LoginProvider } from '@/contexts/loginContext';
+import ProfileTab, { ProfileTabParamList } from './profile';  // Import ProfileTabParamList
+import { PostStackNavigator, PostStackParamList } from '../navigation/PostStackNavigator';
+import { ProfileStackParamList } from '../pages/profile/profileNavigation';
 
-// Define HomeStack params, with nested PostStack
+// Define HomeStack params, with nested ProfileNavigation and PostStack
 export type HomeStackParamList = {
   Home: undefined;
+  ProfileTab: NavigatorScreenParams<ProfileTabParamList> & {
+    // Add this additional parameter that will be passed through the navigation
+    isFromHomeTab?: boolean;
+  };
   PostStack: NavigatorScreenParams<PostStackParamList>;
 };
 
@@ -19,9 +23,25 @@ const Stack = createNativeStackNavigator<HomeStackParamList>();
 
 export default function HomeTab() {
   return (
-      <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="PostStack" component={PostStackNavigator} />
-      </Stack.Navigator>
+    <Stack.Navigator 
+      initialRouteName="Home" 
+      screenOptions={{ 
+        headerShown: false 
+      }}
+    >
+      <Stack.Screen 
+        name="Home" 
+        component={HomeScreen} 
+      />
+      <Stack.Screen 
+        name="ProfileTab" 
+        component={ProfileTab}
+        initialParams={{ isFromHomeTab: true }} // Set default value
+      />
+      <Stack.Screen 
+        name="PostStack" 
+        component={PostStackNavigator} 
+      />
+    </Stack.Navigator>
   );
 }

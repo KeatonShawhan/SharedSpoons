@@ -11,8 +11,12 @@ import API_URL from '@/config';
 
 // Update ProfileStack params to include postId in PostPage
 export type ProfileStackParamList = {
-  Main: { userId?: UUID }; // `userId` parameter for each MainScreen instance
-  Friends: { initialTab: 'followers' | 'following'; userId?: UUID }; // `userId` is now an optional parameter for FriendsScreen
+  Main: { 
+    userId?: UUID;
+    isFromProfileTab?: boolean;
+    isFromHomeTab?: boolean; // Add this parameter
+  };
+  Friends: { initialTab: 'followers' | 'following'; userId?: UUID };
   PostPage: { postId: UUID };
   PostStack: NavigatorScreenParams<PostStackParamList>;
 };

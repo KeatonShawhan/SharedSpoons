@@ -10,7 +10,7 @@ import ProfileStats from '../../../components/profile/ProfileStats';
 import ProfilePostSquare from '../../../components/profile/profilePostSquare';
 import AchievementList from '../../../components/profile/AchievementList';
 import type { ProfileStackParamList, ProfileScreenNavigationProp } from './profileNavigation';
-import { fetchAllPosts, fetchFollowersInfo, fetchFollowingInfo, fetchUserInfo } from './profileHelpers'; // Import fetchUserInfo
+import { fetchAllPosts, fetchFollowersInfo, fetchFollowingInfo, fetchUserInfo } from './profileHelpers';
 import LoginContext from '@/contexts/loginContext';
 
 const { width } = Dimensions.get('window');
@@ -22,6 +22,9 @@ export default function MainScreen() {
 
   const profileId = route.params?.userId || loginContext.userId;
   const isOwnProfile = profileId === loginContext.userId;
+  
+  // Determine if we're in the profile tab by checking the route
+  const isFromHomeTab = route.params?.isFromHomeTab ?? false;
 
   // State for user details
   const [userName, setUserName] = useState("Loading name...");
@@ -106,7 +109,8 @@ export default function MainScreen() {
           bio={bio} 
           rank={rank} 
           colorScheme={colorScheme} 
-          showBackButton={!isOwnProfile}
+          // Show back button if either not our profile OR not in profile tab
+          showBackButton={!isOwnProfile || isFromHomeTab}
         />
         <ProfileStats 
           postCount={postCount}
@@ -186,7 +190,6 @@ export default function MainScreen() {
   );
 }
 
-// Style definitions (same as provided)
 const styles = StyleSheet.create({
   container: { flex: 1, marginBottom: 0 },
   headerContainer: { paddingHorizontal: 10 },
