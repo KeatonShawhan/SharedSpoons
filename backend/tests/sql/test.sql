@@ -84,12 +84,30 @@ SELECT
         'pwhash', crypt('keatoniscool123', salt.salt), 
         'salt', salt.salt
     )
+FROM salt
+UNION ALL
+SELECT
+    '38ababab-2a07-45d6-85c9-f138d63cb466'::uuid,
+    jsonb_build_object(
+        'firstname', 'Test', 
+        'lastname', 'User', 
+        'email', 'testuser@ucsc.edu', 
+        'username', 'testuser',
+        'bio', 'I am a test user',
+        'phoneNumber', '(000) 000-0000',
+        'pfp', 'mock-s3-key.jpg',
+        'pwhash', crypt('testuser123', salt.salt), 
+        'salt', salt.salt
+    )
 FROM salt;
 
 INSERT INTO post (id, user_id, data) VALUES
     ('a5059ef4-971b-4e60-a692-a3af3365ba85', (SELECT id FROM app_user WHERE data->>'email' = 'lschram@ucsc.edu'), 
     json_build_object('image', 'mock-s3-key.jpg', 
                       'rating', 4, 'adds', 2, 'restaurant', 'CatFood', 'dish', 'Stare', 'time', '2024-10-24T12:45:00.000Z', 'caption', 'look at cat')),
+    ('a6969ef4-971b-4e60-a692-a3af3365ba85', (SELECT id FROM app_user WHERE data->>'email' = 'lschram@ucsc.edu'), 
+    json_build_object('image', 'mock-s3-key.jpg', 
+                      'rating', 3, 'adds', 2, 'restaurant', 'testres', 'dish', 'food!', 'time', '2024-10-21T12:45:00.000Z', 'caption', 'testfood')),
     ('a9359ef4-971b-4e60-a692-a3af3365ba85', (SELECT id FROM app_user WHERE data->>'email' = 'kshawhan@ucsc.edu'), 
     json_build_object('image', 'mock-s3-key.jpg', 
                       'rating', 3, 'adds', 1, 'restaurant', 'CatFood', 'dish', 'Stare', 'time', '2024-10-24T11:23:44.336Z', 'caption', 'cat!'));
@@ -101,7 +119,8 @@ INSERT INTO sponsor (data, active) VALUES
                        'adds', 5, 'restaurant', 'war.', 'dish', 'death', 'start', '2024-10-21T12:45:00.000Z', 'end', '2024-10-24T12:45:00.000Z'), false);
 
 INSERT INTO follow (sender, receiver) VALUES
-    ((SELECT id FROM app_user WHERE data->>'email' = 'kshawhan@ucsc.edu'), (SELECT id FROM app_user WHERE data->>'email' = 'lschram@ucsc.edu'));
+    ((SELECT id FROM app_user WHERE data->>'email' = 'kshawhan@ucsc.edu'), (SELECT id FROM app_user WHERE data->>'email' = 'lschram@ucsc.edu')),
+    ((SELECT id FROM app_user WHERE data->>'email' = 'lschram@ucsc.edu'), (SELECT id FROM app_user WHERE data->>'email' = 'kshawhan@ucsc.edu'));
 
 INSERT INTO toEat (post_id, user_id) VALUES
     ((SELECT id FROM post WHERE data->>'dish' = 'Stare' AND data->>'rating' = '3'), (SELECT id FROM app_user WHERE data->>'email' = 'lschram@ucsc.edu'));

@@ -144,30 +144,47 @@ export class postService{
     }
 
     public async getAllFriendsPosts(id:UUID): Promise<PostTotal[] | undefined> {
-        const select = `
-        SELECT 
-            post.*, 
-            app_user.data->>'firstname' AS firstname,
-            app_user.data->>'lastname' AS lastname
-        FROM 
-            post
-        INNER JOIN 
-            follow ON post.user_id = follow.receiver
-        LEFT JOIN 
-            app_user ON app_user.id = post.user_id
-        WHERE 
-            follow.sender = $1;
-        `;
-        const query = {
-          text: select,
-          values: [id]
-        };
-        const { rows } = await pool.query(query);
-        if (rows.length == 0) {
-          return undefined;
+        try {
+            const findUser = `
+            SELECT id FROM app_user
+            WHERE id = $1;
+            `
+            const userQuery = {
+                text: findUser,
+                values: [id]
+            }
+            const user = await pool.query(userQuery.text, userQuery.values);
+            if (user.rowCount === 0) {
+                console.error('User not found:' + id);
+                return undefined;
+            }
+
+            const select = `
+            SELECT 
+                post.*, 
+                app_user.data->>'firstname' AS firstname,
+                app_user.data->>'lastname' AS lastname
+            FROM 
+                post
+            INNER JOIN 
+                follow ON post.user_id = follow.receiver
+            LEFT JOIN 
+                app_user ON app_user.id = post.user_id
+            WHERE 
+                follow.sender = $1;
+            `;
+            const query = {
+            text: select,
+            values: [id]
+            };
+            const { rows } = await pool.query(query);
+            // need to return an empty array if no posts are found, not undefined. If the 
+            console.log(rows)
+            return rows;
+        } catch (error) {
+            console.error('Error getting all posts:', error);
+            return undefined;
         }
-        console.log(rows)
-        return rows;
     }
     
     public async editPost(postID: UUID, rating: number, caption: string): Promise < string | undefined > {

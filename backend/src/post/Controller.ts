@@ -212,7 +212,7 @@ export class PostController extends Controller {
             async (posts: PostTotal[] | undefined): 
             Promise<PostTotal[]| undefined> => {
             console.log(posts);
-            if (!posts) {
+            if (posts === undefined) {
                 this.setStatus(400);
                 console.error('Could not get posts');
                 return undefined;

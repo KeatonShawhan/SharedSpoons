@@ -12,6 +12,10 @@ beforeAll(async () => {
   await db.reset();
 });
 
+afterEach(async () => {
+    await db.reset();
+});
+
 afterAll((done) => {
   db.shutdown();
   server.close(done);
@@ -46,7 +50,7 @@ describe('Basic Test Suite: Verify Basic functionality of all endpts', () => {
         const res = await supertest(server)
             .delete('/api/v0/comment/delete')
             .set('Authorization', `Bearer ${keatonToken}`)
-            .query({ commentId: validCommentID });
+            .query({ commentID: validCommentID });
         expect(res.status).toBe(204);
     });
 });

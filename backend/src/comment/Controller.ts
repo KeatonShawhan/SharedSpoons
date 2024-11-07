@@ -54,7 +54,7 @@ export class CommentController extends Controller{
     @Delete('/delete')
     public async deleteComment(
         @Request() request: express.Request,
-        @Query() commentId: UUID,
+        @Query() commentID: UUID,
     ): Promise< boolean | undefined > {
         try{
             if (!request.user) {
@@ -64,7 +64,7 @@ export class CommentController extends Controller{
             }
 
             return new commentService()
-                .deleteComment(request.user.id, commentId)
+                .deleteComment(request.user.id, commentID)
                 .then((comment) => {
                     if (comment === undefined) {
                         this.setStatus(400);

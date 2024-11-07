@@ -43,6 +43,7 @@ const generateTestToken = ( id:UUID, username:string, firstname:string, lastname
 
 const lucaToken = generateTestToken('a3059ef4-971b-4e60-a692-a3af3365ba85', 'lucaschram', 'Luca', 'Schram');
 const keatonToken = generateTestToken('3b9a58b2-2a07-45d6-85c9-f138d63cb466', 'keatonshawhan', 'Keaton', 'Shawhan');
+const testUserToken = generateTestToken('c9999ef4-971b-4e60-a692-a3af3365ba85', 'testuser', 'Test', 'User')
 const invalidToken = generateTestToken('bbbbbbbb-971b-4e60-a692-a3af3365ba85', 'invalid', 'Invalid', 'User');
 
 const validTestPostData = { // luca data
@@ -112,6 +113,15 @@ describe('Basic Test Suite: Verify Basic functionality of all endpts', () => {
     expect(resJson.caption).toBe('I hate Big Macs!');
   });
 
+  test('Testing post/all/friendsPosts/{userID} endpoint - Will get all friends posts of keatonshawhan', async () => {
+    const response = await supertest(server)
+    .get('/api/v0/post/all/friendsPosts/3b9a58b2-2a07-45d6-85c9-f138d63cb466')
+    .set('Authorization', `Bearer ${keatonToken}`)
+    .expect(200)
+    expect(response.body).toBeDefined();
+    expect(response.body[0]).toHaveProperty('id');
+    expect(response.body[0]).toHaveProperty('data');
+    });
 });
 
 // post/create error testing suite
@@ -332,3 +342,82 @@ describe('Error Test Suite: Verify error handling of post/edit', () => {
         .expect(400);
     });
   });
+
+describe('Error Test Suite: Verify error handling of post/all/friendsPosts/{userID}', () => {
+  test('Get friends\' posts with VALID USER ID', async () => {
+    const validUserID = '3b9a58b2-2a07-45d6-85c9-f138d63cb466'; // Keaton's user ID
+
+    const response = await supertest(server)
+      .get(`/api/v0/post/all/friendsPosts/${validUserID}`)
+      .set('Authorization', `Bearer ${keatonToken}`)
+      .expect(200);
+
+    expect(response.body).toBeDefined();
+    expect(Array.isArray(response.body)).toBe(true);
+    expect(response.body.length).toBeGreaterThan(0); // Assuming keaton follows luca who has posts
+    expect(response.body[0]).toHaveProperty('id');
+    expect(response.body[0]).toHaveProperty('data');
+    expect(response.body[0].data).toHaveProperty('image');
+    expect(response.body[0].data.image).toBe('https://mock-s3-url.com/mock-s3-key.jpg');
+    expect(response.body[0]).toHaveProperty('firstname');
+    expect(response.body[0]).toHaveProperty('lastname');
+  });
+
+  // Test for retrieval attempt with invalid user ID format
+  test('Get friends\' posts with INVALID USER ID FORMAT', async () => {
+    const invalidUserID = 'invalid-id';
+
+    const response = await supertest(server)
+      .get(`/api/v0/post/all/friendsPosts/${invalidUserID}`)
+      .set('Authorization', `Bearer ${lucaToken}`)
+      .expect(400); // Expecting a 400 Bad Request for invalid ID format
+  });
+
+  // Test for retrieval attempt with non-existent user ID
+  test('Get friends\' posts with NON-EXISTENT USER ID', async () => {
+    const nonExistentUserID = 'b1239ef4-971b-4e60-a692-a3af3365ba99';
+
+    const response = await supertest(server)
+      .get(`/api/v0/post/all/friendsPosts/${nonExistentUserID}`)
+      .set('Authorization', `Bearer ${lucaToken}`)
+      .expect(400);
+  });
+
+  // Test for unauthorized access (no token provided)
+  test('Get friends\' posts without AUTHORIZATION TOKEN', async () => {
+    const validUserID = 'a3059ef4-971b-4e60-a692-a3af3365ba85';
+
+    const response = await supertest(server)
+      .get(`/api/v0/post/all/friendsPosts/${validUserID}`)
+      // No Authorization header set
+      .expect(401); // Expecting a 401 Unauthorized error
+  });
+
+  // Test when the user has no friends or friends have no posts
+  test('Get friends\' posts when there are NO FRIENDS POSTS', async () => {
+    const userWithNoFriendsID = '38ababab-2a07-45d6-85c9-f138d63cb466'; // Test user's ID
+
+    const response = await supertest(server)
+      .get(`/api/v0/post/all/friendsPosts/${userWithNoFriendsID}`)
+      .set('Authorization', `Bearer ${testUserToken}`)
+      .expect(200); // Should return 200 with an empty array
+
+    expect(response.body).toBeDefined();
+    expect(Array.isArray(response.body)).toBe(true);
+    expect(response.body.length).toBe(0); // No friends' posts
+  });
+
+  // Test for error during image link retrieval
+  test('Get friends\' posts with ERROR IN IMAGE LINK RETRIEVAL', async () => {
+    // Mock the getFileLink method to return undefined, simulating an error
+    jest.spyOn(S3Service.prototype, 'getFileLink')
+      .mockResolvedValue(undefined);
+    const validUserID = '3b9a58b2-2a07-45d6-85c9-f138d63cb466';
+
+    const response = await supertest(server)
+      .get(`/api/v0/post/all/friendsPosts/${validUserID}`)
+      .set('Authorization', `Bearer ${lucaToken}`)
+      .expect(400); // Expecting a 400 Bad Request due to image link retrieval failure
+  });
+
+});
