@@ -2,29 +2,31 @@ import React, { useContext, useRef, useState, useEffect } from 'react';
 import { Animated, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { PostCard } from '@/components/postCard/postCard';
+import { useNavigation } from '@react-navigation/native';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Header } from '@/components/home/Header';
 import { Colors } from '@/constants/Colors';
-import LoginContext from '@/contexts/loginContext';
+import type { HomeScreenNavigationProp } from '@/app/(tabs)';
+import LoginContext, { LoginProvider } from '@/contexts/loginContext';
 import { fetchPosts } from './homeHelpers';
 const HEADER_HEIGHT = 80; 
 const SCROLL_THRESHOLD = 50; 
 
 export default function HomeScreen() {
+  const navigation = useNavigation<HomeScreenNavigationProp>();
   const colorScheme = useColorScheme();
   const loginContext = useContext(LoginContext)!
   const [homePosts, setHomePosts] = useState([])
-  console.log(loginContext.userId);
-
+  console.log(loginContext.accessToken);
   useEffect(() => {
     const getPosts = async () => {
       const posts = await fetchPosts(loginContext.userId, loginContext.accessToken);
       setHomePosts(posts);
-      //console.log(homePosts);
+      console.log(homePosts);
     };
 
     getPosts();
-  }, [loginContext.accessToken, loginContext.userId]);
+  }, []);
 
   
   // Use a ref to track the scroll position

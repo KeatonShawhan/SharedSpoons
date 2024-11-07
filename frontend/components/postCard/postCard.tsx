@@ -8,7 +8,7 @@ import { PostCaption } from './postCaption';
 import { postDescription } from './postDescription';
 import type { HomeScreenNavigationProp } from '@/app/(tabs)';
 import { ProfileScreenNavigationProp } from '@/app/pages/profile/profileNavigation';
-import type { ToEatScreenNavigationProp } from '@/app/(tabs)/toeat'; 
+import type { ToEatScreenNavigationProp } from '@/app/(tabs)/toeat';
 
 export interface PostCardProps {  
   id: string;
@@ -52,12 +52,50 @@ export function PostCard({
     }).start();
   };
 
+  const handleNavigateToProfile = () => {
+    switch (parentTab) {
+      case 'HomeTab':
+        navigation.push('ProfileTab', {
+          screen: 'ProfileRoot',
+          params: {
+            screen: 'Main',
+            params: { 
+              userId: user_id,
+              isFromHomeTab: true  // Add this line
+            }
+          },
+          isFromHomeTab: true  // Add this line
+        });
+        break;
+
+      case 'ProfileTab':
+        // If we're already in ProfileTab, use the profile navigation directly
+        navigation.push('Main', { userId: user_id });
+        break;
+
+      case 'ToEatTab':
+        // Handle ToEatTab navigation if needed
+        // Add your ToEatTab specific navigation logic here
+        break;
+
+      case 'ExploreTab':
+        // Handle ExploreTab navigation if needed
+        // Add your ExploreTab specific navigation logic here
+        break;
+
+      default:
+        console.warn('Unknown parent tab:', parentTab);
+    }
+  };
+
   return (
     <View style={{ justifyContent: 'center', alignItems: 'center', paddingBottom: 30 }}>
       <View style={{ width: '95%', borderRadius: 0, borderColor: 'none' }}>
-        <View style={{ paddingBottom: 10, paddingLeft: 0 }}>
-          {postHeader({ username, place, user_id })}
-        </View>
+        <TouchableOpacity onPress={handleNavigateToProfile}>
+          <View style={{ paddingBottom: 10, paddingLeft: 0 }}>
+            {postHeader({ username, place, user_id, onNavigateToProfile: handleNavigateToProfile })}
+          </View>
+        </TouchableOpacity>
 
         <TouchableOpacity onPress={handlePress}>
           <View style={{ position: 'relative' }}>
@@ -85,8 +123,8 @@ export function PostCard({
             dish={dish}
             rating={rating}
             postId={id}
-            navigation={navigation} 
-            parentTab={parentTab} 
+            navigation={navigation}
+            parentTab={parentTab}
           />
         </View>
       </View>
