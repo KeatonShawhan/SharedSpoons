@@ -76,7 +76,7 @@ export default function MainScreen() {
     };
 
     fetchData();
-  }, [profileId]);
+  }, [profileId, loginContext.followed]);
 
   useEffect(() => {
     // Simulate fetching achievements data
@@ -99,6 +99,7 @@ export default function MainScreen() {
       if (success) {
         setIsFollowing(false);
         setFollowerCount(prevCount => prevCount - 1);
+        loginContext.isFollowed(!loginContext.followed)
       }
     } else {
       // Follow the user
