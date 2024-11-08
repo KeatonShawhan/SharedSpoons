@@ -75,24 +75,27 @@ export function CommentsScreen() {
 
   }, [])
 
-  const renderComment = ({ item }: { item: Comment }) => (
-    <View style={styles.commentContainer}>
-      <View style={styles.commentHeader}>
-      <Image 
-            style={{height: 40, width:40, borderRadius:20, borderWidth:2, borderColor:"green", marginRight: 10}}
-            source={{ uri: item.pfp }}
-          />
+ 
+
+const renderComment = ({ item }: { item: Comment }) => (
+  <View style={styles.commentContainer}>
+    <View style={styles.commentHeader}>
+      <View style={styles.leftContainer}>
+        <Image 
+          style={{height: 40, width: 40, borderRadius: 20, borderWidth: 2, borderColor: "green", marginRight: 10}}
+          source={{ uri: item.pfp }}
+        />
         <Text style={[styles.username, { color: Colors[colorScheme].text }]}>
           {item.firstname + " " + item.lastname}
         </Text>
-        <Text style={styles.timestamp}>{handleDate(item.data.time)}</Text>
       </View>
-      <Text style={[styles.commentText, { color: Colors[colorScheme].text }]}>
-        {item.data.text}
-      </Text>
+      <Text style={styles.timestamp}>{handleDate(item.data.time)}</Text>
     </View>
-  );
-
+    <Text style={[styles.commentText, { color: Colors[colorScheme].text }]}>
+      {item.data.text}
+    </Text>
+  </View>
+);
   return (
     <SafeAreaView 
       style={[
@@ -199,23 +202,10 @@ const styles = StyleSheet.create({
   commentContainer: {
     marginBottom: 20,
   },
-  commentHeader: {
-    flexDirection: 'row',
-    // justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 4,
-  },
-  username: {
-    fontWeight: '600',
-    marginRight: 10
-  },
   commentText: {
     fontSize: 15,
     lineHeight: 20,
-  },
-  timestamp: {
-    fontSize: 12,
-    color: 'gray',
+    paddingTop: 10,
   },
   inputContainer: {
     flexDirection: 'row',
@@ -237,5 +227,23 @@ const styles = StyleSheet.create({
   sendButton: {
     padding: 8,
     marginBottom: 12,
+  }, 
+  commentHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  leftContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  username: {
+    fontWeight: '600',
+    marginRight: 10,
+  },
+  timestamp: {
+    fontSize: 12,
+    color: 'gray',
   },
 });
