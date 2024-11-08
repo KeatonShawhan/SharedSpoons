@@ -12,6 +12,7 @@ import { useRoute } from '@react-navigation/native';
 import { RouteProp } from '@react-navigation/native';
 import LoginContext from '@/contexts/loginContext';
 import { Image } from 'react-native';
+import { parse } from '@babel/core';
 interface Comment {
   data: {
     id: string;
@@ -55,7 +56,12 @@ export function CommentsScreen() {
     if (!date) return 'No date available';
     const parsedDate = new Date(date);
     if (isNaN(parsedDate.getTime())) return 'Invalid date';
-    return Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' }).format(parsedDate);
+    const today = new Date();
+    if (parsedDate.getDate == today.getDate && parsedDate.getMonth == today.getMonth && parsedDate.getFullYear == today.getFullYear) {
+      return ("Today")
+    } else {
+      return Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' }).format(parsedDate);
+    }
   };
 
   useEffect( ()=>{
@@ -172,7 +178,6 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 0.5,
@@ -196,12 +201,13 @@ const styles = StyleSheet.create({
   },
   commentHeader: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    // justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 4,
   },
   username: {
     fontWeight: '600',
+    marginRight: 10
   },
   commentText: {
     fontSize: 15,
