@@ -107,6 +107,7 @@ export default function MainScreen() {
       if (success) {
         setIsFollowing(true);
         setFollowerCount(prevCount => prevCount + 1);
+        loginContext.isFollowed(!loginContext.followed)
       }
     }
   };
