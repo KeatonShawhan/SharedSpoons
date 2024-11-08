@@ -2,6 +2,18 @@ import { pool } from '../db';
 import { CommentJSON, CommentReturn } from '.';
 import { UUID } from '../types';
 
+interface Comment {
+    data: {
+      id: string;
+      username: string;
+      text: string;
+      time: string;
+    }
+    firstname: string;
+    lastname:string;
+    pfp: string;
+  }
+
 export class commentService {
     public async createComment(userID: UUID, postID: UUID, commentData: CommentJSON): Promise<CommentReturn | undefined> {
         const client = await pool.connect();
@@ -61,7 +73,7 @@ export class commentService {
     }
 
 
-    public async getComments(postId: UUID): Promise<any[] | undefined> {
+    public async getComments(postId: UUID): Promise<Comment[] | undefined> {
         const select = `
         SELECT comment.*, 
         app_user.data->>'firstname' AS firstname,

@@ -12,7 +12,6 @@ import { useRoute } from '@react-navigation/native';
 import { RouteProp } from '@react-navigation/native';
 import LoginContext from '@/contexts/loginContext';
 import { Image } from 'react-native';
-import { parse } from '@babel/core';
 interface Comment {
   data: {
     id: string;
@@ -37,7 +36,7 @@ export function CommentsScreen() {
   const navigation = useNavigation<CommentsScreenNavigationProp>();
   const colorScheme = useColorScheme();
   const [newComment, setNewComment] = useState('');
-  const options = {month: 'short', day:'numeric'}
+  // const options = {month: 'short', day:'numeric'}
   const route = useRoute<CommentsScreenRouteProp>(); 
   const { postId } = route.params; 
   
@@ -45,7 +44,7 @@ export function CommentsScreen() {
 
   const handleSubmitComment = async () => {
 
-    const success = await postComment(postId, newComment, loginContext.accessToken)
+    await postComment(postId, newComment, loginContext.accessToken)
     const commentList = await getComment(postId, loginContext.accessToken)
     setComments(commentList)
 

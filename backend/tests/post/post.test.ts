@@ -367,7 +367,7 @@ describe('Error Test Suite: Verify error handling of post/all/friendsPosts/{user
   test('Get friends\' posts with INVALID USER ID FORMAT', async () => {
     const invalidUserID = 'invalid-id';
 
-    const response = await supertest(server)
+    await supertest(server)
       .get(`/api/v0/post/all/friendsPosts/${invalidUserID}`)
       .set('Authorization', `Bearer ${lucaToken}`)
       .expect(400); // Expecting a 400 Bad Request for invalid ID format
@@ -377,7 +377,7 @@ describe('Error Test Suite: Verify error handling of post/all/friendsPosts/{user
   test('Get friends\' posts with NON-EXISTENT USER ID', async () => {
     const nonExistentUserID = 'b1239ef4-971b-4e60-a692-a3af3365ba99';
 
-    const response = await supertest(server)
+    await supertest(server)
       .get(`/api/v0/post/all/friendsPosts/${nonExistentUserID}`)
       .set('Authorization', `Bearer ${lucaToken}`)
       .expect(400);
@@ -387,7 +387,7 @@ describe('Error Test Suite: Verify error handling of post/all/friendsPosts/{user
   test('Get friends\' posts without AUTHORIZATION TOKEN', async () => {
     const validUserID = 'a3059ef4-971b-4e60-a692-a3af3365ba85';
 
-    const response = await supertest(server)
+    await supertest(server)
       .get(`/api/v0/post/all/friendsPosts/${validUserID}`)
       // No Authorization header set
       .expect(401); // Expecting a 401 Unauthorized error
@@ -414,7 +414,7 @@ describe('Error Test Suite: Verify error handling of post/all/friendsPosts/{user
       .mockResolvedValue(undefined);
     const validUserID = '3b9a58b2-2a07-45d6-85c9-f138d63cb466';
 
-    const response = await supertest(server)
+    await supertest(server)
       .get(`/api/v0/post/all/friendsPosts/${validUserID}`)
       .set('Authorization', `Bearer ${lucaToken}`)
       .expect(400); // Expecting a 400 Bad Request due to image link retrieval failure

@@ -5,6 +5,18 @@ import { commentService } from './service'; // Comment service for handling comm
 import { UUID } from '../types';
 import { commentSchema } from './validator';
 
+interface Comment {
+    data: {
+      id: string;
+      username: string;
+      text: string;
+      time: string;
+    }
+    firstname: string;
+    lastname:string;
+    pfp: string;
+  }
+
 @Security('jwt')
 @Route('comment')
 export class CommentController extends Controller{
@@ -85,7 +97,7 @@ export class CommentController extends Controller{
     @Response("404", "User not found")
     public async getComments(
       @Query() postId: UUID,
-    ): Promise<any[] | undefined> {
+    ): Promise<Comment[] | undefined> {
       return new commentService()
         .getComments(postId)
         .then((comment) => {

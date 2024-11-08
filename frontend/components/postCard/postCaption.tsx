@@ -1,5 +1,5 @@
 // components/post/postCaption.tsx
-import React, { useState, useEffect, useCallback, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Text, View, TouchableOpacity } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { starDisplay } from './starDisplay';
@@ -8,7 +8,7 @@ import { CompositeNavigationProp } from '@react-navigation/native';
 import type { HomeScreenNavigationProp } from '@/app/(tabs)';
 import { ProfileScreenNavigationProp } from '@/app/pages/profile/profileNavigation';
 import type { ToEatScreenNavigationProp } from '@/app/(tabs)/toeat'; 
-import { getComment, getCommentCount } from './screens/commentHelper';
+import { getComment} from './screens/commentHelper';
 import LoginContext from '@/contexts/loginContext';
 const ORANGE_COLOR = '#FF9F45';
 
