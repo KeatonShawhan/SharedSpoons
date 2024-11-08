@@ -46,7 +46,7 @@ export function CommentsScreen() {
   const handleSubmitComment = async () => {
 
     const success = await postComment(postId, newComment, loginContext.accessToken)
-    const commentList = await getComment(postId, newComment, loginContext.accessToken)
+    const commentList = await getComment(postId, loginContext.accessToken)
     setComments(commentList)
 
     //console.log("ugh: " + success2);
@@ -66,7 +66,7 @@ export function CommentsScreen() {
 
   useEffect( ()=>{
     const fetchData = async () => {
-      const commentList = await getComment(postId, newComment, loginContext.accessToken)
+      const commentList = await getComment(postId, loginContext.accessToken)
       setComments(commentList)
       console.log(commentList[0])
     }

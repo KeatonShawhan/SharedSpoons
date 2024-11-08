@@ -13,6 +13,8 @@ interface postHeaderProps {
   place: string;
   user_id: string;
   onNavigateToProfile: () => void;
+
+  
 }
 
 export function postHeader({ username, place, onNavigateToProfile }: postHeaderProps): React.JSX.Element {

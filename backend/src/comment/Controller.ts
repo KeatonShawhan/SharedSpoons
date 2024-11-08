@@ -83,11 +83,28 @@ export class CommentController extends Controller{
 
     @Get("/getComments")
     @Response("404", "User not found")
-    public async getFollowingCount(
+    public async getComments(
       @Query() postId: UUID,
     ): Promise<any[] | undefined> {
       return new commentService()
         .getComments(postId)
+        .then((comment) => {
+            if (comment === undefined) {
+                this.setStatus(400);
+                console.error('Could not delete comment');
+                return undefined;
+            }
+            return comment;
+        })
+    }
+
+    @Get("/getCommentCount")
+    @Response("404", "User not found")
+    public async getCommentsCount(
+      @Query() postId: UUID,
+    ): Promise<number | undefined> {
+      return new commentService()
+        .getCommentsCount(postId)
         .then((comment) => {
             if (comment === undefined) {
                 this.setStatus(400);

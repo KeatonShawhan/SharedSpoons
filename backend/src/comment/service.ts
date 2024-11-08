@@ -93,4 +93,35 @@ export class commentService {
           return undefined;
         }
       }
+
+
+      public async getCommentsCount(postId: UUID): Promise<number | undefined> {
+        const select = `
+        SELECT 
+            COUNT(*) AS comment_count
+        FROM comment
+        WHERE comment.post_id = $1;
+        `;
+        
+        const query = {
+        text: select,
+        values: [postId],
+        };
+
+        try {
+            const { rows } = await pool.query(query);
+
+            if (rows.length === 0) {
+                console.log("No Comments");
+                return 0;
+            }
+
+            const followerCount = rows[0].follower_count;
+            return parseInt(followerCount, 10);
+            
+        } catch (err) {
+            console.error("Error fetching following count:", err);
+            return undefined;
+        }
+      }
 }
