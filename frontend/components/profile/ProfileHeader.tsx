@@ -1,3 +1,5 @@
+// ProfileHeader.tsx
+
 import React from 'react';
 import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity } from 'react-native';
 import { Colors } from '@/constants/Colors';
@@ -11,10 +13,22 @@ interface ProfileHeaderProps {
   bio: string;
   rank: string;
   colorScheme: string;
-  showBackButton?: boolean; // Optional prop to show the back arrow
+  showBackButton?: boolean;
+  isOwnProfile: boolean;
+  isFollowing: boolean;
+  handleFollowPress: () => void;
 }
 
-const ProfileHeader: React.FC<ProfileHeaderProps> = ({ name, bio, rank, colorScheme, showBackButton }) => {
+const ProfileHeader: React.FC<ProfileHeaderProps> = ({
+  name,
+  bio,
+  rank,
+  colorScheme,
+  showBackButton,
+  isOwnProfile,
+  isFollowing,
+  handleFollowPress,
+}) => {
   const navigation = useNavigation();
 
   return (
@@ -33,10 +47,25 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ name, bio, rank, colorSch
         <Text style={[styles.name, { color: Colors[colorScheme].text }]}>{name}</Text>
         <Text style={[styles.bio, { color: Colors[colorScheme].text }]}>{bio}</Text>
       </View>
-      <Image
-        style={[styles.profileImage, { borderColor: Colors[colorScheme].icon }]}
-        source={{ uri: 'https://via.placeholder.com/150' }}
-      />
+      <View style={styles.profileImageContainer}>
+        <Image
+          style={[styles.profileImage, { borderColor: Colors[colorScheme].icon }]}
+          source={{ uri: 'https://via.placeholder.com/150' }}
+        />
+        {/* Conditionally render the follow/unfollow button */}
+        {!isOwnProfile && (
+          <TouchableOpacity
+            style={[styles.followButton, { backgroundColor: Colors[colorScheme].background }]}
+            onPress={handleFollowPress}
+          >
+            <Ionicons
+              name={isFollowing ? 'checkmark' : 'add'}
+              size={16}
+              color={Colors[colorScheme].text}
+            />
+          </TouchableOpacity>
+        )}
+      </View>
     </View>
   );
 };
@@ -59,10 +88,27 @@ const styles = StyleSheet.create({
     flex: 1,
     marginRight: 20,
   },
+  profileImageContainer: {
+    position: 'relative',
+  },
   profileImage: {
     width: width * 0.25,
     height: width * 0.25,
     borderRadius: width * 0.125,
+    borderColor: Colors.light.icon,
+  },
+  followButton: {
+    position: 'absolute',
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    bottom: -1, // Adjust this value to position the button partially over the profile image
+    right: 3,
+    backgroundColor: Colors.light.background,
+    borderWidth: 1,
+    borderColor: Colors.light.icon,
   },
   rankContainer: {
     paddingHorizontal: 12,

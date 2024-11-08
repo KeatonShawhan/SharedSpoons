@@ -1,4 +1,19 @@
+//profileHelpers.tsx
 import API_URL from '@/config';
+
+export const checkIfFollowing = async (currentUserId, profileUserId, accessToken) => {
+  try {
+    // Fetch the current user's following list
+    const followingList = await fetchFollowingInfo(currentUserId, accessToken);
+
+    // Check if the profile user's ID is in the following list
+    const isFollowing = followingList.some(user => user.id === profileUserId);
+    return isFollowing;
+  } catch (err) {
+    console.error("Error checking following status:", err);
+    return false;
+  }
+};
 
 // Fetch followers info
 export const fetchFollowersInfo = async (userId, accessToken) => {
