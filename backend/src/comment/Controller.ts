@@ -1,4 +1,4 @@
-import { Controller, Route, Request, Post, Query, Delete, Security} from 'tsoa';
+import { Controller, Route, Request, Post, Query, Delete, Security, Get, Response} from 'tsoa';
 import * as express from 'express';
 import { CommentJSON, CommentReturn } from '.';
 import { commentService } from './service'; // Comment service for handling comment creation
@@ -79,5 +79,22 @@ export class CommentController extends Controller{
             this.setStatus(500);
             return undefined;
         }
+    }
+
+    @Get("/getComments")
+    @Response("404", "User not found")
+    public async getFollowingCount(
+      @Query() postId: UUID,
+    ): Promise<any[] | undefined> {
+      return new commentService()
+        .getComments(postId)
+        .then((comment) => {
+            if (comment === undefined) {
+                this.setStatus(400);
+                console.error('Could not delete comment');
+                return undefined;
+            }
+            return comment;
+        })
     }
 }

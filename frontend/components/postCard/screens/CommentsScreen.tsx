@@ -1,5 +1,5 @@
 // components/post/screens/CommentsScreen.tsx
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, FlatList, KeyboardAvoidingView, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -7,58 +7,82 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import type { CommentsScreenNavigationProp } from '../postNavigator';
-
+import { postComment, getComment } from './commentHelper';
+import { useRoute } from '@react-navigation/native';
+import { RouteProp } from '@react-navigation/native';
+import LoginContext from '@/contexts/loginContext';
+import { Image } from 'react-native';
 interface Comment {
-  id: string;
-  username: string;
-  text: string;
-  timestamp: string;
+  data: {
+    id: string;
+    username: string;
+    text: string;
+    time: string;
+  }
+  firstname: string;
+  lastname:string;
+  pfp: string;
 }
 
+type PostStackParamList = {
+  Comments: { postId: string; parentTab: string };
+};
+
+type CommentsScreenRouteProp = RouteProp<PostStackParamList, 'Comments'>;
+
+
 export function CommentsScreen() {
+  const loginContext = useContext(LoginContext)
   const navigation = useNavigation<CommentsScreenNavigationProp>();
   const colorScheme = useColorScheme();
   const [newComment, setNewComment] = useState('');
+  const options = {month: 'short', day:'numeric'}
+  const route = useRoute<CommentsScreenRouteProp>(); 
+  const { postId } = route.params; 
   
-  // Dummy comments
-  const [comments, setComments] = useState<Comment[]>([
-    {
-      id: '1',
-      username: 'johndoe',
-      text: 'Looks delicious! 😋',
-      timestamp: '2h ago'
-    },
-    {
-      id: '2',
-      username: 'foodlover',
-      text: 'I need to try this place!',
-      timestamp: '1h ago'
-    }
-  ]);
+  const [comments, setComments] = useState([]);
 
-  const handleSubmitComment = () => {
-    if (newComment.trim()) {
-      const comment: Comment = {
-        id: Date.now().toString(),
-        username: 'currentUser', // Replace with actual username from context/props
-        text: newComment,
-        timestamp: 'Just now'
-      };
-      setComments(prev => [comment, ...prev]);
-      setNewComment('');
-    }
+  const handleSubmitComment = async () => {
+
+    const success = await postComment(postId, newComment, loginContext.accessToken)
+    const commentList = await getComment(postId, newComment, loginContext.accessToken)
+    setComments(commentList)
+
+    //console.log("ugh: " + success2);
   };
+
+  const handleDate = (date: string) => {
+    if (!date) return 'No date available';
+    const parsedDate = new Date(date);
+    if (isNaN(parsedDate.getTime())) return 'Invalid date';
+    return Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' }).format(parsedDate);
+  };
+
+  useEffect( ()=>{
+    const fetchData = async () => {
+      const commentList = await getComment(postId, newComment, loginContext.accessToken)
+      setComments(commentList)
+      console.log(commentList[0])
+    }
+
+    fetchData();
+
+  }, [])
 
   const renderComment = ({ item }: { item: Comment }) => (
     <View style={styles.commentContainer}>
       <View style={styles.commentHeader}>
+      <Image 
+            style={{height: 40, width:40, borderRadius:20, borderWidth:2, borderColor:"green", marginRight: 10}}
+            source={{ uri: item.pfp }}
+          />
         <Text style={[styles.username, { color: Colors[colorScheme].text }]}>
-          {item.username}
+          {item.firstname + " " + item.lastname}
         </Text>
-        <Text style={styles.timestamp}>{item.timestamp}</Text>
+        <Text style={styles.timestamp}>{handleDate(item.data.time)}</Text>
       </View>
       <Text style={[styles.commentText, { color: Colors[colorScheme].text }]}>
-        {item.text}
+        {item.data.text}
       </Text>
     </View>
   );

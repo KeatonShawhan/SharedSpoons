@@ -59,4 +59,38 @@ export class commentService {
             return undefined;
         }
     }
+
+
+    public async getComments(postId: UUID): Promise<any[] | undefined> {
+        const select = `
+        SELECT comment.*, 
+        app_user.data->>'firstname' AS firstname,
+        app_user.data->>'lastname' AS lastname,
+        app_user.data->>'pfp' AS pfp
+        FROM comment
+        LEFT JOIN 
+            app_user ON app_user.id = comment.user_id
+        WHERE 
+            comment.post_id = $1;
+        `;
+    
+        const query = {
+          text: select,
+          values: [postId],
+        };
+    
+        try {
+          const { rows } = await pool.query(query);
+          
+          if (rows.length === 0) {
+            console.log("No comments found for post");
+            return [];
+        }
+          return rows;
+          
+        } catch (err) {
+          console.error("Error fetching followers:", err);
+          return undefined;
+        }
+      }
 }
