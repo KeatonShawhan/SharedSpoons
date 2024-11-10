@@ -1,10 +1,10 @@
 import { pool } from '../db';
-import { PostContent, PostTotal } from '.';
-import { UUID } from '../types/index';
+import { PostTotal } from '../post';
+
 
 export class toEatService{
 
-    public async getToEatList(userId:string): Promise < any[] | undefined > {
+    public async getToEatList(userId:string): Promise < PostTotal[] | undefined > {
         const client = await pool.connect();
 
         try{
@@ -35,7 +35,7 @@ export class toEatService{
         }
     }
 
-    public async postToEatList(userId:string, postId: string): Promise < any[] | undefined > {
+    public async postToEatList(userId:string, postId: string): Promise < {id:string} | undefined > {
         const client = await pool.connect();
 
         try{
@@ -54,7 +54,7 @@ export class toEatService{
 
             const { rows } = await pool.query(query);
 
-            return rows;
+            return rows[0].id;
             
         }catch (error) {
             await client.query('ROLLBACK');

@@ -1,11 +1,8 @@
 //Controller.ts
-import { Controller, Get, Route, Request, FormField, Post, UploadedFile, Query, Response, Delete, Put, Path, Security} from 'tsoa';
+import { Controller, Get, Route, Request, Post, Query, Response, Security} from 'tsoa';
 import * as express from 'express';
-import { S3Service } from '../s3/service'; // S3 service for handling uploads
 import {toEatService } from './service'; // Post service for handling post creation
-import { PostJSON, PostContent, PostTotal } from '.';
-import  {postDataSchema, editPostDataSchema}  from './validator';
-
+import { PostTotal } from '../post';
 
 @Security('jwt')
 @Route('toEat')
@@ -15,7 +12,7 @@ export class ToEatController extends Controller {
     @Response("404", "User not found")
     public async getToEat(
       @Request() request: express.Request, 
-    ): Promise<any[] | undefined> {
+    ): Promise<PostTotal[] | undefined> {
         try {
             if (!request.user) {
                 this.setStatus(401);
@@ -46,7 +43,7 @@ export class ToEatController extends Controller {
     public async postToEat(
       @Request() request: express.Request, 
       @Query() postId: string,
-    ): Promise<any[] | undefined> {
+    ): Promise<{id:string} | undefined> {
         try {
             if (!request.user) {
                 this.setStatus(401);
