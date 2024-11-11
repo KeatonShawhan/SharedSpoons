@@ -122,13 +122,13 @@ export class commentService {
 
         try {
             const { rows } = await pool.query(query);
-
+            console.log(rows);
             if (rows.length === 0) {
                 console.log("No Comments");
                 return 0;
             }
 
-            const followerCount = rows[0].follower_count;
+            const followerCount = rows[0].comment_count;
             return parseInt(followerCount, 10);
             
         } catch (err) {

@@ -8,7 +8,7 @@ import { CompositeNavigationProp } from '@react-navigation/native';
 import type { HomeScreenNavigationProp } from '@/app/(tabs)';
 import { ProfileScreenNavigationProp } from '@/app/pages/profile/profileNavigation';
 import type { ToEatScreenNavigationProp } from '@/app/(tabs)/toeat'; 
-import { getComment} from './screens/commentHelper';
+import { getComment, getCommentCount} from './screens/commentHelper';
 import LoginContext from '@/contexts/loginContext';
 import { addToEat } from '@/app/pages/toeat/toEatHelper';
 const ORANGE_COLOR = '#FF9F45';
@@ -59,14 +59,13 @@ export function PostCaption({
 
   useEffect( ()=>{
     const fetchData = async () => {
-      const commentList = await getComment(postId, loginContext.accessToken)
-      setCommentCount(commentList.length)
-      console.log(commentList.length)
+      console.log(postId)
+      const commentList = await getCommentCount(postId, loginContext.accessToken)
+      setCommentCount(commentList)
+      console.log("amt: " + commentList)
     }
-
     fetchData();
-
-  }, [])
+  }, [postId])
 
   return (
     <ThemedView>

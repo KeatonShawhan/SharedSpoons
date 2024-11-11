@@ -19,6 +19,7 @@ export const postComment = async (postId, text, accessToken) => {
 };
 
 export const getComment = async (postId, accessToken) => {
+  console.log("check: " + postId)
   try {
     const response = await fetch(`${API_URL}comment/getComments?postId=${postId}`, {
       method: 'GET',
@@ -40,6 +41,7 @@ export const getComment = async (postId, accessToken) => {
 };
 
 export const getCommentCount = async (postId, accessToken) => {
+
   try {
     const response = await fetch(`${API_URL}comment/getCommentCount?postId=${postId}`, {
       method: 'GET',
@@ -51,11 +53,11 @@ export const getCommentCount = async (postId, accessToken) => {
     if (!response.ok) throw new Error(`Error following user: ${response.status}`);
     //console.log(response)
     const json = await response.json();
-    //console.log(json)
+    console.log(json)
     return json;
 
   } catch (err) {
-    console.error("Error getting comment", err);
+    console.error("Error getting comment count", err);
     return 0;
   }
 };

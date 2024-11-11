@@ -1,5 +1,5 @@
 // app/pages/toEatDetails.tsx
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { SafeAreaView, ScrollView, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
 import { ToEatDetailsInfo } from '@/components/toEatCard/toEatDetails';
@@ -12,7 +12,9 @@ import type { ToEatScreenNavigationProp } from '@/app/(tabs)/toeat';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { PostStackParamList } from '@/app/navigation/PostStackNavigator';
 import type { PostCardProps } from '@/components/postCard/postCard';
-
+import LoginContext from '@/contexts/loginContext';
+import API_URL from '@/config';
+import { fetchPostData } from './toEatHelper';
 type ToEatDetailsRouteProp = RouteProp<{ ToEatDetails: { id: string } }, 'ToEatDetails'>;
 type ToEatDetailsNavigationProp = CompositeNavigationProp<
   NativeStackNavigationProp<{ PostStack: PostStackParamList }>,
@@ -24,20 +26,24 @@ export default function ToEatDetails() {
   const navigation = useNavigation<ToEatDetailsNavigationProp>();
   const colorScheme = useColorScheme();
   const { id } = route.params;
+  const loginContext = useContext(LoginContext)
+  const [post, setPost] = useState<PostCardProps>();
+
 
   const themeColors = Colors[colorScheme];
 
-  const detailData: PostCardProps = {
-    id,
-    user_id:'1',
-    username: "Zoe Feller",
-    caption: "yum!",
-    dish: "Pepperoni Pizza",
-    rating: 4.5,
-    place: "Pizza Hut",
-    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFGJ2-FbJk717ZkaM5gjIUHT3kCQhDWNdIyvsR-XLbpsRdFVMpWRlSZx6jo9JAa1joLRU&usqp=CAU",
-    parentTab: 'ToEatTab', 
-  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const postData = await fetchPostData(id,loginContext.accessToken);
+        setPost(postData)
+      } catch (error) {
+        console.error("Error fetching profile data:", error);
+      }
+    };
+    fetchData();
+  }, []);
   
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: themeColors.background }}>
@@ -53,7 +59,7 @@ export default function ToEatDetails() {
       {/* Scrollable Content */}
       <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
         <ThemedView style={{ paddingTop: 20 }}>
-          <ToEatDetailsInfo {...detailData} />
+          <ToEatDetailsInfo {...post} />
         </ThemedView>
       </ScrollView>
     </SafeAreaView>

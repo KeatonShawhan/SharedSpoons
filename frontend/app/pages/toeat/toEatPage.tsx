@@ -42,9 +42,9 @@ export default function ToEatPage() {
             <ToEatCard
               key={item.id || Math.random().toString()}
               id={item.id}
-              dish={item.data?.dish || "Default Dish"}
-              place={item.data?.restaurant || "Default Place"}
-              image={item.data?.image || "https://via.placeholder.com/150"}
+              dish={item.data.dish || "Default Dish"}
+              place={item.data.restaurant || "Default Place"}
+              image={item.data.image}
               onPress={() => navigation.navigate('ToEatDetails', { id: item.id })}
             />
           ))
