@@ -29,16 +29,13 @@ export default function ToEatDetails() {
 
   const detailData: PostCardProps = {
     id,
+    user_id:'1',
     username: "Zoe Feller",
     caption: "yum!",
     dish: "Pepperoni Pizza",
     rating: 4.5,
     place: "Pizza Hut",
     image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFGJ2-FbJk717ZkaM5gjIUHT3kCQhDWNdIyvsR-XLbpsRdFVMpWRlSZx6jo9JAa1joLRU&usqp=CAU",
-    categories: ["Pizza", "Italian"],
-    notes: "i thought it was really good, maybe a little greasy",
-    likes: 15,
-    commentsCount: 20,
     parentTab: 'ToEatTab', 
   };
   

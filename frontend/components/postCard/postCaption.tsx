@@ -10,6 +10,7 @@ import { ProfileScreenNavigationProp } from '@/app/pages/profile/profileNavigati
 import type { ToEatScreenNavigationProp } from '@/app/(tabs)/toeat'; 
 import { getComment} from './screens/commentHelper';
 import LoginContext from '@/contexts/loginContext';
+import { addToEat } from '@/app/pages/toeat/toEatHelper';
 const ORANGE_COLOR = '#FF9F45';
 
 type CombinedNavigationProp = CompositeNavigationProp<
@@ -45,6 +46,8 @@ export function PostCaption({
 
   const handleSave = () => {
     setIsSaved(!isSaved);
+    console.log(postId);
+    addToEat(postId, loginContext.accessToken)
   };
 
   const handleComment = () => {
