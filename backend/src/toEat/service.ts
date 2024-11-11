@@ -65,6 +65,25 @@ export class toEatService{
         }
     }
 
+    public async deleteComment(userId: string, postId: string): Promise<boolean | undefined> {
+        try {
+            const deleteQuery = {
+                text: `DELETE FROM toEat WHERE user_id = $1 AND post_id = $2 RETURNING *`,
+                values: [userId, postId],
+            };
+            const res = await pool.query(deleteQuery);
+            if(res.rowCount === 0) {
+                console.error('to eat post deletion failed.');
+                return undefined;
+            }
+            return true;
+
+        } catch (error) {
+            console.error("Error deleting to eat post:", error);
+            return undefined;
+        }
+    }
+
     
 
 }

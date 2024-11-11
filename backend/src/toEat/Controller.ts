@@ -1,5 +1,5 @@
 //Controller.ts
-import { Controller, Get, Route, Request, Post, Query, Response, Security} from 'tsoa';
+import { Controller, Get, Route, Request, Post, Query, Response, Security, Delete} from 'tsoa';
 import * as express from 'express';
 import {toEatService } from './service'; // Post service for handling post creation
 import { PostTotal } from '../post';
@@ -67,6 +67,36 @@ export class ToEatController extends Controller {
             
         }
       
+    }
+
+    @Delete('/delete')
+    public async deleteComment(
+        @Request() request: express.Request,
+        @Query() postId: string,
+    ): Promise< boolean | undefined > {
+        try{
+            if (!request.user) {
+                this.setStatus(401);
+                console.error('Unauthorized user');
+                return undefined;
+            }
+
+            return new toEatService()
+                .deleteComment(request.user.id, postId)
+                .then((post) => {
+                    if (post === undefined) {
+                        this.setStatus(400);
+                        console.error('Could not delete to eat ppst');
+                        return undefined;
+                    }
+                    this.setStatus(204);
+                    return true;
+                })
+        } catch (error) {
+            console.error('Error deleting post', error);
+            this.setStatus(500);
+            return undefined;
+        }
     }
 
 
