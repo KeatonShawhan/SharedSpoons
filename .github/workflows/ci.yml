@@ -14,4 +14,4 @@ jobs:
 
     - name: Backend Health Check - Build and run docker-compose test to verify all tests pass
       run: |
-        docker-compose up --build --abort-on-container-exit --exit-code-from test
+        docker compose up --build --abort-on-container-exit --exit-code-from test
