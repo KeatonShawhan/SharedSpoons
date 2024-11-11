@@ -13,7 +13,6 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { PostStackParamList } from '@/app/navigation/PostStackNavigator';
 import type { PostCardProps } from '@/components/postCard/postCard';
 import LoginContext from '@/contexts/loginContext';
-import API_URL from '@/config';
 import { fetchPostData } from './toEatHelper';
 type ToEatDetailsRouteProp = RouteProp<{ ToEatDetails: { id: string } }, 'ToEatDetails'>;
 type ToEatDetailsNavigationProp = CompositeNavigationProp<

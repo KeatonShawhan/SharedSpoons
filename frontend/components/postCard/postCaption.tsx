@@ -8,7 +8,7 @@ import { CompositeNavigationProp } from '@react-navigation/native';
 import type { HomeScreenNavigationProp } from '@/app/(tabs)';
 import { ProfileScreenNavigationProp } from '@/app/pages/profile/profileNavigation';
 import type { ToEatScreenNavigationProp } from '@/app/(tabs)/toeat'; 
-import { getComment, getCommentCount} from './screens/commentHelper';
+import {getCommentCount} from './screens/commentHelper';
 import LoginContext from '@/contexts/loginContext';
 import { addToEat } from '@/app/pages/toeat/toEatHelper';
 const ORANGE_COLOR = '#FF9F45';
