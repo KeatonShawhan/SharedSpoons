@@ -89,10 +89,15 @@ import {
       return new AccountService()
         .getUserInfo(id)
         .then(async (account: User | undefined): Promise<User |undefined> => {
+          if (account === undefined) {
+            console.log("Account is undefined");
+            this.setStatus(400);
+            return undefined;
+          }
           return account;
         })
         .catch(() => {
-          this.setStatus(401);
+          this.setStatus(400);
           return undefined;
         });
     }
