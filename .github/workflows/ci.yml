@@ -1,0 +1,17 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Backend Health Check - Build and run docker-compose test to verify all tests pass
+      run: |
+        docker compose up --build --abort-on-container-exit --exit-code-from test
