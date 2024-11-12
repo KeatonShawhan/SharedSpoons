@@ -75,7 +75,7 @@ export function PostCaption({
       console.log("amt: " + commentList)
     }
     fetchData();
-  }, [postId])
+  }, [postId, loginContext.commented])
 
   return (
     <ThemedView>

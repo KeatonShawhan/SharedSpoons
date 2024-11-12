@@ -47,6 +47,7 @@ export function CommentsScreen() {
     await postComment(postId, newComment, loginContext.accessToken)
     const commentList = await getComment(postId, loginContext.accessToken)
     setComments(commentList)
+    loginContext.setCommented(!loginContext.commented)
 
     //console.log("ugh: " + success2);
   };
