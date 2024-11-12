@@ -54,6 +54,21 @@ export class commentService {
 
     public async deleteComment(userId: UUID, commentId: UUID): Promise<boolean | undefined> {
         try {
+            // check if the comment exists and if the user is authorized to delete it
+            const authQuery = {
+                text: `SELECT user_id FROM comment WHERE id = $1`,
+                values: [commentId],
+            };
+            const authRes = await pool.query(authQuery);
+            if(authRes.rows.length === 0) {
+                console.error('Comment not found');
+                return undefined;
+            }
+            if(authRes.rows[0].user_id !== userId) {
+                console.error('Unauthorized user');
+                return undefined;
+            }
+            // now delete the comment
             const deleteQuery = {
                 text: `DELETE FROM comment WHERE id = $1 AND user_id = $2 RETURNING data->>'comment' as comment`,
                 values: [commentId, userId],
@@ -101,7 +116,7 @@ export class commentService {
           return rows;
           
         } catch (err) {
-          console.error("Error fetching followers:", err);
+          console.error("Error fetching comments for post", err);
           return undefined;
         }
       }
@@ -132,7 +147,7 @@ export class commentService {
             return parseInt(followerCount, 10);
             
         } catch (err) {
-            console.error("Error fetching following count:", err);
+            console.error("Error fetching comment count:", err);
             return undefined;
         }
       }

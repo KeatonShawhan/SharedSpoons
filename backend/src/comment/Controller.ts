@@ -96,16 +96,23 @@ export class CommentController extends Controller{
     @Get("/getComments")
     @Response("404", "User not found")
     public async getComments(
-      @Query() postId: UUID,
+        @Request() request: express.Request,
+        @Query() postId: UUID,
     ): Promise<Comment[] | undefined> {
+        if (!request.user) {
+            this.setStatus(401);
+            console.error('Unauthorized user in getComments');
+            return undefined;
+        }
       return new commentService()
         .getComments(postId)
         .then((comment) => {
             if (comment === undefined) {
                 this.setStatus(400);
-                console.error('Could not delete comment');
+                console.error('Could not get list of comments');
                 return undefined;
             }
+            this.setStatus(200);
             return comment;
         })
     }
@@ -113,14 +120,20 @@ export class CommentController extends Controller{
     @Get("/getCommentCount")
     @Response("404", "User not found")
     public async getCommentsCount(
-      @Query() postId: UUID,
+        @Request() request: express.Request,
+        @Query() postId: UUID,
     ): Promise<number | undefined> {
+        if (!request.user) {
+            this.setStatus(401);
+            console.error('Unauthorized user in getCommentCount');
+            return undefined;
+        }
       return new commentService()
         .getCommentsCount(postId)
         .then((comment) => {
             if (comment === undefined) {
                 this.setStatus(400);
-                console.error('Could not delete comment');
+                console.error('Couldnt get comment count');
                 return undefined;
             }
             return comment;
