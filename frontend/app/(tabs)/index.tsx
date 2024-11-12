@@ -6,7 +6,7 @@ import ProfileTab, { ProfileTabParamList } from './profile';  // Import ProfileT
 import { PostStackNavigator, PostStackParamList } from '../navigation/PostStackNavigator';
 import { useNavigation } from 'expo-router';
 import LoginContext from '@/contexts/loginContext';
-import { useContext, useEffect } from 'react';
+import { useContext,} from 'react';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootTabParamList } from './_layout';
 // Define HomeStack params, with nested ProfileNavigation and PostStack
@@ -33,7 +33,7 @@ export default function HomeTab() {
   if(loginContext.isAuthenticated == false) {
     navigation.navigate('login');
   }
-  
+
   return (
     <Stack.Navigator 
       initialRouteName="Home" 
