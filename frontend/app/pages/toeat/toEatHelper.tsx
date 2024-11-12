@@ -45,6 +45,28 @@ export const addToEat = async (postId, accessToken) => {
   }
 };
 
+export const deleteToEat = async (postId, accessToken) => {
+  try {
+    const response = await fetch(`${API_URL}toEat/delete?postId=${postId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`, 
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const json = await response.json();
+    return json;
+  } catch (err) {
+    console.log("Error deleting To Eat:", err);
+    return [];
+  }
+};
+
 export const fetchPostData = async (postId, accessToken) => {
   console.log('postid: ' + postId)
   try {
@@ -60,9 +82,11 @@ export const fetchPostData = async (postId, accessToken) => {
       }
 
       const apiData = await response.json();
+      console.log(apiData)
             
             // Transform API data to match PostCard props
             const transformedData: PostCardProps = {
+                isSaved: apiData.is_saved,
                 id: apiData.id,
                 user_id: apiData.user_id,
                 username: apiData.firstname + " " + apiData.lastname, // You might want to fetch this separately or get from context

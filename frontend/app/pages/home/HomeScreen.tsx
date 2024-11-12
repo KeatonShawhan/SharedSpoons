@@ -23,7 +23,7 @@ export default function HomeScreen() {
     };
 
     getPosts();
-  }, []);
+  }, [loginContext.followed, loginContext.accessToken, loginContext.followed, loginContext.isAuthenticated]);
 
   
   // Use a ref to track the scroll position
@@ -75,6 +75,7 @@ export default function HomeScreen() {
           <PostCard 
             key={post.id}  
             id={post.id}
+            isSaved={post.is_saved}
             user_id={post.user_id}
             username={post.firstname + " " + post.lastname}
             caption={post.data.caption}

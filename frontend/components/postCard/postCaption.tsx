@@ -10,7 +10,7 @@ import { ProfileScreenNavigationProp } from '@/app/pages/profile/profileNavigati
 import type { ToEatScreenNavigationProp } from '@/app/(tabs)/toeat'; 
 import {getCommentCount} from './screens/commentHelper';
 import LoginContext from '@/contexts/loginContext';
-import { addToEat } from '@/app/pages/toeat/toEatHelper';
+import { addToEat, deleteToEat } from '@/app/pages/toeat/toEatHelper';
 const ORANGE_COLOR = '#FF9F45';
 
 type CombinedNavigationProp = CompositeNavigationProp<
@@ -23,6 +23,7 @@ interface PostCaptionProps {
   rating: number;
   postId: string;
   navigation: CombinedNavigationProp;
+  isSaved:boolean;
   parentTab: 'HomeTab' | 'ProfileTab' | 'ToEatTab' | 'ExploreTab';
 }
 
@@ -32,9 +33,10 @@ export function PostCaption({
   postId,
   navigation,
   parentTab,
+  isSaved
 }: PostCaptionProps) {
   const [isLiked, setIsLiked] = useState(false);
-  const [isSaved, setIsSaved] = useState(false);
+  const [saved, setIsSaved] = useState(isSaved);
   const [likeCount, setLikeCount] = useState(0);
   const [commentCount, setCommentCount] = useState(0);
   const loginContext = useContext(LoginContext)
@@ -45,9 +47,15 @@ export function PostCaption({
   };
 
   const handleSave = () => {
-    setIsSaved(!isSaved);
+    setIsSaved(!saved);
     console.log(postId);
-    addToEat(postId, loginContext.accessToken)
+    if (saved == false){
+      addToEat(postId, loginContext.accessToken)
+      loginContext.setAddedEat(true);
+    } else {
+      deleteToEat(postId, loginContext.accessToken)
+      loginContext.setAddedEat(false);
+    }
   };
 
   const handleComment = () => {
@@ -102,7 +110,7 @@ export function PostCaption({
           </View>
 
           <TouchableOpacity onPress={handleSave}>
-            <Ionicons name={isSaved ? 'bookmark' : 'bookmark-outline'} size={22} color={isSaved ? ORANGE_COLOR : 'gray'} />
+            <Ionicons name={saved ? 'bookmark' : 'bookmark-outline'} size={22} color={isSaved ? ORANGE_COLOR : 'gray'} />
           </TouchableOpacity>
         </View>
       </View>

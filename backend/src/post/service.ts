@@ -89,7 +89,7 @@ export class postService{
         }
     }
 
-    public async getPost(postID: UUID): Promise < PostContent | undefined > {
+    public async getPost(postID: UUID, userId:UUID): Promise < PostContent | undefined > {
         const client = await pool.connect();
 
         try {
@@ -97,18 +97,24 @@ export class postService{
             SELECT 
                 post.*, 
                 app_user.data->>'firstname' AS firstname,
-                app_user.data->>'lastname' AS lastname
+                app_user.data->>'lastname' AS lastname,
+                CASE 
+                    WHEN toEat.post_id IS NOT NULL THEN TRUE 
+                    ELSE FALSE 
+                END AS is_saved
             FROM 
                 post
             LEFT JOIN 
                 app_user ON app_user.id = post.user_id
+            LEFT JOIN 
+                toEat ON toEat.post_id = post.id AND toEat.user_id = $2
             WHERE 
                 post.id = $1;
             `;
 
             const query = {
                 text: selectQuery,
-                values: [postID]
+                values: [postID, userId]
             }
 
             const res = await client.query(query.text, query.values);
@@ -117,7 +123,6 @@ export class postService{
                 console.error('Database retrieval of post failed');
                 return undefined;
             }
-
             return res.rows[0];
 
         } catch (error) {
@@ -163,13 +168,20 @@ export class postService{
             SELECT 
                 post.*, 
                 app_user.data->>'firstname' AS firstname,
-                app_user.data->>'lastname' AS lastname
+                app_user.data->>'lastname' AS lastname,
+                CASE 
+                    WHEN toEat.post_id IS NOT NULL THEN TRUE 
+                    ELSE FALSE 
+                END AS is_saved
+
             FROM 
                 post
             INNER JOIN 
                 follow ON post.user_id = follow.receiver
             LEFT JOIN 
                 app_user ON app_user.id = post.user_id
+            LEFT JOIN 
+                toEat ON toEat.post_id = post.id AND toEat.user_id = $1
             WHERE 
                 follow.sender = $1;
             `;

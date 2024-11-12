@@ -19,6 +19,7 @@ export interface PostCardProps {
   rating: number;
   place: string;
   image: string;
+  isSaved: boolean;
   parentTab: 'HomeTab' | 'ProfileTab' | 'ToEatTab' | 'ExploreTab';
 }
 
@@ -38,6 +39,7 @@ export function PostCard({
   place,
   image,
   parentTab,
+  isSaved,
 }: PostCardProps) {
   const navigation = useNavigation<CombinedNavigationProp>();
   const [isFlipped, setIsFlipped] = useState(false);
@@ -125,6 +127,7 @@ export function PostCard({
             postId={id}
             navigation={navigation}
             parentTab={parentTab}
+            isSaved={isSaved}
           />
         </View>
       </View>

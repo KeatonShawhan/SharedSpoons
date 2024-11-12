@@ -99,7 +99,7 @@ export default function MainScreen() {
       if (success) {
         setIsFollowing(false);
         setFollowerCount(prevCount => prevCount - 1);
-        loginContext.isFollowed(!loginContext.followed)
+        loginContext.setFollowed(!loginContext.followed)
       }
     } else {
       // Follow the user
@@ -107,7 +107,7 @@ export default function MainScreen() {
       if (success) {
         setIsFollowing(true);
         setFollowerCount(prevCount => prevCount + 1);
-        loginContext.isFollowed(!loginContext.followed)
+        loginContext.setFollowed(!loginContext.followed)
       }
     }
   };

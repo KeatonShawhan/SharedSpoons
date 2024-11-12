@@ -22,6 +22,7 @@ export const Header: React.FC<HeaderProps> = ({ colorScheme}) => {
     await AsyncStorage.removeItem("accessToken");
     loginContext.setAccessToken('');
     navigation.navigate('login');
+    loginContext.setIsAuthenticated(false);
     //onLogout();
   };
 

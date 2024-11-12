@@ -127,7 +127,7 @@ export class PostController extends Controller {
                 return undefined;
             }
             return new postService()
-                .getPost(postID)
+                .getPost(postID, request.user.id)
                 .then(
                     async (post : PostContent | undefined):
                         Promise<PostContent | undefined> => {

@@ -27,7 +27,7 @@ export default function ToEatPage() {
       }
     };
     fetchData();
-  }, []);
+  }, [loginContext.addedEat]);
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: Colors[colorScheme].background }]}>
