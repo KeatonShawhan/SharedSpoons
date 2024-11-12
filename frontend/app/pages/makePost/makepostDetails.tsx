@@ -30,6 +30,7 @@ import MakePostHeader from '@/components/makePost/MakePostHeader';
 import API_URL from '@/config';
 import { RootTabParamList } from '@/app/(tabs)/_layout';
 import { useNavigation } from 'expo-router';
+import { CommonActions } from '@react-navigation/native';
 const HEADER_HEIGHT = 80;
 
 type MakePostDetailsRouteProp = RouteProp<MakePostScreenStackParamList, 'Details'>;
@@ -40,7 +41,7 @@ type Props = {
   navigation: MakePostDetailsNavigationProp;
 };
 
-export default function MakePostDetails({route}: Props) {
+export default function MakePostDetails({route, navigation}: Props) {
   const rootnav = useNavigation<StackNavigationProp<RootTabParamList>>(); // Use the correct type here
 
   const colorScheme = useColorScheme();
@@ -112,7 +113,18 @@ formData.append('file', file);
 
       if (response.ok) {
         Alert.alert('Success', 'Your post has been submitted successfully.', [
-          { text: 'OK', onPress: () => rootnav.navigate('index') },
+          
+          { text: 'OK', onPress: () => {
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [{ name: 'Main' }], // Ensure 'Main' is the first route in the stack
+              })
+            );
+
+            rootnav.navigate('index') 
+          
+          }},
         ]);
 
       } else {
