@@ -25,6 +25,7 @@ interface PostApiResponse {
   };
   firstname: string;
   lastname:string;
+  is_saved:boolean;
 }
 
 export default function PostPage() {
@@ -62,6 +63,7 @@ export default function PostPage() {
             
             // Transform API data to match PostCard props
             const transformedData: PostCardProps = {
+                isSaved: apiData.is_saved,
                 id: apiData.id,
                 user_id: apiData.user_id,
                 username: apiData.firstname + " " + apiData.lastname, // You might want to fetch this separately or get from context

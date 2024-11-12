@@ -49,8 +49,6 @@ export function PostCaption({
   };
 
   const handleSave = () => {
-    setIsSaved(!saved);
-    console.log(postId);
     if (saved == false){
       addToEat(postId, loginContext.accessToken)
       loginContext.setAddedEat(true);
@@ -58,6 +56,7 @@ export function PostCaption({
       deleteToEat(postId, loginContext.accessToken)
       loginContext.setAddedEat(false);
     }
+    setIsSaved(!saved);
   };
 
   const handleComment = () => {
@@ -69,10 +68,8 @@ export function PostCaption({
 
   useEffect( ()=>{
     const fetchData = async () => {
-      console.log(postId)
       const commentList = await getCommentCount(postId, loginContext.accessToken)
       setCommentCount(commentList)
-      console.log("amt: " + commentList)
     }
     fetchData();
   }, [postId, loginContext.commented])

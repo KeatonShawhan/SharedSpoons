@@ -10,7 +10,6 @@ export const postComment = async (postId, text, accessToken) => {
       },
     });
     if (!response.ok) throw new Error(`Error following user: ${response.status}`);
-    console.log(response)
     return true;
   } catch (err) {
     console.error("Error making comment", err);
@@ -19,7 +18,6 @@ export const postComment = async (postId, text, accessToken) => {
 };
 
 export const getComment = async (postId, accessToken) => {
-  console.log("check: " + postId)
   try {
     const response = await fetch(`${API_URL}comment/getComments?postId=${postId}`, {
       method: 'GET',
@@ -29,9 +27,7 @@ export const getComment = async (postId, accessToken) => {
       },
     });
     if (!response.ok) throw new Error(`Error following user: ${response.status}`);
-    //console.log(response)
     const json = await response.json();
-    //console.log(json)
     return json;
 
   } catch (err) {

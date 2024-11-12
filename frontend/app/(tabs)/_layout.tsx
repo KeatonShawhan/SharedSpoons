@@ -28,8 +28,8 @@ export default function TabLayout() {
     const checkAuth = async () => {
       const token = await AsyncStorage.getItem('accessToken');
       loginContext.setIsAuthenticated(!!token);
-      const temp = !!token
-      if (temp) {
+      //const temp = !!token
+      if (token) {
         try {
           const response = await fetch(`${API_URL}auth?accessToken=${token}`, {
             method: 'GET',

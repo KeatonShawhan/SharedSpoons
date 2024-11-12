@@ -22,7 +22,7 @@ export function ToEatCard({
 }) {
   const colorScheme = useColorScheme();
   const themeColors = Colors[colorScheme];
-  console.log('card id: +' + id)
+  console.log(id);
 
   return (
     <TouchableOpacity onPress={onPress}>

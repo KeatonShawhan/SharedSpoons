@@ -81,9 +81,7 @@ export const fetchPostData = async (postId, accessToken) => {
           throw new Error('Failed to fetch post');
       }
 
-      const apiData = await response.json();
-      console.log(apiData)
-            
+      const apiData = await response.json();            
             // Transform API data to match PostCard props
             const transformedData: PostCardProps = {
                 isSaved: apiData.is_saved,

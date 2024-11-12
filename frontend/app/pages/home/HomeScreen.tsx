@@ -14,16 +14,15 @@ export default function HomeScreen() {
   const colorScheme = useColorScheme();
   const loginContext = useContext(LoginContext)!
   const [homePosts, setHomePosts] = useState([])
-  console.log(loginContext.accessToken);
   useEffect(() => {
     const getPosts = async () => {
       const posts = await fetchPosts(loginContext.userId, loginContext.accessToken);
       setHomePosts(posts);
-      // console.log(homePosts);
+    console.log(loginContext.accessToken);
     };
 
     getPosts();
-  }, [loginContext.followed, loginContext.accessToken, loginContext.followed, loginContext.isAuthenticated]);
+  }, [loginContext.followed, loginContext.addedEat, loginContext.accessToken, loginContext.followed, loginContext.isAuthenticated]);
 
   
   // Use a ref to track the scroll position
