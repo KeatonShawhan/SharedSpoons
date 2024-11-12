@@ -40,7 +40,7 @@ type Props = {
   navigation: MakePostDetailsNavigationProp;
 };
 
-export default function MakePostDetails({ route, navigation }: Props) {
+export default function MakePostDetails({route}: Props) {
   const rootnav = useNavigation<StackNavigationProp<RootTabParamList>>(); // Use the correct type here
 
   const colorScheme = useColorScheme();
