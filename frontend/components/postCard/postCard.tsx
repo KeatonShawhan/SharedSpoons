@@ -128,6 +128,7 @@ export function PostCard({
             navigation={navigation}
             parentTab={parentTab}
             isSaved={isSaved}
+            userId={user_id}
           />
         </View>
       </View>

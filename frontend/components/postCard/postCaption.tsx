@@ -24,6 +24,7 @@ interface PostCaptionProps {
   postId: string;
   navigation: CombinedNavigationProp;
   isSaved:boolean;
+  userId: string;
   parentTab: 'HomeTab' | 'ProfileTab' | 'ToEatTab' | 'ExploreTab';
 }
 
@@ -33,7 +34,8 @@ export function PostCaption({
   postId,
   navigation,
   parentTab,
-  isSaved
+  isSaved, 
+  userId
 }: PostCaptionProps) {
   const [isLiked, setIsLiked] = useState(false);
   const [saved, setIsSaved] = useState(isSaved);
@@ -108,10 +110,13 @@ export function PostCaption({
             </TouchableOpacity>
             {commentCount > 0 && <Text style={{ fontSize: 14, color: 'gray', marginLeft: 4 }}>{commentCount}</Text>}
           </View>
-
-          <TouchableOpacity onPress={handleSave}>
-            <Ionicons name={saved ? 'bookmark' : 'bookmark-outline'} size={22} color={isSaved ? ORANGE_COLOR : 'gray'} />
-          </TouchableOpacity>
+            { loginContext.userId != userId &&
+              (
+              <TouchableOpacity onPress={handleSave}>
+              <Ionicons name={saved ? 'bookmark' : 'bookmark-outline'} size={22} color={isSaved ? ORANGE_COLOR : 'gray'} />
+              </TouchableOpacity>
+              )
+            }
         </View>
       </View>
       <View>
