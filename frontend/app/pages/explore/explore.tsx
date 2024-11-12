@@ -14,6 +14,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/constants/Colors';
 import type { ExploreScreenNavigationProp } from '@/app/(tabs)/exploreMain';
+import { ExploreSearchBar } from '@/components/explore/ExploreSearchbar';
 
 // Define the Post interface here
 interface Post {
@@ -88,7 +89,7 @@ export default function Explore() {
       <View style={styles.header}>
         <Text style={[styles.headerTitle, { color: themeColors.text }]}>Explore</Text>
       </View>
-
+      <ExploreSearchBar/>
       {/* Staggered Grid */}
       <FlatList
         data={posts}

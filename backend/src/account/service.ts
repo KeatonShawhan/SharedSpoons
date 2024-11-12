@@ -172,22 +172,5 @@ export class AccountService {
     }
     console.log(rows)
     return rows[0];
-
 }
-
-  // 2 of the same endpoints??
-  /*
-  public async IDuserInfo(id: string): Promise<UserIdInfo | undefined> {
-    const select = `SELECT id, data->>'name' as name FROM app_user WHERE id = $1`;
-    const query = {
-      text: select,
-      values: [id],
-    };
-    const { rows } = await pool.query(query);
-    if (rows.length == 0) {
-      return undefined;
-    }
-    return { id: id, name: rows[0].name};
-  };
-  */
 }
