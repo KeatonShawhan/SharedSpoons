@@ -21,13 +21,15 @@ import { StarRating } from '@/components/makePost/StarRating';
 import { RestaurantInputBox } from '@/components/makePost/RestaurantInputBox';
 import { DishNameInputBox } from '@/components/makePost/DishNameInputBox';
 // Import LoginContext
+import { StackNavigationProp } from '@react-navigation/stack';
 import LoginContext from '@/contexts/loginContext';
 import { RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { MakePostScreenStackParamList } from '@/app/(tabs)/makePostMain';
 import MakePostHeader from '@/components/makePost/MakePostHeader';
 import API_URL from '@/config';
-
+import { RootTabParamList } from '@/app/(tabs)/_layout';
+import { useNavigation } from 'expo-router';
 const HEADER_HEIGHT = 80;
 
 type MakePostDetailsRouteProp = RouteProp<MakePostScreenStackParamList, 'Details'>;
@@ -39,6 +41,8 @@ type Props = {
 };
 
 export default function MakePostDetails({ route, navigation }: Props) {
+  const rootnav = useNavigation<StackNavigationProp<RootTabParamList>>(); // Use the correct type here
+
   const colorScheme = useColorScheme();
   const themeColors = Colors[colorScheme || 'light'];
   const { selectedImage, caption } = route.params; // Destructure caption from route.params
@@ -108,7 +112,7 @@ formData.append('file', file);
 
       if (response.ok) {
         Alert.alert('Success', 'Your post has been submitted successfully.', [
-          { text: 'OK', onPress: () => navigation.navigate('Main') },
+          { text: 'OK', onPress: () => rootnav.navigate('index') },
         ]);
 
       } else {
