@@ -48,6 +48,7 @@ export default function FriendsScreen() {
         // Fetch first name of the user if viewing someone else's profile
         const userInfo = await fetchUserInfo(profileId, loginContext.accessToken);
         setFirstName(userInfo.firstname || "User");
+        console.log("not my logged in");
       } else {
         console.log(loginContext.firstName);
         setFirstName(loginContext.firstName);
