@@ -54,6 +54,8 @@ services:
       - backend
 
   test:
+    profiles:
+      - test
     build:
       context: ./backend
       dockerfile: Dockerfile
