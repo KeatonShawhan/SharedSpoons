@@ -75,7 +75,7 @@ export default function MainScreen() {
     };
 
     fetchData();
-  }, [profileId, loginContext.followed]);
+  }, [profileId, loginContext.followed, loginContext.madePost]);
 
   useEffect(() => {
     // Simulate fetching achievements data

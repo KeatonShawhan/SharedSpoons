@@ -56,7 +56,7 @@ export default function MakePostDetails({route, navigation}: Props) {
 
   const [showCaptionBox, setShowCaptionBox] = useState(false);
   const captionAnim = useRef(new Animated.Value(0)).current;
-
+  const loginContext = useContext(LoginContext)
   const handlePlusPress = () => {
     setShowCaptionBox(true);
     Animated.timing(captionAnim, {
@@ -121,7 +121,7 @@ formData.append('file', file);
                 routes: [{ name: 'Main' }], // Ensure 'Main' is the first route in the stack
               })
             );
-
+            loginContext.setMadePost(!loginContext.madePost)
             rootnav.navigate('index') 
           
           }},
