@@ -1,7 +1,14 @@
-// MainScreen.tsx
+// /Users/keaton/cse115a/SharedSpoons/frontend/app/pages/explore/MainScreen.tsx
 
 import React, { useState, useRef, useEffect, useContext } from 'react';
-import { View, Animated, StyleSheet, Dimensions, TouchableOpacity, FlatList, TextInput, Text, ScrollView } from 'react-native';
+import {
+  View,
+  Animated,
+  StyleSheet,
+  Dimensions,
+  TouchableOpacity,
+  FlatList,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { useColorScheme } from '@/hooks/useColorScheme';
@@ -11,8 +18,17 @@ import ProfileHeader from '../../../components/profile/ProfileHeader';
 import ProfileStats from '../../../components/profile/ProfileStats';
 import ProfilePostSquare from '../../../components/profile/profilePostSquare';
 import AchievementList from '../../../components/profile/AchievementList';
+import SettingsTab from '@/components/profile/SettingsTab';
 import type { ProfileStackParamList, ProfileScreenNavigationProp } from './profileNavigation';
-import { fetchAllPosts, fetchUserInfo, fetchFollowerCount, fetchFollowingCount, checkIfFollowing, sendFollowRequest, removeFollowRequest } from './profileHelpers';
+import {
+  fetchAllPosts,
+  fetchUserInfo,
+  fetchFollowerCount,
+  fetchFollowingCount,
+  checkIfFollowing,
+  sendFollowRequest,
+  removeFollowRequest,
+} from './profileHelpers';
 import LoginContext from '@/contexts/loginContext';
 
 const { width } = Dimensions.get('window');
@@ -24,18 +40,18 @@ export default function MainScreen() {
 
   const profileId = route.params?.userId || loginContext.userId;
   const isOwnProfile = profileId === loginContext.userId;
-  
+
   // Determine if we're in the profile tab by checking the route
   const isFromHomeTab = route.params?.isFromHomeTab ?? false;
 
   // State variables
-  const [userName, setUserName] = useState("Loading name...");
-  const [bio, setBio] = useState("Loading bio...");
-  const [rank, setRank] = useState("Loading rank...");
+  const [userName, setUserName] = useState('Loading name...');
+  const [bio, setBio] = useState('Loading bio...');
+  const [rank, setRank] = useState('Loading rank...');
   const [activeTab, setActiveTab] = useState<'posts' | 'achievements' | 'settings'>('posts');
   const [achievements, setAchievements] = useState([]);
   const colorScheme = useColorScheme();
-  const slideAnim = useRef(new Animated.Value(0)).current; 
+  const slideAnim = useRef(new Animated.Value(0)).current;
   const [followerCount, setFollowerCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
   const [postCount, setPostCount] = useState(0);
@@ -49,7 +65,7 @@ export default function MainScreen() {
         const userData = await fetchUserInfo(profileId, loginContext.accessToken);
         setUserName(`${userData.firstname} ${userData.lastname}`);
         setBio(userData.bio || 'No bio available');
-        setRank(isOwnProfile ? "Food Connoisseur" : "Food Enthusiast");
+        setRank(isOwnProfile ? 'Food Connoisseur' : 'Food Enthusiast');
 
         // Fetch followers and following data
         const followersData = await fetchFollowerCount(profileId, loginContext.accessToken);
@@ -65,11 +81,15 @@ export default function MainScreen() {
 
         // Check if current user is following the profile user
         if (!isOwnProfile) {
-          const isFollowingStatus = await checkIfFollowing(loginContext.userId, profileId, loginContext.accessToken);
+          const isFollowingStatus = await checkIfFollowing(
+            loginContext.userId,
+            profileId,
+            loginContext.accessToken
+          );
           setIsFollowing(isFollowingStatus);
         }
       } catch (error) {
-        console.error("Error fetching profile data:", error);
+        console.error('Error fetching profile data:', error);
       }
     };
 
@@ -80,32 +100,31 @@ export default function MainScreen() {
     // Simulate fetching achievements data
     setTimeout(() => {
       setAchievements([
-        { rank: "New Foodie", progress: 25, required: 25, description: "Try your first 25 different dishes" },
-        { rank: "Food Explorer", progress: 100, required: 100, description: "Discover 100 unique dishes" },
-        { rank: "Taste Enthusiast", progress: 250, required: 250, description: "Experience 250 different dishes" },
-        { rank: "Food Connoisseur", progress: 500, required: 500, description: "Savor 500 diverse dishes" },
-        { rank: "Culinary Veteran", progress: 800, required: 1000, description: "Master 1000 different dishes" },
+        { rank: 'New Foodie', progress: 25, required: 25, description: 'Try your first 25 different dishes' },
+        { rank: 'Food Explorer', progress: 100, required: 100, description: 'Discover 100 unique dishes' },
+        { rank: 'Taste Enthusiast', progress: 250, required: 250, description: 'Experience 250 different dishes' },
+        { rank: 'Food Connoisseur', progress: 500, required: 500, description: 'Savor 500 diverse dishes' },
+        { rank: 'Culinary Veteran', progress: 800, required: 1000, description: 'Master 1000 different dishes' },
       ]);
     }, 2000);
   }, []);
 
-  
   const handleFollowPress = async () => {
     if (isFollowing) {
       // Unfollow the user
       const success = await removeFollowRequest(profileId, loginContext.accessToken);
       if (success) {
         setIsFollowing(false);
-        setFollowerCount(prevCount => prevCount - 1);
-        loginContext.setFollowed(!loginContext.followed)
+        setFollowerCount((prevCount) => prevCount - 1);
+        loginContext.setFollowed(!loginContext.followed);
       }
     } else {
       // Follow the user
       const success = await sendFollowRequest(profileId, loginContext.accessToken);
       if (success) {
         setIsFollowing(true);
-        setFollowerCount(prevCount => prevCount + 1);
-        loginContext.setFollowed(!loginContext.followed)
+        setFollowerCount((prevCount) => prevCount + 1);
+        loginContext.setFollowed(!loginContext.followed);
       }
     }
   };
@@ -122,78 +141,96 @@ export default function MainScreen() {
       toValue,
       useNativeDriver: true,
       tension: 68,
-      friction: 12
+      friction: 12,
     }).start();
     setActiveTab(tab);
   };
 
   const getIconColor = (isActive: boolean) => {
     return isActive
-      ? colorScheme === 'dark' ? '#FFFFFF' : '#000000'
-      : colorScheme === 'dark' ? '#666666' : '#999999';
+      ? colorScheme === 'dark'
+        ? '#FFFFFF'
+        : '#000000'
+      : colorScheme === 'dark'
+      ? '#666666'
+      : '#999999';
   };
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: Colors[colorScheme].background }]} edges={['top']}>
       <View style={styles.headerContainer}>
-        <ProfileHeader 
-          name={userName} 
-          bio={bio} 
-          rank={rank} 
-          colorScheme={colorScheme} 
+        <ProfileHeader
+          name={userName}
+          bio={bio}
+          rank={rank}
+          colorScheme={colorScheme}
           // Show back button if either not our profile OR not in profile tab
           showBackButton={!isOwnProfile || isFromHomeTab}
           isOwnProfile={isOwnProfile}
           isFollowing={isFollowing}
           handleFollowPress={handleFollowPress}
         />
-        <ProfileStats 
+        <ProfileStats
           postCount={postCount}
           followerCount={followerCount}
           followingCount={followingCount}
           colorScheme={colorScheme}
-          onFollowersPress={() => navigation.push('Friends', { initialTab: 'followers', userId: profileId })}
-          onFollowingPress={() => navigation.push('Friends', { initialTab: 'following', userId: profileId })}
+          onFollowersPress={() =>
+            navigation.push('Friends', { initialTab: 'followers', userId: profileId })
+          }
+          onFollowingPress={() =>
+            navigation.push('Friends', { initialTab: 'following', userId: profileId })
+          }
         />
-        <View style={[
-          styles.tabContainer, 
-          { borderBottomColor: colorScheme === 'dark' ? '#333333' : '#DDDDDD' }
-        ]}>
+        <View
+          style={[
+            styles.tabContainer,
+            { borderBottomColor: colorScheme === 'dark' ? '#333333' : '#DDDDDD' },
+          ]}
+        >
           {tabs.map((tabName) => (
-            <TouchableOpacity 
+            <TouchableOpacity
               key={tabName}
-              style={styles.tabButton} 
+              style={styles.tabButton}
               onPress={() => handleTabSwitch(tabName as 'posts' | 'achievements' | 'settings')}
             >
-              <Ionicons 
+              <Ionicons
                 name={
-                  tabName === 'posts' ? 'grid-outline' : 
-                  tabName === 'achievements' ? 'trophy-outline' : 
-                  'settings-outline'
-                } 
-                size={24} 
-                color={getIconColor(activeTab === tabName)} 
+                  tabName === 'posts'
+                    ? 'grid-outline'
+                    : tabName === 'achievements'
+                    ? 'trophy-outline'
+                    : 'settings-outline'
+                }
+                size={24}
+                color={getIconColor(activeTab === tabName)}
               />
-              <View style={[
-                styles.activeIndicator,
-                { opacity: activeTab === tabName ? 1 : 0 }
-              ]} />
+              <View
+                style={[
+                  styles.activeIndicator,
+                  { opacity: activeTab === tabName ? 1 : 0 },
+                ]}
+              />
             </TouchableOpacity>
           ))}
         </View>
       </View>
-      <Animated.View style={[
-        styles.contentContainer,
-        { width: width * tabs.length },
-        {
-          transform: [{
-            translateX: slideAnim.interpolate({
-              inputRange: tabs.map((_, i) => i * width),
-              outputRange: tabs.map((_, i) => -i * width),
-            })
-          }]
-        }
-      ]}>
+      <Animated.View
+        style={[
+          styles.contentContainer,
+          { width: width * tabs.length },
+          {
+            transform: [
+              {
+                translateX: slideAnim.interpolate({
+                  inputRange: tabs.map((_, i) => i * width),
+                  outputRange: tabs.map((_, i) => -i * width),
+                }),
+              },
+            ],
+          },
+        ]}
+      >
         {tabs.map((tabName) => (
           <View key={tabName} style={styles.tabContent}>
             {tabName === 'posts' && (
@@ -207,7 +244,7 @@ export default function MainScreen() {
                     onPress={() => navigation.navigate('PostPage', { postId: item.id })}
                   />
                 )}
-                keyExtractor={item => item.id}
+                keyExtractor={(item) => item.id}
                 contentContainerStyle={styles.listContainer}
                 columnWrapperStyle={styles.postsRow}
                 style={styles.flatList}
@@ -223,75 +260,6 @@ export default function MainScreen() {
         ))}
       </Animated.View>
     </SafeAreaView>
-  );
-}
-interface SettingsTabProps {
-  userName: string;
-  bio: string;
-  colorScheme: 'light' | 'dark';
-}
-function SettingsTab({ userName, bio, colorScheme }: SettingsTabProps) {
-  // State variables for the settings
-  const [username, setUsername] = useState(userName);
-  const [bioText, setBioText] = useState(bio);
-  const [location, setLocation] = useState('');
-  const [profilePicture/*, setProfilePicture*/] = useState(null);
-
-  const handleSave = () => {
-    // For now, just log the values
-    console.log('Saving settings:', { username, bio: bioText, location, profilePicture });
-    // Later, make API calls to save the settings
-  };
-
-  return (
-    <ScrollView style={styles.settingsContainer} contentContainerStyle={styles.scrollContent}>
-      <View style={styles.fieldContainer}>
-        <Text style={[styles.label, { color: Colors[colorScheme].text }]}>Username</Text>
-        <TextInput
-          style={[styles.input, { color: Colors[colorScheme].text, borderColor: colorScheme === 'dark' ? '#666' : '#ccc', backgroundColor: colorScheme === 'dark' ? '#333' : '#fff' }]}
-          placeholder="Username"
-          placeholderTextColor={colorScheme === 'dark' ? '#aaa' : '#555'}
-          value={username}
-          onChangeText={setUsername}
-        />
-      </View>
-
-      <View style={styles.fieldContainer}>
-        <Text style={[styles.label, { color: Colors[colorScheme].text }]}>Bio</Text>
-        <TextInput
-          style={[styles.input, styles.textArea, { color: Colors[colorScheme].text, borderColor: colorScheme === 'dark' ? '#666' : '#ccc', backgroundColor: colorScheme === 'dark' ? '#333' : '#fff' }]}
-          placeholder="Bio"
-          placeholderTextColor={colorScheme === 'dark' ? '#aaa' : '#555'}
-          value={bioText}
-          onChangeText={setBioText}
-          multiline
-        />
-      </View>
-
-      <View style={styles.fieldContainer}>
-        <Text style={[styles.label, { color: Colors[colorScheme].text }]}>Location</Text>
-        <TextInput
-          style={[styles.input, { color: Colors[colorScheme].text, borderColor: colorScheme === 'dark' ? '#666' : '#ccc', backgroundColor: colorScheme === 'dark' ? '#333' : '#fff' }]}
-          placeholder="Location"
-          placeholderTextColor={colorScheme === 'dark' ? '#aaa' : '#555'}
-          value={location}
-          onChangeText={setLocation}
-        />
-      </View>
-
-      <View style={styles.fieldContainer}>
-        <Text style={[styles.label, { color: Colors[colorScheme].text }]}>Profile Picture</Text>
-        {/* Placeholder for Profile Picture Upload */}
-        <TouchableOpacity style={styles.imageUploadButton}>
-          <Ionicons name="image-outline" size={24} color={Colors[colorScheme].text} />
-          <Text style={[styles.imageUploadText, { color: Colors[colorScheme].text }]}>Upload Profile Picture</Text>
-        </TouchableOpacity>
-      </View>
-
-      <TouchableOpacity style={styles.button} onPress={handleSave}>
-        <Text style={styles.buttonText}>Save Changes</Text>
-      </TouchableOpacity>
-    </ScrollView>
   );
 }
 
@@ -329,44 +297,5 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     padding: 16,
-  },
-  fieldContainer: {
-    marginBottom: 15,
-  },
-  label: {
-    marginBottom: 5,
-    fontWeight: 'bold',
-  },
-  input: {
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 10,
-  },
-  textArea: {
-    height: 100,
-    textAlignVertical: 'top', // For Android to align text at the top
-  },
-  button: {
-    backgroundColor: '#FF9F45',
-    padding: 15,
-    borderRadius: 5,
-    alignItems: 'center',
-    marginTop: 20,
-    marginBottom: 30, // Added extra margin at the bottom
-  },
-  buttonText: {
-    color: '#fff',
-    fontWeight: 'bold',
-  },
-  imageUploadButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    padding: 10,
-  },
-  imageUploadText: {
-    marginLeft: 10,
   },
 });
