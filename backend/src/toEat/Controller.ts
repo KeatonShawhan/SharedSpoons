@@ -24,14 +24,14 @@ export class ToEatController extends Controller {
             .then((list) => {
                 if (!list) {
                     this.setStatus(400);
-                    console.error('Could not get list');
+                    console.error('Could not get toEat list');
                     return undefined;
                 }
                 return list;
             })
         } catch (error) {
             this.setStatus(500);
-            console.error('Error in getting to eat list:', error);
+            console.error('Error in getting toEat list:', error);
             return undefined;
             
         }
@@ -55,14 +55,14 @@ export class ToEatController extends Controller {
             .then((list) => {
                 if (!list) {
                     this.setStatus(400);
-                    console.error('Could not get list');
+                    console.error('Could not add to toEat list');
                     return undefined;
                 }
                 return list;
             })
         } catch (error) {
             this.setStatus(500);
-            console.error('Error in getting to eat list:', error);
+            console.error('Error in adding to toEat list:', error);
             return undefined;
             
         }
@@ -70,7 +70,7 @@ export class ToEatController extends Controller {
     }
 
     @Delete('/delete')
-    public async deleteComment(
+    public async deleteFromToEat(
         @Request() request: express.Request,
         @Query() postId: string,
     ): Promise< boolean | undefined > {
@@ -82,18 +82,18 @@ export class ToEatController extends Controller {
             }
 
             return new toEatService()
-                .deleteComment(request.user.id, postId)
+                .deleteFromToEat(request.user.id, postId)
                 .then((post) => {
                     if (post === undefined) {
                         this.setStatus(400);
-                        console.error('Could not delete to eat ppst');
+                        console.error('Could not delete to eat post');
                         return undefined;
                     }
                     this.setStatus(204);
                     return true;
                 })
         } catch (error) {
-            console.error('Error deleting post', error);
+            console.error('Error deleting from toEat', error);
             this.setStatus(500);
             return undefined;
         }

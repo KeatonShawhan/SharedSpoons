@@ -10,6 +10,16 @@ export class toEatService{
         try{
             await client.query('BEGIN');
 
+            const verifyQuery = {
+                text: `SELECT * FROM app_user WHERE id = $1`,
+                values: [userId],
+            };
+            const verifyRes = await pool.query(verifyQuery);
+            if(verifyRes.rowCount === 0) {
+                console.error('User not found');
+                return undefined;
+            }
+
             const select = `
                 SELECT p.*
                 FROM toEat t
@@ -54,18 +64,21 @@ export class toEatService{
 
             const { rows } = await pool.query(query);
 
-            return rows[0].id;
+            await client.query('COMMIT');
+
+            return rows[0];
             
         }catch (error) {
             await client.query('ROLLBACK');
             console.error('Error getting to eat list:', error);
+            console.log('ID: ' + postId + ' User: ' + userId); 
             return undefined;
         } finally {
             client.release();
         }
     }
 
-    public async deleteComment(userId: string, postId: string): Promise<boolean | undefined> {
+    public async deleteFromToEat(userId: string, postId: string): Promise<boolean | undefined> {
         try {
             const deleteQuery = {
                 text: `DELETE FROM toEat WHERE user_id = $1 AND post_id = $2 RETURNING *`,
