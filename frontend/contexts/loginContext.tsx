@@ -18,6 +18,8 @@ interface LoginContextType {
   setAddedEat: (followed: boolean) => void;
   commented:boolean;
   setCommented: (followed: boolean) => void;
+  firstName:string;
+  setFirstName: (firstName: string) => void;
 }
 
 const LoginContext = createContext<LoginContextType | undefined>(undefined);
@@ -31,11 +33,12 @@ export const LoginProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [followed, setFollowed] = useState<boolean>(true);
   const [commented, setCommented] = useState<boolean>(true);
   const [addedEat, setAddedEat] = useState<boolean>(true);
+  const [firstName, setFirstName] = useState<string>('');
 
 
 
   return (
-    <LoginContext.Provider value={{commented, setCommented, addedEat, setAddedEat, followed, setFollowed, userName, setUserName, accessToken, setAccessToken, userId, setUserId, isAuthenticated, setIsAuthenticated, isLogin, setIsLogin }}>
+    <LoginContext.Provider value={{commented, setCommented, addedEat, setAddedEat, followed, setFollowed, userName, setUserName, accessToken, setAccessToken, userId, setUserId, isAuthenticated, setIsAuthenticated, isLogin, setIsLogin, firstName, setFirstName }}>
       {children}
     </LoginContext.Provider>
   );
