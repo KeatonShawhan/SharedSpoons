@@ -190,7 +190,7 @@ export class postService{
             values: [id]
             };
             const { rows } = await pool.query(query);
-            // need to return an empty array if no posts are found, not undefined. If the 
+            // need to return an empty array if no posts are found, not undefined. 
             console.log(rows)
             return rows;
         } catch (error) {

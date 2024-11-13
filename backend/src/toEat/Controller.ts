@@ -3,10 +3,12 @@ import { Controller, Get, Route, Request, Post, Query, Response, Security, Delet
 import * as express from 'express';
 import {toEatService } from './service'; // Post service for handling post creation
 import { PostTotal } from '../post';
+import { S3Service } from '../s3/service';
 
 @Security('jwt')
 @Route('toEat')
 export class ToEatController extends Controller {
+    private s3Service = new S3Service();
 
     @Get("/getList")
     @Response("404", "User not found")
@@ -21,11 +23,20 @@ export class ToEatController extends Controller {
             }
             return new toEatService()
             .getToEatList(request.user.id)
-            .then((list) => {
-                if (!list) {
+            .then(async (list) => {
+                if (list === undefined) {
                     this.setStatus(400);
                     console.error('Could not get toEat list');
                     return undefined;
+                }
+                for (let i = 0; i < list.length; i++) {
+                    const imageLink = await this.s3Service.getFileLink(list[i].data.image);
+                    if (imageLink === undefined) {
+                        this.setStatus(400);
+                        console.error('Could not get image link for image:', list[i].data.image);
+                        return undefined;
+                    }
+                    list[i].data.image = imageLink;
                 }
                 return list;
             })
@@ -52,13 +63,13 @@ export class ToEatController extends Controller {
             }
             return new toEatService()
             .postToEatList(request.user.id, postId)
-            .then((list) => {
-                if (!list) {
+            .then(async (id) => {
+                if (id === undefined) {
                     this.setStatus(400);
                     console.error('Could not add to toEat list');
                     return undefined;
                 }
-                return list;
+                return id;
             })
         } catch (error) {
             this.setStatus(500);
@@ -83,8 +94,8 @@ export class ToEatController extends Controller {
 
             return new toEatService()
                 .deleteFromToEat(request.user.id, postId)
-                .then((post) => {
-                    if (post === undefined) {
+                .then(async (deleted) => {
+                    if (deleted === undefined) {
                         this.setStatus(400);
                         console.error('Could not delete to eat post');
                         return undefined;
