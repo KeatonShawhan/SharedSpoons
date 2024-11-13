@@ -194,7 +194,7 @@ export class PostController extends Controller {
             return undefined;
         }
     }
-// eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjNiOWE1OGIyLTJhMDctNDVkNi04NWM5LWYxMzhkNjNjYjQ2NiIsInVzZXJuYW1lIjoia2VhdG9uc2hhd2hhbiIsImZpcnN0bmFtZSI6IktlYXRvbiIsImxhc3RuYW1lIjoiU2hhd2hhbiIsImlhdCI6MTczMDg3NTU2NiwiZXhwIjoxNzMxNDgwMzY2fQ.6rW23DocEdYt7hC5S5sQyNxyx7UXHed9dH9Q9IjERQ4
+
     @Get('/all/friendsPosts/{userID}')
     public async getFriendPosts(
         @Request() request: express.Request,

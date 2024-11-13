@@ -64,6 +64,7 @@ export default function MainScreen() {
         // Fetch user info
         const userData = await fetchUserInfo(profileId, loginContext.accessToken);
         setUserName(`${userData.firstname} ${userData.lastname}`);
+        loginContext.setFirstName(userData.firstname);
         setBio(userData.bio || 'No bio available');
         setRank(isOwnProfile ? 'Food Connoisseur' : 'Food Enthusiast');
 
@@ -76,6 +77,7 @@ export default function MainScreen() {
 
         // Fetch all posts
         const allPostsData = await fetchAllPosts(profileId, loginContext.accessToken);
+        console.log(allPostsData);
         setPostCount(allPostsData.length);
         setPosts(allPostsData);
 
@@ -94,7 +96,7 @@ export default function MainScreen() {
     };
 
     fetchData();
-  }, [profileId, loginContext.followed]);
+  }, [profileId, loginContext.followed, loginContext.madePost]);
 
   useEffect(() => {
     // Simulate fetching achievements data

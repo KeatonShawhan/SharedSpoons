@@ -64,6 +64,7 @@ export default function login() {
         loginContext.setUserId(json.id);
         loginContext.setUserName(json.username);
         AsyncStorage.setItem("accessToken", json.accessToken);
+        loginContext.setFirstName(json.firstname);
         loginContext.setIsAuthenticated(true);
         navigation.navigate('index')
       })

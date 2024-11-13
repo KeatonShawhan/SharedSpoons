@@ -56,7 +56,7 @@ export default function MakePostDetails({route, navigation}: Props) {
 
   const [showCaptionBox, setShowCaptionBox] = useState(false);
   const captionAnim = useRef(new Animated.Value(0)).current;
-
+  const loginContext = useContext(LoginContext)
   const handlePlusPress = () => {
     setShowCaptionBox(true);
     Animated.timing(captionAnim, {
@@ -92,14 +92,13 @@ export default function MakePostDetails({route, navigation}: Props) {
     const formData = new FormData();
     formData.append('post', JSON.stringify(postData));
 
-    // Create a proper File object
-    const file = new File(
-      [selectedImage],
-      'photo.jpg',
-      { type: 'image/jpeg' }
-    );
-
-formData.append('file', file);
+    /* eslint-disable */
+    formData.append('file', {
+      uri: selectedImage,
+      name: 'photo.jpg',
+      type: 'image/jpeg',
+    } as any);
+    /* eslint-enable */
 
     try {
       const response = await fetch(`${API_URL}post/create`, {
@@ -121,7 +120,7 @@ formData.append('file', file);
                 routes: [{ name: 'Main' }], // Ensure 'Main' is the first route in the stack
               })
             );
-
+            loginContext.setMadePost(!loginContext.madePost)
             rootnav.navigate('index') 
           
           }},

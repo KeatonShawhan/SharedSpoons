@@ -45,6 +45,7 @@ export default function TabLayout() {
       
           const json = await response.json();
           loginContext.setUserId(json.id)
+          
           loginContext.setAccessToken(token)
           return json;
         } catch (err) {

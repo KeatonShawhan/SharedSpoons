@@ -39,7 +39,7 @@ export default function FriendsScreen() {
   const [followers, setFollowers] = useState([]);
   const [following, setFollowing] = useState([]);
   const [suggested_users] = useState(SUGGESTED_USERS);
-  const [firstName, setFirstName] = useState(loginContext.userName.split(' ')[0]); // Default to logged-in user
+  const [firstName, setFirstName] = useState(loginContext.firstName); // Default to logged-in user
 
   // Fetch followers and following when the page opens
   useEffect(() => {
@@ -49,7 +49,8 @@ export default function FriendsScreen() {
         const userInfo = await fetchUserInfo(profileId, loginContext.accessToken);
         setFirstName(userInfo.firstname || "User");
       } else {
-        setFirstName(loginContext.userName.split(' ')[0]);
+        console.log(loginContext.firstName);
+        setFirstName(loginContext.firstName);
       }
 
       // Fetch followers and following data
