@@ -5,7 +5,7 @@ import {
     Put,
     // Path
     Request,
-    Body,
+    FormField,
     UploadedFile
   } from "tsoa";
   import { AccountService } from "./service";
@@ -20,7 +20,7 @@ export class AccountController extends Controller {
   private s3Service = new S3Service();
   @Put("/update")
   public async updateAccount(
-    @Body() updateRequest: UpdateAccountRequest,
+    @FormField() updateRequest: UpdateAccountRequest,
     @UploadedFile() file: Express.Multer.File,
     @Request() request: express.Request
 ): Promise<{ message: string }> {

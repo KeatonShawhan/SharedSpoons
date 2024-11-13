@@ -16,7 +16,7 @@ const SettingsTab: React.FC<SettingsTabProps> = ({ userName, bio, colorScheme })
   const [username, setUsername] = useState(userName);
   const [bioText, setBioText] = useState(bio);
   const [location, setLocation] = useState('');
-  const [profilePicture, setProfilePicture] = useState(null); // Uncomment if needed
+  const [profilePicture, setProfilePicture] = useState(null);
 
   const handleSave = () => {
     // For now, just log the values
@@ -91,9 +91,9 @@ const SettingsTab: React.FC<SettingsTabProps> = ({ userName, bio, colorScheme })
       <View style={styles.fieldContainer}>
         <Text style={[styles.label, { color: Colors[colorScheme].text }]}>Profile Picture</Text>
         <ImagePickerBox
-          selectedImage={profilePicture} // Bind selected image to the state
-          setSelectedImage={setProfilePicture} // Update state with the selected image URI
-          isDisabled={false} // Pass any condition to disable the image picker if needed
+          selectedImage={profilePicture}
+          setSelectedImage={setProfilePicture}
+          isDisabled={false}
         />
       </View>
 
