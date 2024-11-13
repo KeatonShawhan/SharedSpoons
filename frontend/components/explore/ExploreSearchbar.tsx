@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, TextInput, FlatList, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 // import { useNavigation } from '@react-navigation/native';
 import { Colors } from '@/constants/Colors';
 import API_URL from '../../config'
@@ -20,7 +20,8 @@ export const ExploreSearchBar: React.FC = () => {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-          },
+            'Authorization': `Bearer ${loginContext.accessToken}`
+          }
         }
       );
 
@@ -57,8 +58,8 @@ export const ExploreSearchBar: React.FC = () => {
         value={searchInput}
         onChangeText={setSearchInput}
         onSubmitEditing={() => handleSearch(searchInput)}
+        autoCapitalize="none"
       />
-      {/* Suggestions Dropdown */}
       {suggestions.length > 0 && (
         <FlatList
           data={suggestions}

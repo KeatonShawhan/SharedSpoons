@@ -59,9 +59,10 @@ export default function login() {
         return out;
       })
       .then((json) => {
+        console.log(json);
         loginContext.setAccessToken(json.accessToken);
         loginContext.setUserId(json.id);
-        loginContext.setUserName(json.firstname + " " + json.lastname);
+        loginContext.setUserName(json.username);
         AsyncStorage.setItem("accessToken", json.accessToken);
         loginContext.setIsAuthenticated(true);
         navigation.navigate('index')

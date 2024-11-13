@@ -2,7 +2,8 @@ export interface Authenticated {
     id: string,
     firstname: string,
     lastname: string,
-    accessToken: string
+    accessToken: string,
+    username: string
   }
   
   export interface Credentials {
