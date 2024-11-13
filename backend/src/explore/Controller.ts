@@ -4,13 +4,15 @@ import {
     Get,
     Route,
     Security,
-    // Put,
+    Request
     // Path
   } from "tsoa";
     
   import { ExploreService } from "./service";
-  
   import {Suggestion} from './index';
+  import * as express from 'express';
+import { PostContent } from "../post";
+
 
   @Security('jwt', ['member'])
   @Route("explore")
@@ -35,6 +37,25 @@ import {
               return [];     
             }
             return usernames;
+          }
+    );
+  }
+
+  @Get("/posts")
+    public async explorePosts(
+      @Request() request: express.Request,
+    ): Promise<PostContent[]> {
+      return new ExploreService()
+        .getExplorePosts(request.user!.id)
+        .then(
+          async (
+            posts: PostContent[]
+          ): Promise<PostContent[]> => {
+            console.log("posts: " + posts);
+            if (!posts) {
+              return [];     
+            }
+            return posts;
           }
     );
   }
