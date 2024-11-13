@@ -1,3 +1,4 @@
+//HomeScreen.tsx
 import React, { useContext, useRef, useState, useEffect } from 'react';
 import { Animated, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -18,7 +19,8 @@ export default function HomeScreen() {
     const getPosts = async () => {
       const posts = await fetchPosts(loginContext.userId, loginContext.accessToken);
       setHomePosts(posts);
-    console.log(loginContext.accessToken);
+      console.log(loginContext.accessToken);
+      console.log(posts);
     };
 
     getPosts();

@@ -1,7 +1,7 @@
 // MainScreen.tsx
 
 import React, { useState, useRef, useEffect, useContext } from 'react';
-import { View, Animated, StyleSheet, Dimensions, TouchableOpacity, FlatList } from 'react-native';
+import { View, Animated, StyleSheet, Dimensions, TouchableOpacity, FlatList, TextInput, Text, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { useColorScheme } from '@/hooks/useColorScheme';
@@ -12,7 +12,7 @@ import ProfileStats from '../../../components/profile/ProfileStats';
 import ProfilePostSquare from '../../../components/profile/profilePostSquare';
 import AchievementList from '../../../components/profile/AchievementList';
 import type { ProfileStackParamList, ProfileScreenNavigationProp } from './profileNavigation';
-import { fetchAllPosts, /*fetchFollowersInfo, fetchFollowingInfo,*/ fetchUserInfo, fetchFollowerCount, fetchFollowingCount, checkIfFollowing, sendFollowRequest, removeFollowRequest } from './profileHelpers';
+import { fetchAllPosts, fetchUserInfo, fetchFollowerCount, fetchFollowingCount, checkIfFollowing, sendFollowRequest, removeFollowRequest } from './profileHelpers';
 import LoginContext from '@/contexts/loginContext';
 
 const { width } = Dimensions.get('window');
@@ -32,12 +32,10 @@ export default function MainScreen() {
   const [userName, setUserName] = useState("Loading name...");
   const [bio, setBio] = useState("Loading bio...");
   const [rank, setRank] = useState("Loading rank...");
-  const [activeTab, setActiveTab] = useState<'posts' | 'achievements'>('posts');
+  const [activeTab, setActiveTab] = useState<'posts' | 'achievements' | 'settings'>('posts');
   const [achievements, setAchievements] = useState([]);
   const colorScheme = useColorScheme();
   const slideAnim = useRef(new Animated.Value(0)).current; 
-  //const [followers, setFollowers] = useState([]);
-  //const [following, setFollowing] = useState([]);
   const [followerCount, setFollowerCount] = useState(0);
   const [followingCount, setFollowingCount] = useState(0);
   const [postCount, setPostCount] = useState(0);
@@ -112,8 +110,14 @@ export default function MainScreen() {
     }
   };
 
-  const handleTabSwitch = (tab: 'posts' | 'achievements') => {
-    const toValue = tab === 'posts' ? 0 : width;
+  const tabs = ['posts', 'achievements'];
+  if (isOwnProfile) {
+    tabs.push('settings');
+  }
+
+  const handleTabSwitch = (tab: 'posts' | 'achievements' | 'settings') => {
+    const index = tabs.indexOf(tab);
+    const toValue = index * width;
     Animated.spring(slideAnim, {
       toValue,
       useNativeDriver: true,
@@ -155,76 +159,146 @@ export default function MainScreen() {
           styles.tabContainer, 
           { borderBottomColor: colorScheme === 'dark' ? '#333333' : '#DDDDDD' }
         ]}>
-          <TouchableOpacity 
-            style={styles.tabButton} 
-            onPress={() => handleTabSwitch('posts')}
-          >
-            <Ionicons 
-              name="grid-outline" 
-              size={24} 
-              color={getIconColor(activeTab === 'posts')} 
-            />
-            <View style={[
-              styles.activeIndicator,
-              { opacity: activeTab === 'posts' ? 1 : 0 }
-            ]} />
-          </TouchableOpacity>
-          <TouchableOpacity 
-            style={styles.tabButton} 
-            onPress={() => handleTabSwitch('achievements')}
-          >
-            <Ionicons 
-              name="trophy-outline" 
-              size={24} 
-              color={getIconColor(activeTab === 'achievements')} 
-            />
-            <View style={[
-              styles.activeIndicator,
-              { opacity: activeTab === 'achievements' ? 1 : 0 }
-            ]} />
-          </TouchableOpacity>
+          {tabs.map((tabName) => (
+            <TouchableOpacity 
+              key={tabName}
+              style={styles.tabButton} 
+              onPress={() => handleTabSwitch(tabName as 'posts' | 'achievements' | 'settings')}
+            >
+              <Ionicons 
+                name={
+                  tabName === 'posts' ? 'grid-outline' : 
+                  tabName === 'achievements' ? 'trophy-outline' : 
+                  'settings-outline'
+                } 
+                size={24} 
+                color={getIconColor(activeTab === tabName)} 
+              />
+              <View style={[
+                styles.activeIndicator,
+                { opacity: activeTab === tabName ? 1 : 0 }
+              ]} />
+            </TouchableOpacity>
+          ))}
         </View>
       </View>
       <Animated.View style={[
         styles.contentContainer,
+        { width: width * tabs.length },
         {
           transform: [{
             translateX: slideAnim.interpolate({
-              inputRange: [0, width],
-              outputRange: [0, -width]
+              inputRange: tabs.map((_, i) => i * width),
+              outputRange: tabs.map((_, i) => -i * width),
             })
           }]
         }
       ]}>
-        <View style={styles.tabContent}>
-          <FlatList
-            key="posts"
-            data={posts}
-            numColumns={3}
-            renderItem={({ item }) => (
-              <ProfilePostSquare
-                imageUrl={item.data.image}
-                onPress={() => navigation.navigate('PostPage', { postId: item.id })}
+        {tabs.map((tabName) => (
+          <View key={tabName} style={styles.tabContent}>
+            {tabName === 'posts' && (
+              <FlatList
+                key="posts"
+                data={posts}
+                numColumns={3}
+                renderItem={({ item }) => (
+                  <ProfilePostSquare
+                    imageUrl={item.data.image}
+                    onPress={() => navigation.navigate('PostPage', { postId: item.id })}
+                  />
+                )}
+                keyExtractor={item => item.id}
+                contentContainerStyle={styles.listContainer}
+                columnWrapperStyle={styles.postsRow}
+                style={styles.flatList}
               />
             )}
-            keyExtractor={item => item.id}
-            contentContainerStyle={styles.listContainer}
-            columnWrapperStyle={styles.postsRow}
-            style={styles.flatList}
-          />
-        </View>
-        <View style={styles.tabContent}>
-          <AchievementList achievements={achievements} colorScheme={colorScheme} />
-        </View>
+            {tabName === 'achievements' && (
+              <AchievementList achievements={achievements} colorScheme={colorScheme} />
+            )}
+            {tabName === 'settings' && (
+              <SettingsTab userName={userName} bio={bio} colorScheme={colorScheme} />
+            )}
+          </View>
+        ))}
       </Animated.View>
     </SafeAreaView>
+  );
+}
+interface SettingsTabProps {
+  userName: string;
+  bio: string;
+  colorScheme: 'light' | 'dark';
+}
+function SettingsTab({ userName, bio, colorScheme }: SettingsTabProps) {
+  // State variables for the settings
+  const [username, setUsername] = useState(userName);
+  const [bioText, setBioText] = useState(bio);
+  const [location, setLocation] = useState('');
+  const [profilePicture/*, setProfilePicture*/] = useState(null);
+
+  const handleSave = () => {
+    // For now, just log the values
+    console.log('Saving settings:', { username, bio: bioText, location, profilePicture });
+    // Later, make API calls to save the settings
+  };
+
+  return (
+    <ScrollView style={styles.settingsContainer} contentContainerStyle={styles.scrollContent}>
+      <View style={styles.fieldContainer}>
+        <Text style={[styles.label, { color: Colors[colorScheme].text }]}>Username</Text>
+        <TextInput
+          style={[styles.input, { color: Colors[colorScheme].text, borderColor: colorScheme === 'dark' ? '#666' : '#ccc', backgroundColor: colorScheme === 'dark' ? '#333' : '#fff' }]}
+          placeholder="Username"
+          placeholderTextColor={colorScheme === 'dark' ? '#aaa' : '#555'}
+          value={username}
+          onChangeText={setUsername}
+        />
+      </View>
+
+      <View style={styles.fieldContainer}>
+        <Text style={[styles.label, { color: Colors[colorScheme].text }]}>Bio</Text>
+        <TextInput
+          style={[styles.input, styles.textArea, { color: Colors[colorScheme].text, borderColor: colorScheme === 'dark' ? '#666' : '#ccc', backgroundColor: colorScheme === 'dark' ? '#333' : '#fff' }]}
+          placeholder="Bio"
+          placeholderTextColor={colorScheme === 'dark' ? '#aaa' : '#555'}
+          value={bioText}
+          onChangeText={setBioText}
+          multiline
+        />
+      </View>
+
+      <View style={styles.fieldContainer}>
+        <Text style={[styles.label, { color: Colors[colorScheme].text }]}>Location</Text>
+        <TextInput
+          style={[styles.input, { color: Colors[colorScheme].text, borderColor: colorScheme === 'dark' ? '#666' : '#ccc', backgroundColor: colorScheme === 'dark' ? '#333' : '#fff' }]}
+          placeholder="Location"
+          placeholderTextColor={colorScheme === 'dark' ? '#aaa' : '#555'}
+          value={location}
+          onChangeText={setLocation}
+        />
+      </View>
+
+      <View style={styles.fieldContainer}>
+        <Text style={[styles.label, { color: Colors[colorScheme].text }]}>Profile Picture</Text>
+        {/* Placeholder for Profile Picture Upload */}
+        <TouchableOpacity style={styles.imageUploadButton}>
+          <Ionicons name="image-outline" size={24} color={Colors[colorScheme].text} />
+          <Text style={[styles.imageUploadText, { color: Colors[colorScheme].text }]}>Upload Profile Picture</Text>
+        </TouchableOpacity>
+      </View>
+
+      <TouchableOpacity style={styles.button} onPress={handleSave}>
+        <Text style={styles.buttonText}>Save Changes</Text>
+      </TouchableOpacity>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1, marginBottom: 0 },
   headerContainer: { paddingHorizontal: 10 },
-  contentContainer: { flex: 1, flexDirection: 'row', width: width * 2 },
+  contentContainer: { flex: 1, flexDirection: 'row' },
   tabContent: { width: width },
   tabContainer: {
     flexDirection: 'row',
@@ -249,4 +323,50 @@ const styles = StyleSheet.create({
   flatList: { flex: 1, width: '100%' },
   listContainer: { paddingBottom: 80 },
   postsRow: { paddingHorizontal: 9, marginTop: 8, justifyContent: 'flex-start' },
+  settingsContainer: {
+    flex: 1,
+    backgroundColor: 'transparent',
+  },
+  scrollContent: {
+    padding: 16,
+  },
+  fieldContainer: {
+    marginBottom: 15,
+  },
+  label: {
+    marginBottom: 5,
+    fontWeight: 'bold',
+  },
+  input: {
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 10,
+  },
+  textArea: {
+    height: 100,
+    textAlignVertical: 'top', // For Android to align text at the top
+  },
+  button: {
+    backgroundColor: '#FF9F45',
+    padding: 15,
+    borderRadius: 5,
+    alignItems: 'center',
+    marginTop: 20,
+    marginBottom: 30, // Added extra margin at the bottom
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  imageUploadButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    padding: 10,
+  },
+  imageUploadText: {
+    marginLeft: 10,
+  },
 });
