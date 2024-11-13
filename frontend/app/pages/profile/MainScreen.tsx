@@ -48,6 +48,7 @@ export default function MainScreen() {
         // Fetch user info
         const userData = await fetchUserInfo(profileId, loginContext.accessToken);
         setUserName(`${userData.firstname} ${userData.lastname}`);
+        loginContext.setFirstName(userData.firstname);
         setBio(userData.bio || 'No bio available');
         setRank(isOwnProfile ? "Food Connoisseur" : "Food Enthusiast");
 
