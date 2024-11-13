@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { AccountService } from './account/service';
+import { AuthService } from './auth/service';
 import { SessionUser } from './types';
 
 
@@ -18,7 +18,7 @@ export const expressAuthentication = async (
   }
 
   try {
-    const account = await new AccountService().check(accessToken.toString());
+    const account = await new AuthService().check(accessToken.toString());
     if (!account) {
       throw new Error("Unauthorized");
     }

@@ -15,6 +15,7 @@ SELECT
         'username', 'lucaschram',
         'bio', 'I love dogs',
         'phoneNumber', '(123) 123-1232',
+        'location', 'Santa Cruz',
         'pfp', '10bc9173-ff57-4bd6-8e79-10339a57cc4c.jpg',
         'pwhash', crypt('lucasucks123', salt.salt), 
         'salt', salt.salt
@@ -30,6 +31,7 @@ SELECT
         'username', 'keatonshawhan',
         'bio', 'I love cats',
         'phoneNumber', '(858) 688-4237',
+        'location', 'Santa Cruz',
         'pfp', '10bc9173-ff57-4bd6-8e79-10339a57cc4c.jpg',
         'pwhash', crypt('keatoniscool123', salt.salt), 
         'salt', salt.salt

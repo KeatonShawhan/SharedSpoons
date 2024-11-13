@@ -1,104 +1,79 @@
 import {
-    Body,
-    Query,
     Controller,
-    Post,
-    Get,
-    Response,
     Route,
-    // Put,
-    SuccessResponse,
-    Request, 
-    Security
+    Security,
+    Put,
     // Path
+    Request,
+    FormField,
+    UploadedFile
   } from "tsoa";
-  
+  import { AccountService } from "./service";
+  import { S3Service } from '../s3/service';
+  import { UpdateAccountRequest } from "./index";
   import * as express from 'express';
 
-  import {
-    Authenticated,
-    Credentials,
-    SessionUser,
-    UserSignUp,
-  } from "./index";
-  import { AccountService } from "./service";
-  import type User from "./service"
+@Security('jwt', ['member'])
+@Route("account")
+export class AccountController extends Controller {
+  
+  private s3Service = new S3Service();
+  @Put("/update")
+  public async updateAccount(
+    @FormField() updateRequest: UpdateAccountRequest,
+    @UploadedFile() file: Express.Multer.File,
+    @Request() request: express.Request
+): Promise<{ message: string }> {
+    try {
+        if (!request.user) {
+            this.setStatus(401);
+            console.error('Unauthorized user');
+            return { message: 'Unauthorized user' };
+        }
 
-  @Route("auth")
-  export class AccountController extends Controller {
-    @Post("/login")
-    @Response("401", "Unauthorized")
-    public async login(
-      @Body() credentials: Credentials
-    ): Promise<Authenticated | undefined> {
-      console.log(credentials);
-      return new AccountService()
-        .login(credentials)
-        .then(
-          async (
-            account: Authenticated | undefined
-          ): Promise<Authenticated | undefined> => {
-            if (!account) {
-              this.setStatus(401);
+        if (updateRequest.username){
+            const usernameAvailable = await AccountService.usernameAvailable(updateRequest.username);
+            if (!usernameAvailable) {
+                this.setStatus(400);
+                console.error('Username already in use');
+                return { message: 'Username already in use' };
             }
-            return account;
-          }
-        );
-    }
-  
-    @Post("/signup")
-    @Response("409", "Email/Username already in use")
-    @SuccessResponse("201")
-    public async signup(
-      @Body() info: UserSignUp
-    ): Promise<Authenticated | undefined> {
-      const ret = await new AccountService().signup(info);
-      console.log(ret);
-      if (!ret) {
-        this.setStatus(409);
-        return undefined;
-      }
-      return this.login({username: info.username, password: info.password});
-    }
-  
-    @Get()
-    @Security('jwt')
-    @Response("401", "Unauthorized")
-    public async check(
-      @Query() accessToken: string
-    ): Promise<SessionUser | undefined> {
-      return new AccountService()
-        .check(accessToken)
-        .then(async (account: SessionUser): Promise<SessionUser> => {
-          return account;
-        })
-        .catch(() => {
-          this.setStatus(401);
-          return undefined;
-        });
-    }
+        }
 
 
-    @Get("/userInfo")
-    @Security('jwt')
-    @Response("401", "Unauthorized")
-    public async userInfo(
-      @Request() request: express.Request,
-      @Query() id: string
-    ): Promise<User | undefined> {
-      return new AccountService()
-        .getUserInfo(id)
-        .then(async (account: User | undefined): Promise<User |undefined> => {
-          if (account === undefined) {
-            console.log("Account is undefined");
+        if (file) {
+            const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+            if (!allowedMimeTypes.includes(file.mimetype)) {
+                this.setStatus(400);
+                console.error('Invalid file type');
+                return { message: 'Invalid file type' };
+            }
+
+            const s3key = await this.s3Service.uploadFile(file);
+            if (s3key === undefined) {
+                this.setStatus(400);
+                console.error('Could not upload file');
+                return { message: 'Could not upload file' };
+            }
+
+            updateRequest.profilePicture = s3key;
+        }
+
+        const userId = request.user.id;
+        const updatedAccount = await AccountService.updateUserAccount(userId, updateRequest);
+
+        if (!updatedAccount) {
             this.setStatus(400);
-            return undefined;
-          }
-          return account;
-        })
-        .catch(() => {
-          this.setStatus(400);
-          return undefined;
-        });
+            console.error('Failed to update account');
+            return { message: 'Failed to update account' };
+        }
+
+        this.setStatus(200);
+        return { message: 'Account updated successfully' };
+    } catch (error) {
+        this.setStatus(500);
+        console.error('Error in account update route:', error);
+        return { message: 'Failed to update account' };
     }
-  }
+}
+}

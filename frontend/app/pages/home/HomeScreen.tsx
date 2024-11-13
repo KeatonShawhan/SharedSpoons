@@ -19,8 +19,7 @@ export default function HomeScreen() {
     const getPosts = async () => {
       const posts = await fetchPosts(loginContext.userId, loginContext.accessToken);
       setHomePosts(posts);
-      console.log(loginContext.accessToken);
-      console.log(posts);
+      // console.log(posts.image);
     };
 
     getPosts();
