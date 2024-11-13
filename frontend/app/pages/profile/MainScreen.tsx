@@ -61,6 +61,7 @@ export default function MainScreen() {
 
         // Fetch all posts
         const allPostsData = await fetchAllPosts(profileId, loginContext.accessToken);
+        console.log(allPostsData);
         setPostCount(allPostsData.length);
         setPosts(allPostsData);
 

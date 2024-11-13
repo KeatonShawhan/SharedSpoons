@@ -92,14 +92,11 @@ export default function MakePostDetails({route, navigation}: Props) {
     const formData = new FormData();
     formData.append('post', JSON.stringify(postData));
 
-    // Create a proper File object
-    const file = new File(
-      [selectedImage],
-      'photo.jpg',
-      { type: 'image/jpeg' }
-    );
-
-formData.append('file', file);
+    formData.append('file', {
+      uri: selectedImage,
+      name: 'photo.jpg',
+      type: 'image/jpeg',
+    } as any);
 
     try {
       const response = await fetch(`${API_URL}post/create`, {
