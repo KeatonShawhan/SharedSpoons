@@ -1,63 +1,88 @@
+// ExploreSearchbar.tsx
+
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, TextInput, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
-// import { useNavigation } from '@react-navigation/native';
-import { Colors } from '@/constants/Colors';
-import API_URL from '../../config'
+import { View, TextInput, FlatList, StyleSheet } from 'react-native';
+import { useColorScheme } from 'react-native';
+import { Colors } from '@/constants/Colors'; // Import your Colors definition
+import API_URL from '../../config';
 import LoginContext from "@/contexts/loginContext";
+import UserItem from '@/components/friends/UserItem';
 
-export const ExploreSearchBar: React.FC = () => {
+interface Suggestion {
+  id: string;
+  username: string;
+  firstname: string;
+  lastname: string;
+}
+
+interface ExploreSearchBarProps {
+  navigation: any;
+}
+
+export const ExploreSearchBar: React.FC<ExploreSearchBarProps> = ({ navigation }) => {
   const [searchInput, setSearchInput] = useState('');
-  const [suggestions, setSuggestions] = useState<{ id: string; username: string }[]>([]);
+  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const loginContext = useContext(LoginContext);
-  const currentUsername = loginContext.userName;
-  // const navigation = useNavigation();
+  const colorScheme = useColorScheme();
 
-  const searchSuggestion = async (input: string) => {
+  const fetchSuggestions = async (input: string) => {
     try {
       const response = await fetch(
-        `${API_URL}/explore/search/suggestion?input=${encodeURIComponent(input)}&currentUsername=${encodeURIComponent(currentUsername)}`,
+        `${API_URL}/explore/search/suggestion?input=${encodeURIComponent(input)}&currentUsername=${encodeURIComponent(loginContext.userName)}`,
         {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${loginContext.accessToken}`
-          }
+            'Authorization': `Bearer ${loginContext.accessToken}`,
+          },
         }
       );
-
+  
       if (!response.ok) {
         throw new Error(await response.text());
       }
-
+  
       const result = await response.json();
-      setSuggestions(result);
+      // console.log('Fetched suggestions:', result); // Log the response for debugging
+  
+      // Map and ensure all fields are available before setting suggestions
+      const mappedSuggestions = result.map((user: any) => ({
+        id: user.id,
+        firstname: user.firstname || 'N/A', // Default value if undefined
+        lastname: user.lastname || 'N/A',   // Default value if undefined
+        username: user.username,
+      }));
+  
+      setSuggestions(mappedSuggestions);
     } catch (err) {
-      console.error(err);
+      console.error('Error fetching suggestions:', err);
     }
   };
+  
 
-  // Fetch suggestions based on the search input
   useEffect(() => {
     if (searchInput) {
-      searchSuggestion(searchInput);
+      fetchSuggestions(searchInput);
     } else {
       setSuggestions([]);
     }
   }, [searchInput]);
 
-  const handleSearch = (selectedInput: string) => {
-    setSearchInput(selectedInput);
-    // navigation.navigate('SearchResults', { query: selectedInput });
-  };
-
   return (
     <View style={styles.container}>
       <TextInput
-        style={styles.searchInput}
+        style={[
+          styles.searchInput,
+          {
+            borderColor: Colors[colorScheme].icon,
+            backgroundColor: Colors[colorScheme].background,
+            color: Colors[colorScheme].text,
+          },
+        ]}
         placeholder="Search for usernames"
+        placeholderTextColor={Colors[colorScheme].icon}
         value={searchInput}
         onChangeText={setSearchInput}
-        onSubmitEditing={() => handleSearch(searchInput)}
         autoCapitalize="none"
       />
       {suggestions.length > 0 && (
@@ -65,11 +90,26 @@ export const ExploreSearchBar: React.FC = () => {
           data={suggestions}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => handleSearch(item.username)} style={styles.suggestionItem}>
-              <Text style={styles.suggestionText}>{item.username}</Text>
-            </TouchableOpacity>
+            <UserItem
+              user={{
+                id: item.id,
+                firstname: item.firstname,
+                lastname: item.lastname,
+                username: item.username,
+              }}
+              colorScheme={colorScheme}
+              onPress={(userId) => {
+                navigation.push('ProfileRoot', { 
+                  screen: 'Main', 
+                  params: { userId, isFromExploreTab: true } // Set `isFromExploreTab` to true
+                });
+              }}
+            />
           )}
-          style={styles.suggestionsList}
+          style={[
+            styles.suggestionsList,
+            { backgroundColor: Colors[colorScheme].background },
+          ]}
         />
       )}
     </View>
@@ -84,24 +124,15 @@ const styles = StyleSheet.create({
   },
   searchInput: {
     height: 40,
-    borderColor: Colors.light.icon,
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 10,
-    backgroundColor: '#fff',
   },
   suggestionsList: {
-    backgroundColor: '#fff',
     maxHeight: 200,
     borderRadius: 5,
     marginTop: 5,
   },
-  suggestionItem: {
-    padding: 10,
-    borderBottomColor: '#ddd',
-    borderBottomWidth: 1,
-  },
-  suggestionText: {
-    fontSize: 16,
-  },
 });
+
+export default ExploreSearchBar;

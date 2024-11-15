@@ -21,7 +21,6 @@ interface Post {
   id: string;
   image: string;
   heightRatio?: number;
-  // Add other fields if necessary
 }
 
 export default function Explore() {
@@ -32,27 +31,22 @@ export default function Explore() {
   const [posts, setPosts] = useState<Post[]>([]);
 
   useEffect(() => {
-    // Fetch posts data when the component mounts
     fetchPosts();
   }, []);
 
   const fetchPosts = async () => {
     try {
-      // Placeholder for API call to fetch posts
-      // Replace with your actual API call
       const fetchedPosts: Post[] = [
         {
           id: '1',
           image: 'https://via.placeholder.com/300x400',
           heightRatio: 1.5,
-          // Add other necessary fields
         },
         {
           id: '2',
           image: 'https://via.placeholder.com/300x500',
           heightRatio: 2,
         },
-        // Add more posts as needed
       ];
       setPosts(fetchedPosts);
     } catch (error) {
@@ -60,10 +54,9 @@ export default function Explore() {
     }
   };
 
-  // Calculate image width based on screen width and desired number of columns
   const numColumns = 2;
   const screenWidth = Dimensions.get('window').width;
-  const imageWidth = screenWidth / numColumns - 16; // Adjust spacing as needed
+  const imageWidth = screenWidth / numColumns - 16;
 
   const renderItem = ({ item }: { item: Post }) => (
     <TouchableOpacity
@@ -85,12 +78,11 @@ export default function Explore() {
 
   return (
     <View style={[styles.container, { backgroundColor: themeColors.background }]}>
-      {/* Header */}
       <View style={styles.header}>
         <Text style={[styles.headerTitle, { color: themeColors.text }]}>Explore</Text>
       </View>
-      <ExploreSearchBar/>
-      {/* Staggered Grid */}
+      {/* Pass navigation for infinite stacking */}
+      <ExploreSearchBar navigation={navigation} />
       <FlatList
         data={posts}
         renderItem={renderItem}
@@ -109,7 +101,7 @@ const styles = StyleSheet.create({
     paddingTop: 7,
   },
   header: {
-    height: 90, // Adjust as needed
+    height: 90,
     paddingTop: 0,
     paddingLeft: 20,
   },
