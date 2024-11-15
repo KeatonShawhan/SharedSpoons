@@ -14,7 +14,7 @@ import {
   } from "tsoa";
   
   import * as express from 'express';
-
+  import { S3Service } from "../s3/service";
   import {
     Authenticated,
     Credentials,
@@ -26,6 +26,8 @@ import {
 
   @Route("auth")
   export class AuthController extends Controller {
+    private s3Service = new S3Service();
+
     @Post("/login")
     @Response("401", "Unauthorized")
     public async login(
@@ -94,6 +96,12 @@ import {
             this.setStatus(400);
             return undefined;
           }
+          const newLink = await this.s3Service.getFileLink(account.pfp);
+          if (newLink === undefined) {
+            this.setStatus(400);
+            return undefined;
+          }
+          account.pfp = newLink;
           return account;
         })
         .catch(() => {

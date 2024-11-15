@@ -33,6 +33,7 @@ export class AccountController extends Controller {
         const updateRequestJson: UpdateAccountRequest = JSON.parse(updateRequest);
 
         if (updateRequestJson.username){
+            console.log(updateRequestJson.username);
             const usernameAvailable = await AccountService.usernameAvailable(updateRequestJson.username);
             if (!usernameAvailable) {
                 this.setStatus(400);
@@ -41,6 +42,7 @@ export class AccountController extends Controller {
             }
         }
 
+        let updatedAccount: boolean;
 
         if (file) {
             const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
@@ -56,12 +58,10 @@ export class AccountController extends Controller {
                 console.error('Could not upload file');
                 return { message: 'Could not upload file' };
             }
-
-            updateRequestJson.profilePicture = s3key;
+            updatedAccount = await AccountService.updateUserAccount(request.user.id, updateRequestJson, s3key);
+        } else{
+            updatedAccount = await AccountService.updateUserAccount(request.user.id, updateRequestJson)
         }
-
-        const userId = request.user.id;
-        const updatedAccount = await AccountService.updateUserAccount(userId, updateRequestJson);
 
         if (!updatedAccount) {
             this.setStatus(400);
