@@ -1,7 +1,7 @@
 import { pool } from "../db";
 
 import {Suggestion} from './index';
-
+import { PostContent } from "../post";
 export class ExploreService {
 
 public async searchSuggestion(input: string, currentUsername: string): Promise<Suggestion[]> {
@@ -34,5 +34,20 @@ public async searchSuggestion(input: string, currentUsername: string): Promise<S
   }));
 
   return suggestions;
+}
+
+public async getExplorePosts(userId:string): Promise<PostContent[]> {
+  const select = `
+  SELECT * FROM post WHERE user_id != $1 ORDER BY RANDOM() LIMIT 10
+`;
+
+const query = {
+  text: select,
+  values: [userId],
+};
+
+const { rows } = await pool.query(query);
+
+return rows;
 }
 }

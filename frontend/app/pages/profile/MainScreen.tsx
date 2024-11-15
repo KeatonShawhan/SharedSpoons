@@ -41,8 +41,9 @@ export default function MainScreen() {
   const profileId = route.params?.userId || loginContext.userId;
   const isOwnProfile = profileId === loginContext.userId;
 
-  // Determine if we're in the profile tab by checking the route
+  // Determine if we're in the profile tab or explore tab by checking the route
   const isFromHomeTab = route.params?.isFromHomeTab ?? false;
+  const isFromExploreTab = route.params?.isFromExploreTab ?? false;
 
   // State variables
   const [userName, setUserName] = useState('Loading name...');
@@ -64,7 +65,6 @@ export default function MainScreen() {
         // Fetch user info
         const userData = await fetchUserInfo(profileId, loginContext.accessToken);
         setUserName(`${userData.firstname} ${userData.lastname}`);
-        loginContext.setFirstName(userData.firstname);
         setBio(userData.bio || 'No bio available');
         setRank(isOwnProfile ? 'Food Connoisseur' : 'Food Enthusiast');
 
@@ -167,7 +167,7 @@ export default function MainScreen() {
           rank={rank}
           colorScheme={colorScheme}
           // Show back button if either not our profile OR not in profile tab
-          showBackButton={!isOwnProfile || isFromHomeTab}
+          showBackButton={!isOwnProfile || isFromHomeTab || isFromExploreTab}
           isOwnProfile={isOwnProfile}
           isFollowing={isFollowing}
           handleFollowPress={handleFollowPress}

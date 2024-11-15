@@ -1,3 +1,4 @@
+// profileNavitagion.tsx
 import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { NavigatorScreenParams } from '@react-navigation/native';
 import MainScreen from '@/app/pages/profile/MainScreen';
@@ -11,7 +12,8 @@ export type ProfileStackParamList = {
   Main: { 
     userId?: UUID;
     isFromProfileTab?: boolean;
-    isFromHomeTab?: boolean; // Add this parameter
+    isFromHomeTab?: boolean; 
+    isFromExploreTab?: boolean; 
   };
   Friends: { initialTab: 'followers' | 'following'; userId?: UUID };
   PostPage: { postId: UUID };

@@ -12,16 +12,13 @@ interface SettingsTabProps {
 }
 
 const SettingsTab: React.FC<SettingsTabProps> = ({ userName, bio, colorScheme }) => {
-  // State variables for the settings
   const [username, setUsername] = useState(userName);
   const [bioText, setBioText] = useState(bio);
   const [location, setLocation] = useState('');
   const [profilePicture, setProfilePicture] = useState(null);
 
   const handleSave = () => {
-    // For now, just log the values
     console.log('Saving settings:', { username, bio: bioText, location, profilePicture });
-    // Later, make API calls to save the settings
   };
 
   return (
@@ -42,7 +39,7 @@ const SettingsTab: React.FC<SettingsTabProps> = ({ userName, bio, colorScheme })
           placeholderTextColor={colorScheme === 'dark' ? '#aaa' : '#555'}
           value={username}
           onChangeText={setUsername}
-          autoCapitalize="none" // Ensure first letter isn't capitalized
+          autoCapitalize="none"
         />
       </View>
 
@@ -87,23 +84,25 @@ const SettingsTab: React.FC<SettingsTabProps> = ({ userName, bio, colorScheme })
         />
       </View>
 
+      {/* Profile Picture Label */}
+      <Text style={[styles.profilePictureLabel, { color: Colors[colorScheme].text }]}>
+        Profile Picture
+      </Text>
+
       {/* Profile Picture Picker */}
-      <View style={styles.fieldContainer}>
-        <Text style={[styles.label, { color: Colors[colorScheme].text }]}>Profile Picture</Text>
-        <ImagePickerBox
-          selectedImage={profilePicture}
-          setSelectedImage={setProfilePicture}
-          isDisabled={false}
-        />
-      </View>
+      <ImagePickerBox
+        selectedImage={profilePicture}
+        setSelectedImage={setProfilePicture}
+        isDisabled={false}
+        style={styles.imagePickerBox} // Separate styling for ImagePickerBox
+      />
 
       {/* Save Button */}
       <TouchableOpacity style={styles.button} onPress={handleSave}>
         <Text style={styles.buttonText}>Save Changes</Text>
       </TouchableOpacity>
     </ScrollView>
-);
-
+  );
 };
 
 export default SettingsTab;
@@ -115,12 +114,13 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     padding: 16,
+    paddingBottom: 80, 
   },
   fieldContainer: {
     marginBottom: 15,
   },
   label: {
-    marginBottom: 5,
+    marginBottom: 3,
     fontWeight: 'bold',
   },
   input: {
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
   },
   textArea: {
     height: 100,
-    textAlignVertical: 'top', // For Android to align text at the top
+    textAlignVertical: 'top',
   },
   button: {
     backgroundColor: '#FF9F45',
@@ -138,21 +138,20 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
     marginTop: 20,
-    marginBottom: 30, // Added extra margin at the bottom
+    marginBottom: 30,
   },
   buttonText: {
     color: '#fff',
     fontWeight: 'bold',
   },
-  imageUploadButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    padding: 10,
+  profilePictureLabel: {
+    marginTop: 5,
+    marginBottom: -40,
+    fontWeight: 'bold',
   },
-  imageUploadText: {
-    marginLeft: 10,
+  imagePickerBox: {
+    height: '40%',
+    width: '40%',
+    marginBottom: 20, // Space between ImagePickerBox and other elements
   },
 });
