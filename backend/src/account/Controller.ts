@@ -20,7 +20,7 @@ export class AccountController extends Controller {
   private s3Service = new S3Service();
   @Put("/update")
   public async updateAccount(
-    @FormField() updateRequest: UpdateAccountRequest,
+    @FormField() updateRequest: string,
     @UploadedFile() file: Express.Multer.File,
     @Request() request: express.Request
 ): Promise<{ message: string }> {
@@ -30,9 +30,10 @@ export class AccountController extends Controller {
             console.error('Unauthorized user');
             return { message: 'Unauthorized user' };
         }
+        const updateRequestJson: UpdateAccountRequest = JSON.parse(updateRequest);
 
-        if (updateRequest.username){
-            const usernameAvailable = await AccountService.usernameAvailable(updateRequest.username);
+        if (updateRequestJson.username){
+            const usernameAvailable = await AccountService.usernameAvailable(updateRequestJson.username);
             if (!usernameAvailable) {
                 this.setStatus(400);
                 console.error('Username already in use');
@@ -56,11 +57,11 @@ export class AccountController extends Controller {
                 return { message: 'Could not upload file' };
             }
 
-            updateRequest.profilePicture = s3key;
+            updateRequestJson.profilePicture = s3key;
         }
 
         const userId = request.user.id;
-        const updatedAccount = await AccountService.updateUserAccount(userId, updateRequest);
+        const updatedAccount = await AccountService.updateUserAccount(userId, updateRequestJson);
 
         if (!updatedAccount) {
             this.setStatus(400);
