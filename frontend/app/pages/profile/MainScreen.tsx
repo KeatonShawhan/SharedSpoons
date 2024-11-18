@@ -42,8 +42,10 @@ export default function MainScreen() {
   const isOwnProfile = profileId === loginContext.userId;
 
   // Determine if we're in the profile tab or explore tab by checking the route
-  const isFromHomeTab = route.params?.isFromHomeTab ?? false;
-  const isFromExploreTab = route.params?.isFromExploreTab ?? false;
+  // const isFromHomeTab = route.params?.isFromHomeTab ?? false;
+  // const isFromExploreTab = route.params?.isFromExploreTab ?? false;
+  const isFromProfileTab = route.params?.isFromProfileTab ?? false;
+  // console.log(isFromExploreTab);
 
   // State variables
   const [userName, setUserName] = useState('Loading name...');
@@ -168,7 +170,7 @@ export default function MainScreen() {
           rank={rank}
           colorScheme={colorScheme}
           // Show back button if either not our profile OR not in profile tab
-          showBackButton={!isOwnProfile || isFromHomeTab || isFromExploreTab}
+          showBackButton={!isFromProfileTab }
           isOwnProfile={isOwnProfile}
           isFollowing={isFollowing}
           handleFollowPress={handleFollowPress}

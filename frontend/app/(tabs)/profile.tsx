@@ -8,7 +8,6 @@ export type ProfileTabParamList = {
   ProfileRoot: NavigatorScreenParams<ProfileStackParamList>;
 };
 
-// Create a navigator for ProfileTab
 const ProfileTabStack = createNativeStackNavigator<ProfileTabParamList>();
 
 export default function ProfileTab() {
@@ -17,6 +16,14 @@ export default function ProfileTab() {
       <ProfileTabStack.Screen 
         name="ProfileRoot" 
         component={ProfileNavigation}
+        initialParams={{
+          screen: 'Main',
+          params: {
+            isFromProfileTab: true,
+            isFromHomeTab: false,
+            isFromExploreTab: false
+          }
+        }}
       />
     </ProfileTabStack.Navigator>
   );

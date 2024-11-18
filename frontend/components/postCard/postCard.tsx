@@ -54,6 +54,7 @@ export function PostCard({
       useNativeDriver: true,
     }).start();
   };
+
   const handleNavigateToProfile = () => {
     switch (parentTab) {
       case 'HomeTab':
@@ -63,26 +64,33 @@ export function PostCard({
             screen: 'Main',
             params: { 
               userId: user_id,
-              isFromHomeTab: true  // Add this line
+              isFromHomeTab: true
             }
           },
-          isFromHomeTab: true  // Add this line
+          isFromHomeTab: true
         });
         break;
 
       case 'ProfileTab':
-        // If we're already in ProfileTab, use the profile navigation directly
-        navigation.push('Main', { userId: user_id });
+        // Instead of pushing directly to Main, use the full navigation path
+        navigation.push('ProfileRoot', {
+          screen: 'Main',
+          params: {
+            userId: user_id,
+          }
+        });
         break;
 
       case 'ToEatTab':
-        // Handle ToEatTab navigation if needed
-        // Add your ToEatTab specific navigation logic here
+        navigation.push('ProfileRoot', {
+          screen: 'Main',
+          params: {
+            userId: user_id,
+          }
+        });
         break;
 
       case 'ExploreTab':
-        // Handle ExploreTab navigation if needed
-        // Add your ExploreTab specific navigation logic here
         break;
 
       default:

@@ -8,16 +8,23 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import type { RouteProp, CompositeNavigationProp } from '@react-navigation/native';
-import type { ToEatScreenNavigationProp } from '@/app/(tabs)/toeat';
+import type { ToEatStackParamList } from '@/app/(tabs)/toeat';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { PostStackParamList } from '@/app/navigation/PostStackNavigator';
+import { ProfileStackParamList } from '@/app/pages/profile/profileNavigation';
 import type { PostCardProps } from '@/components/postCard/postCard';
 import LoginContext from '@/contexts/loginContext';
 import { fetchPostData } from './toEatHelper';
+
 type ToEatDetailsRouteProp = RouteProp<{ ToEatDetails: { id: string } }, 'ToEatDetails'>;
+
+// Update navigation prop to include ProfileStackParamList
 type ToEatDetailsNavigationProp = CompositeNavigationProp<
-  NativeStackNavigationProp<{ PostStack: PostStackParamList }>,
-  ToEatScreenNavigationProp
+  NativeStackNavigationProp<ToEatStackParamList>,
+  CompositeNavigationProp<
+    NativeStackNavigationProp<PostStackParamList>,
+    NativeStackNavigationProp<ProfileStackParamList>
+  >
 >;
 
 export default function ToEatDetails() {
@@ -25,24 +32,35 @@ export default function ToEatDetails() {
   const navigation = useNavigation<ToEatDetailsNavigationProp>();
   const colorScheme = useColorScheme();
   const { id } = route.params;
-  const loginContext = useContext(LoginContext)
+  const loginContext = useContext(LoginContext);
   const [post, setPost] = useState<PostCardProps>();
 
-
   const themeColors = Colors[colorScheme];
-
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const postData = await fetchPostData(id,loginContext.accessToken);
-        setPost(postData)
+        const postData = await fetchPostData(id, loginContext.accessToken);
+        setPost(postData);
       } catch (error) {
         console.error("Error fetching profile data:", error);
       }
     };
     fetchData();
   }, []);
+
+  // Add handler for profile navigation
+  const handleProfileNavigation = (userId: string) => {
+    navigation.navigate('ProfileRoot', {
+      screen: 'Main',
+      params: {
+        userId,
+        isFromProfileTab: false,
+        isFromHomeTab: false,
+        isFromExploreTab: false
+      }
+    });
+  };
   
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: themeColors.background }}>
@@ -58,7 +76,10 @@ export default function ToEatDetails() {
       {/* Scrollable Content */}
       <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
         <ThemedView style={{ paddingTop: 20 }}>
-          <ToEatDetailsInfo {...post} />
+          <ToEatDetailsInfo 
+            {...post}
+            onProfilePress={post?.user_id ? () => handleProfileNavigation(post.user_id) : undefined}
+          />
         </ThemedView>
       </ScrollView>
     </SafeAreaView>

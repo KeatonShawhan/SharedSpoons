@@ -1,16 +1,24 @@
 // components/toEatCard/toEatDetails.tsx
 import React from 'react';
 import { View } from 'react-native';
-import { PostCard } from '../postCard/postCard';
+import { PostCard, PostCardProps } from '../postCard/postCard';
 import { postEatButton } from './postEatButton';
 import { removeEatButton } from './removeEatButton';
-import type { PostCardProps } from '../postCard/postCard';
 
-export function ToEatDetailsInfo(props: PostCardProps) {
+// Extend PostCardProps to include onProfilePress
+/* eslint-disable */
+interface ToEatDetailsInfoProps extends PostCardProps {
+  onProfilePress?: () => void;
+}
+
+export function ToEatDetailsInfo({ onProfilePress, ...postProps }: ToEatDetailsInfoProps) {
   return (
     <View style={{ justifyContent: 'center', alignItems: 'center', paddingBottom: 30 }}>
       <View style={{ width: '95%', borderRadius: 0, borderColor: 'none' }}>
-        <PostCard {...props} />
+        <PostCard 
+          {...postProps}
+          parentTab="ToEatTab"
+        />
         <View>
           {postEatButton()}
           {removeEatButton()}
@@ -19,3 +27,4 @@ export function ToEatDetailsInfo(props: PostCardProps) {
     </View>
   );
 }
+/* eslint-enable */
