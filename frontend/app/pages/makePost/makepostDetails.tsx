@@ -131,6 +131,10 @@ export default function MakePostDetails({route, navigation}: Props) {
         Alert.alert('Submission Failed', errorData.message || 'Failed to submit post. Please try again.');
       }
     } catch (error) {
+      if (error.message.includes("401")) {
+        loginContext.handleLogout();
+        return;
+      }
       Alert.alert('An Error Occurred', 'Please try again.');
       console.error('Submission error:', error);
     }

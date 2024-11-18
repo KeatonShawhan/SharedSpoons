@@ -17,9 +17,8 @@ export default function HomeScreen() {
   const [homePosts, setHomePosts] = useState([])
   useEffect(() => {
     const getPosts = async () => {
-      const posts = await fetchPosts(loginContext.userId, loginContext.accessToken);
-      setHomePosts(posts);
-      // console.log(posts.image);
+      const posts = await fetchPosts(loginContext.userId, loginContext.accessToken, loginContext.handleLogout);
+      setHomePosts(posts || []);
     };
 
     getPosts();

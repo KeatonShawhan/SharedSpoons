@@ -63,20 +63,20 @@ export default function MainScreen() {
     const fetchData = async () => {
       try {
         // Fetch user info
-        const userData = await fetchUserInfo(profileId, loginContext.accessToken);
+        const userData = await fetchUserInfo(profileId, loginContext.accessToken, loginContext.handleLogout);
         setUserName(`${userData.firstname} ${userData.lastname}`);
         setBio(userData.bio || 'No bio available');
         setRank(isOwnProfile ? 'Food Connoisseur' : 'Food Enthusiast');
 
         // Fetch followers and following data
-        const followersData = await fetchFollowerCount(profileId, loginContext.accessToken);
+        const followersData = await fetchFollowerCount(profileId, loginContext.accessToken, loginContext.handleLogout);
         setFollowerCount(followersData);
 
-        const followingData = await fetchFollowingCount(profileId, loginContext.accessToken);
+        const followingData = await fetchFollowingCount(profileId, loginContext.accessToken, loginContext.handleLogout);
         setFollowingCount(followingData);
 
         // Fetch all posts
-        const allPostsData = await fetchAllPosts(profileId, loginContext.accessToken);
+        const allPostsData = await fetchAllPosts(profileId, loginContext.accessToken, loginContext.handleLogout);
         console.log(allPostsData);
         setPostCount(allPostsData.length);
         setPosts(allPostsData);
@@ -86,7 +86,8 @@ export default function MainScreen() {
           const isFollowingStatus = await checkIfFollowing(
             loginContext.userId,
             profileId,
-            loginContext.accessToken
+            loginContext.accessToken,
+            loginContext.handleLogout
           );
           setIsFollowing(isFollowingStatus);
         }
@@ -114,7 +115,7 @@ export default function MainScreen() {
   const handleFollowPress = async () => {
     if (isFollowing) {
       // Unfollow the user
-      const success = await removeFollowRequest(profileId, loginContext.accessToken);
+      const success = await removeFollowRequest(profileId, loginContext.accessToken, loginContext.handleLogout);
       if (success) {
         setIsFollowing(false);
         setFollowerCount((prevCount) => prevCount - 1);
@@ -122,7 +123,7 @@ export default function MainScreen() {
       }
     } else {
       // Follow the user
-      const success = await sendFollowRequest(profileId, loginContext.accessToken);
+      const success = await sendFollowRequest(profileId, loginContext.accessToken, loginContext.handleLogout);
       if (success) {
         setIsFollowing(true);
         setFollowerCount((prevCount) => prevCount + 1);

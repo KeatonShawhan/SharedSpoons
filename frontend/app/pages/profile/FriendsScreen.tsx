@@ -46,19 +46,18 @@ export default function FriendsScreen() {
     const fetchData = async () => {
       if (!isOwnProfile) {
         // Fetch first name of the user if viewing someone else's profile
-        const userInfo = await fetchUserInfo(profileId, loginContext.accessToken);
+        const userInfo = await fetchUserInfo(profileId, loginContext.accessToken, loginContext.handleLogout);
         setFirstName(userInfo.firstname || "User");
-        console.log("not my logged in");
       } else {
         console.log(loginContext.firstName);
         setFirstName(loginContext.firstName);
       }
 
       // Fetch followers and following data
-      const followersData = await fetchFollowersInfo(profileId, loginContext.accessToken);
+      const followersData = await fetchFollowersInfo(profileId, loginContext.accessToken, loginContext.handleLogout);
       setFollowers(followersData);
 
-      const followingData = await fetchFollowingInfo(profileId, loginContext.accessToken);
+      const followingData = await fetchFollowingInfo(profileId, loginContext.accessToken, loginContext.handleLogout);
       setFollowing(followingData);
     };
 

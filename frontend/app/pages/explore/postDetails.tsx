@@ -82,6 +82,10 @@ export default function PostDetails({ route }: Props) {
 
       setPostData(transformedData);
     } catch (err) {
+      if (err.message.includes("401")) {
+        loginContext.handleLogout();
+        return;
+      }
       setError(err instanceof Error ? err.message : 'Failed to fetch post');
       console.error('Error fetching post:', err);
       setPostData(null);

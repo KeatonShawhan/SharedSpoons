@@ -1,12 +1,8 @@
 import React, { useContext } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Colors } from '@/constants/Colors';
 import LoginContext from '@/contexts/loginContext';
-import { useNavigation } from "expo-router";
-import { RootTabParamList } from '@/app/(tabs)/_layout';
-import { StackNavigationProp } from "@react-navigation/stack";
 
 const ORANGE_COLOR = '#FF9F45';
 
@@ -14,17 +10,8 @@ interface HeaderProps {
   colorScheme: string;
 }
 
-export const Header: React.FC<HeaderProps> = ({ colorScheme}) => {
+export const Header: React.FC<HeaderProps> = ({ colorScheme }) => {
   const loginContext = useContext(LoginContext)
-  const navigation = useNavigation<StackNavigationProp<RootTabParamList>>(); // Use the correct type here
-
-  const handleLogout = async () => {
-    await AsyncStorage.removeItem("accessToken");
-    loginContext.setAccessToken('');
-    navigation.navigate('login');
-    loginContext.setIsAuthenticated(false);
-    //onLogout();
-  };
 
   return (
     <View style={styles.headerContainer}>
@@ -38,7 +25,7 @@ export const Header: React.FC<HeaderProps> = ({ colorScheme}) => {
           color={Colors[colorScheme].text} 
           style={styles.icon}
         />
-        <TouchableOpacity onPress={handleLogout} style={styles.icon}>
+        <TouchableOpacity onPress={loginContext.handleLogout} style={styles.icon}>
         <Ionicons 
           name="log-out-outline" 
           size={28}

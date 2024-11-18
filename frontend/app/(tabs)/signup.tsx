@@ -68,6 +68,7 @@ export default function signup () {
         loginContext.setUserName(json.firstname + " " + json.lastname);
         AsyncStorage.setItem("accessToken", json.accessToken);
         loginContext.setIsAuthenticated(true);
+        setUser({ username: "", password: "", phoneNumber: "", firstname: "", lastname: "", email: "" });
         navigation.navigate('index')
       })
       .catch((err) => {

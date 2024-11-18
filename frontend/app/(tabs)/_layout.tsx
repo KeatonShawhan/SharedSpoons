@@ -49,6 +49,10 @@ export default function TabLayout() {
           loginContext.setAccessToken(token)
           return json;
         } catch (err) {
+          if (err.message.includes("401")) {
+            loginContext.handleLogout();
+            return;
+          }
           console.log("Error fetching user info:", err);
           return null;
         }

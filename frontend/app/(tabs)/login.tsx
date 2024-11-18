@@ -60,12 +60,16 @@ export default function login() {
       })
       .then((json) => {
         console.log(json);
+        // Faulty JWT test lines
+        //loginContext.setAccessToken('FAULTY_TOKEN');
+        //AsyncStorage.setItem("accessToken", 'FAULTY_TOKEN');
         loginContext.setAccessToken(json.accessToken);
+        AsyncStorage.setItem("accessToken", json.accessToken);
         loginContext.setUserId(json.id);
         loginContext.setUserName(json.username);
-        AsyncStorage.setItem("accessToken", json.accessToken);
         loginContext.setFirstName(json.firstname);
         loginContext.setIsAuthenticated(true);
+        setUser({username: "", password: ""});
         navigation.navigate('index')
       })
       .catch((err) => {

@@ -1,6 +1,6 @@
 import API_URL from "@/config";
 
-export const fetchPosts = async (userId, accessToken) => {
+export const fetchPosts = async (userId, accessToken, handleLogout) => {
   try {
     const response = await fetch(`${API_URL}post/all/friendsPosts/${userId}`, {
       method: 'GET',
@@ -17,6 +17,11 @@ export const fetchPosts = async (userId, accessToken) => {
     const json = await response.json();
     return json;
   } catch (err) {
+    if (err.message.includes("401")) {
+      console.log("Unauthorized, logging out...");
+      handleLogout();
+      return;
+    }
     console.log("Error fetching post info:", err);
     return [];
   }
