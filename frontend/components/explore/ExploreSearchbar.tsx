@@ -44,6 +44,7 @@ export const ExploreSearchBar: React.FC<ExploreSearchBarProps> = ({ navigation }
       }
   
       const result = await response.json();
+      console.log(result);
       // console.log('Fetched suggestions:', result); // Log the response for debugging
   
       // Map and ensure all fields are available before setting suggestions
