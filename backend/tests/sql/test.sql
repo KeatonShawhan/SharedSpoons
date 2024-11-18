@@ -52,6 +52,13 @@ CREATE TABLE comment (
     data jsonb
 );
 
+DROP TABLE IF EXISTS likes CASCADE;
+CREATE TABLE likes (
+    post_id UUID REFERENCES post(id) ON DELETE CASCADE,
+    user_id UUID REFERENCES app_user(id) ON DELETE CASCADE,
+    PRIMARY KEY (post_id, user_id)
+);
+
 WITH salt AS (
     SELECT gen_salt('bf') AS salt
 )
@@ -129,3 +136,9 @@ INSERT INTO comment (id, post_id, user_id, data) VALUES
     ('a6666ef4-971b-4e60-a692-a3af3365ba85', (SELECT id FROM post WHERE data->>'dish' = 'Stare' AND data->>'rating' = '3'), 
     (SELECT id FROM app_user WHERE data->>'email' = 'kshawhan@ucsc.edu'),
     json_build_object('time', '2024-10-21T12:45:00.000Z', 'comment', 'I love this cat!'));
+
+INSERT INTO likes (post_id, user_id) VALUES
+    ((SELECT id FROM post WHERE data->>'caption' = 'look at cat'), 
+    (SELECT id FROM app_user WHERE data->>'email' = 'kshawhan@ucsc.edu')),
+    ((SELECT id FROM post WHERE data->>'caption' = 'cat!'),
+    (SELECT id FROM app_user WHERE data->>'email' = 'lschram@ucsc.edu'));

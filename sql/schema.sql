@@ -59,3 +59,11 @@ CREATE TABLE comment (
     user_id UUID REFERENCES app_user(id) ON DELETE CASCADE,
     data jsonb
 );
+
+-- Like Table
+DROP TABLE IF EXISTS likes CASCADE;
+CREATE TABLE likes (
+    post_id UUID REFERENCES post(id) ON DELETE CASCADE,
+    user_id UUID REFERENCES app_user(id) ON DELETE CASCADE,
+    PRIMARY KEY (post_id, user_id)
+);

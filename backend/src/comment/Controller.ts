@@ -15,7 +15,7 @@ interface Comment {
     firstname: string;
     lastname:string;
     pfp: string;
-  }
+}
 
 @Security('jwt')
 @Route('comment')
