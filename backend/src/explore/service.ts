@@ -8,7 +8,9 @@ public async searchSuggestion(input: string, currentUsername: string): Promise<S
     const select = `
     SELECT DISTINCT 
       id, 
-      data->>'username' as username
+      data->>'username' as username,
+      data->>'firstname' as firstname,
+      data->>'lastname' as lastname
     FROM 
       app_user 
     WHERE 
@@ -31,6 +33,8 @@ public async searchSuggestion(input: string, currentUsername: string): Promise<S
   const suggestions = rows.map((row) => ({
     id: row.id,
     username: row.username,
+    firstname: row.firstname,
+    lastname: row.lastname,
   }));
 
   return suggestions;

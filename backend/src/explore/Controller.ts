@@ -30,13 +30,13 @@ import { PostContent } from "../post";
         .searchSuggestion(input, currentUsername)
         .then(
           async (
-            usernames: Suggestion[]
+            searchResults: Suggestion[]
           ): Promise<Suggestion[]> => {
-            console.log("usernames: " + usernames);
-            if (!usernames) {
+            console.log("Suggestions: " + searchResults);
+            if (!searchResults) {
               return [];     
             }
-            return usernames;
+            return searchResults;
           }
     );
   }
