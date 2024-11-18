@@ -4,7 +4,6 @@ import {
   Credentials,
   SessionUser,
   UserSignUp,
-  SignUpRet,
 } from ".";
 import { pool } from "../db";
 import { UUID } from '../types/index';
@@ -73,64 +72,60 @@ export class AuthService {
     }
   }
 
-  public async signup(info: UserSignUp): Promise<SignUpRet | undefined> {
+  public async signup(info: UserSignUp): Promise<Authenticated | undefined> {
     let select = `SELECT data || jsonb_build_object('id', id) AS user FROM app_user WHERE data->>'email' = $1`;
-    let query = {
-      text: select,
-      values: [`${info.email}`],
-    };
+    let query = { text: select, values: [info.email] };
     const { rows } = await pool.query(query);
-    if (rows.length == 1) {
-      return undefined;
-    }
+    if (rows.length === 1) return undefined;
+  
     select = `SELECT data || jsonb_build_object('id', id) AS user FROM app_user WHERE data->>'username' = $1`;
-    query = {
-      text: select,
-      values: [`${info.username}`],
-    };
-    const { rows: result } = await pool.query(query);
-    if (result.length == 1) {
-      return undefined;
-    }
+    query = { text: select, values: [info.username] };
+    const { rows: usernameRows } = await pool.query(query);
+    if (usernameRows.length === 1) return undefined;
+  
     select = `SELECT data || jsonb_build_object('id', id) AS user FROM app_user WHERE data->>'phoneNumber' = $1`;
-    query = {
-      text: select,
-      values: [`${info.phoneNumber}`],
-    };
-    const { rows: out } = await pool.query(query);
-    if (out.length == 1) {
-      return undefined;
-    }
-    const insert = `INSERT INTO app_user(data) VALUES (jsonb_build_object('username', $1::text, 'firstname', $2::text, 'pwhash', '', 'salt', gen_salt('bf'), 'status', 'undefined', 'email', $3::text, 'lastname', $4::text, 'phoneNumber', $5::text));`;
+    query = { text: select, values: [info.phoneNumber] };
+    const { rows: phoneRows } = await pool.query(query);
+    if (phoneRows.length === 1) return undefined;
+  
+    const insert = `INSERT INTO app_user(data) 
+                    VALUES (jsonb_build_object('username', $1::text, 'firstname', $2::text, 'pwhash', '', 'salt', gen_salt('bf'), 'status', 'undefined', 'email', $3::text, 'lastname', $4::text, 'phoneNumber', $5::text))`;
     const query2 = {
       text: insert,
       values: [info.username, info.firstname, info.email, info.lastname, info.phoneNumber],
     };
     await pool.query(query2);
-
-    const select2 = `SELECT data->>'salt' AS salt from app_user WHERE data->>'username' = $1::text`;
-    const query3 = {
-      text: select2,
-      values: [info.username],
-    };
-    const { rows: row } = await pool.query(query3);
-    const salt = row[0].salt;
-
+  
+    const selectSalt = `SELECT id, data->>'salt' AS salt FROM app_user WHERE data->>'username' = $1::text`;
+    const query3 = { text: selectSalt, values: [info.username] };
+    const { rows: saltRows } = await pool.query(query3);
+    const { id, salt } = saltRows[0];
+  
     const update = `UPDATE app_user
                     SET data = jsonb_set(
-                    data, 
-                    '{pwhash}',
-                    to_jsonb(crypt($1::text, $2::text)),
-                    true
-               ) WHERE data->>'username' = $3::text`;
-    const query4 = {
-      text: update,
-      values: [info.password, salt, info.username],
-    };
+                      data, 
+                      '{pwhash}',
+                      to_jsonb(crypt($1::text, $2::text)),
+                      true
+                    ) WHERE id = $3`;
+    const query4 = { text: update, values: [info.password, salt, id] };
     await pool.query(query4);
-
-    return { firstname: info.firstname, username: info.username };
+  
+    const accessToken = jwt.sign(
+      { id, username: info.username, firstname: info.firstname, lastname: info.lastname },
+      `${process.env.HASH_MASTER_SECRET}`,
+      { expiresIn: "7d", algorithm: "HS256" }
+    );
+  
+    return {
+      id,
+      firstname: info.firstname,
+      lastname: info.lastname,
+      username: info.username,
+      accessToken,
+    };
   }
+  
 
   public async check(accessToken: string): Promise<SessionUser> {
     return new Promise((resolve, reject) => {

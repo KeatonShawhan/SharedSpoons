@@ -17,6 +17,7 @@ import { RouteProp, useNavigation } from '@react-navigation/native';
 import API_URL from '@/config';
 import { ExploreScreenStackParamList } from '@/app/(tabs)/exploreMain';
 import { PostCard, PostCardProps } from '@/components/postCard/postCard';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type PostDetailsRouteProp = RouteProp<ExploreScreenStackParamList, 'Details'>;
 
@@ -51,7 +52,7 @@ export default function PostDetails({ route }: Props) {
 
       const response = await fetch(`${API_URL}post/postID/${postId}`, {
         headers: {
-          Authorization: `Bearer ${loginContext.accessToken}`,
+          Authorization: `Bearer ${AsyncStorage.getItem('accessToken')}`,
         },
       });
 
@@ -82,12 +83,12 @@ export default function PostDetails({ route }: Props) {
 
       setPostData(transformedData);
     } catch (err) {
+      console.error('Error fetching post:', err);
       if (err.message.includes("401")) {
         loginContext.handleLogout();
         return;
       }
       setError(err instanceof Error ? err.message : 'Failed to fetch post');
-      console.error('Error fetching post:', err);
       setPostData(null);
     } finally {
       setIsLoading(false);

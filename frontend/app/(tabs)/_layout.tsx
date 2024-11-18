@@ -28,6 +28,7 @@ export default function TabLayout() {
     const checkAuth = async () => {
       const token = await AsyncStorage.getItem('accessToken');
       loginContext.setIsAuthenticated(!!token);
+      loginContext.decodeToken();
       //const temp = !!token
       if (token) {
         try {

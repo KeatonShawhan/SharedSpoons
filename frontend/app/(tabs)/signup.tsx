@@ -63,13 +63,15 @@ export default function signup () {
         return res.json();
       })
       .then((json) => {
+        console.log(json);
         loginContext.setAccessToken(json.accessToken);
         loginContext.setUserId(json.id);
-        loginContext.setUserName(json.firstname + " " + json.lastname);
+        loginContext.setFirstName(json.firstname);
+        loginContext.setUserName(json.username);
         AsyncStorage.setItem("accessToken", json.accessToken);
         loginContext.setIsAuthenticated(true);
         setUser({ username: "", password: "", phoneNumber: "", firstname: "", lastname: "", email: "" });
-        navigation.navigate('index')
+        navigation.navigate('index');
       })
       .catch((err) => {
         setBadSignup(true);
@@ -78,7 +80,7 @@ export default function signup () {
   };
 
   const toggleAuthPage = () => {
-    loginContext.setIsLogin(!loginContext.isLogin);
+    navigation.navigate('login');
   }
 
   return (

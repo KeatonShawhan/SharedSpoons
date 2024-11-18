@@ -9,21 +9,38 @@ import { Colors } from '@/constants/Colors';
 import LoginContext from '@/contexts/loginContext';
 import { fetchPosts } from './homeHelpers';
 const HEADER_HEIGHT = 80; 
-const SCROLL_THRESHOLD = 50; 
+const SCROLL_THRESHOLD = 50;
 
 export default function HomeScreen() {
   const colorScheme = useColorScheme();
   const loginContext = useContext(LoginContext)!
   const [homePosts, setHomePosts] = useState([])
+
   useEffect(() => {
     const getPosts = async () => {
-      const posts = await fetchPosts(loginContext.userId, loginContext.accessToken, loginContext.handleLogout);
+      // Ensure the accessToken is set correctly before making the fetch call
+      await loginContext.decodeToken();
+      if (!loginContext.accessToken) {
+        console.log("No access token available.");
+        return;
+      }
+
+      // Proceed with fetching posts once login context is updated
+      const posts = await fetchPosts(
+        loginContext.userId,
+        loginContext.accessToken,
+        loginContext.handleLogout
+      );
+
       setHomePosts(posts || []);
     };
 
     getPosts();
-  }, [loginContext.followed, loginContext.addedEat, loginContext.accessToken, loginContext.followed, loginContext.isAuthenticated]);
-
+  }, [
+    loginContext.followed,
+    loginContext.addedEat,
+    loginContext.isAuthenticated,
+  ]);
   
   // Use a ref to track the scroll position
   const scrollYRef = useRef(new Animated.Value(0)).current;

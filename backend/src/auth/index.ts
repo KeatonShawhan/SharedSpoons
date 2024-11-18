@@ -33,3 +33,13 @@ export interface Authenticated {
     id: string;
     name: string;
   }
+
+  export type DecodedToken = {
+    id: string;
+    username: string;
+    firstname: string;
+    lastname: string;
+    iat: number;
+    exp: number;
+  }
+  

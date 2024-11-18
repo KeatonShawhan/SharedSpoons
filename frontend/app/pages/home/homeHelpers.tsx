@@ -18,7 +18,7 @@ export const fetchPosts = async (userId, accessToken, handleLogout) => {
     return json;
   } catch (err) {
     if (err.message.includes("401")) {
-      console.log("Unauthorized, logging out...");
+      console.log("fetching post logging u out");
       handleLogout();
       return;
     }

@@ -70,7 +70,7 @@ export default function login() {
         loginContext.setFirstName(json.firstname);
         loginContext.setIsAuthenticated(true);
         setUser({username: "", password: ""});
-        navigation.navigate('index')
+        navigation.navigate('index');
       })
       .catch((err) => {
         setBadLogin(true);
@@ -79,7 +79,7 @@ export default function login() {
   };
 
   const toggleAuthPage = () => {
-    loginContext.setIsLogin(!loginContext.isLogin);
+    navigation.navigate('signup');
   }
 
   return (

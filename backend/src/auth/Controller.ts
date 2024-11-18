@@ -20,9 +20,12 @@ import {
     Credentials,
     SessionUser,
     UserSignUp,
+    DecodedToken,
   } from "./index";
   import { AuthService } from "./service";
-  import type User from "./service"
+  import type User from "./service";
+  import jwt from 'jsonwebtoken';
+
 
   @Route("auth")
   export class AuthController extends Controller {
@@ -96,12 +99,14 @@ import {
             this.setStatus(400);
             return undefined;
           }
-          const newLink = await this.s3Service.getFileLink(account.pfp);
-          if (newLink === undefined) {
-            this.setStatus(400);
-            return undefined;
+          if (account.pfp) {
+            const newLink = await this.s3Service.getFileLink(account.pfp);
+            if (newLink === undefined) {
+              this.setStatus(400);
+              return undefined;
+            }
+            account.pfp = newLink;
           }
-          account.pfp = newLink;
           return account;
         })
         .catch(() => {
@@ -109,4 +114,35 @@ import {
           return undefined;
         });
     }
-  }
+    
+    @Get("/decodeToken")
+    @Security('jwt')
+    @Response("400", "Bad Request")
+    @Response("401", "Unauthorized")
+    public async decodeToken(
+      @Request() request: express.Request
+    ): Promise<DecodedToken | { message: string }> {
+      const token = request.headers['authorization']?.split(' ')[1];
+    
+      if (!token) {
+        this.setStatus(401);
+        return { message: 'Token is required' };
+      }
+    
+      try {
+        const decoded = jwt.decode(token) as DecodedToken | null;
+    
+        if (!decoded) {
+          this.setStatus(400);
+          return { message: 'Invalid token' }; 
+        }
+    
+        return decoded;
+      } catch (error) {
+        console.error(error);
+        this.setStatus(500);  // Internal Server Error if there's an issue during decoding
+        return { message: 'Failed to decode token' };  // Respond with error message
+      }
+    }
+    
+}
