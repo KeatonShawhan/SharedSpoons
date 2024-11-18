@@ -134,7 +134,9 @@ export class postService{
     }
 
     public async getAllPosts(userID:UUID): Promise<PostTotal[] | undefined> {
-        const select = `SELECT * from post WHERE user_id = $1`;
+        const select = 
+        `SELECT * from post 
+        WHERE user_id = $1 ORDER BY data->>'time' DESC;`;
         const query = {
           text: select,
           values: [userID]
@@ -152,7 +154,7 @@ export class postService{
         try {
             const findUser = `
             SELECT id FROM app_user
-            WHERE id = $1;
+            WHERE id = $1 ORDER BY data->>'time' DESC
             `
             const userQuery = {
                 text: findUser,
