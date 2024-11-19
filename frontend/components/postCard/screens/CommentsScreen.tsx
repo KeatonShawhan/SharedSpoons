@@ -34,7 +34,9 @@ export function CommentsScreen() {
   const colorScheme = useColorScheme();
   const [newComment, setNewComment] = useState('');
   const route = useRoute<CommentsScreenRouteProp>(); 
+  /* eslint-disable */
   const { postId, parentTab } = route.params; 
+  /* eslint-enable */
   
   const [comments, setComments] = useState<Comment[]>([]);
 
