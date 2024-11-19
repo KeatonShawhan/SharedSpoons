@@ -1,23 +1,41 @@
 // app/navigation/PostStackNavigator.tsx
 import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { CommentsScreen } from '@/components/postCard/screens/CommentsScreen';
+import ProfileNavigation from '@/app/pages/profile/profileNavigation';
+import { UUID } from '../../../backend/src/types';
 
-export type PostStackParamList = {
-  Comments: { 
-    postId: string;
-    parentTab: 'HomeTab' | 'ProfileTab' | 'ToEatTab' | 'ExploreTab';
+// Define the profile params separately
+type ProfileRootParams = {
+  screen: 'Main';
+  params: {
+    userId: UUID;
+    isFromComments?: boolean;
   };
 };
 
-// Navigation prop type for screens within PostStack
-export type CommentsScreenNavigationProp = NativeStackNavigationProp<PostStackParamList, 'Comments'>;
+export type PostStackParamList = {
+  Comments: { 
+    postId: UUID;
+    parentTab: 'HomeTab' | 'ProfileTab' | 'ToEatTab' | 'ExploreTab';
+  };
+  ProfileRoot: ProfileRootParams;
+};
+
+export type PostStackNavigationProp = NativeStackNavigationProp<PostStackParamList>;
 
 const PostStack = createNativeStackNavigator<PostStackParamList>();
 
 export function PostStackNavigator() {
   return (
     <PostStack.Navigator screenOptions={{ headerShown: false }}>
-      <PostStack.Screen name="Comments" component={CommentsScreen} />
+      <PostStack.Screen 
+        name="Comments" 
+        component={CommentsScreen} 
+      />
+      <PostStack.Screen 
+        name="ProfileRoot" 
+        component={ProfileNavigation}
+      />
     </PostStack.Navigator>
   );
 }

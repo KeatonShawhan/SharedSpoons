@@ -49,7 +49,7 @@ export default function FriendsScreen() {
         const userInfo = await fetchUserInfo(profileId, loginContext.accessToken, loginContext.handleLogout);
         setFirstName(userInfo.firstname || "User");
       } else {
-        console.log(loginContext.firstName);
+        // console.log(loginContext.firstName);
         setFirstName(loginContext.firstName);
       }
 

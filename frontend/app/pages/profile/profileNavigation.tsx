@@ -13,6 +13,7 @@ export type ProfileStackParamList = {
     isFromProfileTab?: boolean;
     isFromHomeTab?: boolean; 
     isFromExploreTab?: boolean; 
+    isFromComments?: boolean;
   };
   Friends: { initialTab: 'followers' | 'following'; userId?: UUID };
   PostPage: { postId: UUID };

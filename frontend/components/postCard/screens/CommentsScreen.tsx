@@ -6,51 +6,46 @@ import { useNavigation } from '@react-navigation/native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import type { CommentsScreenNavigationProp } from '../postNavigator';
+import type { PostStackNavigationProp, PostStackParamList } from '@/app/navigation/PostStackNavigator';
 import { postComment, getComment } from './commentHelper';
-import { useRoute } from '@react-navigation/native';
-import { RouteProp } from '@react-navigation/native';
+import { useRoute, RouteProp } from '@react-navigation/native';
 import LoginContext from '@/contexts/loginContext';
 import { Image } from 'react-native';
+import { UUID } from '../../../../backend/src/types';
+
 interface Comment {
   data: {
-    id: string;
-    username: string;
     text: string;
     time: string;
-  }
+  };
   firstname: string;
-  lastname:string;
+  lastname: string;
   pfp: string;
+  post_id: UUID;
+  user_id: UUID;  // This is at root level
+  id: UUID;
 }
-
-type PostStackParamList = {
-  Comments: { postId: string; parentTab: string };
-};
 
 type CommentsScreenRouteProp = RouteProp<PostStackParamList, 'Comments'>;
 
-
 export function CommentsScreen() {
   const loginContext = useContext(LoginContext)
-  const navigation = useNavigation<CommentsScreenNavigationProp>();
+  const navigation = useNavigation<PostStackNavigationProp>();
   const colorScheme = useColorScheme();
   const [newComment, setNewComment] = useState('');
-  // const options = {month: 'short', day:'numeric'}
   const route = useRoute<CommentsScreenRouteProp>(); 
-  const { postId } = route.params; 
+  const { postId, parentTab } = route.params; 
   
-  const [comments, setComments] = useState([]);
+  const [comments, setComments] = useState<Comment[]>([]);
 
   const handleSubmitComment = async () => {
-
-    await postComment(postId, newComment, loginContext.accessToken)
-    const commentList = await getComment(postId, loginContext.accessToken)
-    setComments(commentList)
-    loginContext.setCommented(!loginContext.commented)
-    setNewComment('')
-
-    //console.log("ugh: " + success2);
+    if (!newComment.trim()) return;
+    
+    await postComment(postId, newComment, loginContext.accessToken);
+    const commentList = await getComment(postId, loginContext.accessToken);
+    setComments(commentList);
+    loginContext.setCommented(!loginContext.commented);
+    setNewComment('');
   };
 
   const handleDate = (date: string) => {
@@ -58,51 +53,64 @@ export function CommentsScreen() {
     const parsedDate = new Date(date);
     if (isNaN(parsedDate.getTime())) return 'Invalid date';
     const today = new Date();
-    if (parsedDate.getDate == today.getDate && parsedDate.getMonth == today.getMonth && parsedDate.getFullYear == today.getFullYear) {
-      return ("Today")
+    if (parsedDate.getDate === today.getDate && 
+        parsedDate.getMonth === today.getMonth && 
+        parsedDate.getFullYear === today.getFullYear) {
+      return "Today";
     } else {
       return Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' }).format(parsedDate);
     }
   };
 
-  useEffect( ()=>{
+  useEffect(() => {
     const fetchData = async () => {
-      const commentList = await getComment(postId, loginContext.accessToken)
-      setComments(commentList)
-      console.log(commentList[0])
+      const commentList = await getComment(postId, loginContext.accessToken);
+      setComments(commentList);
     }
 
     fetchData();
+  }, [postId, loginContext.accessToken]);
 
-  }, [])
+  const handleProfilePress = (userId: UUID) => {
+    console.log("Navigating to user profile:", userId);
+    navigation.push('ProfileRoot', {
+      screen: 'Main',
+      params: {
+        userId,
+        isFromComments: true
+      }
+    });
+  };
 
- 
-
-const renderComment = ({ item }: { item: Comment }) => (
-  <View style={styles.commentContainer}>
-    <View style={styles.commentHeader}>
-      <View style={styles.leftContainer}>
-        <Image 
-          style={{height: 40, width: 40, borderRadius: 20, borderWidth: 2, borderColor: "green", marginRight: 10}}
-          source={{ uri: item.pfp }}
-        />
-        <Text style={[styles.username, { color: Colors[colorScheme].text }]}>
-          {item.firstname + " " + item.lastname}
+  const renderComment = ({ item }: { item: Comment }) => {
+    console.log("Comment user_id:", item.user_id); // This will show the user_id
+    return (
+      <View style={styles.commentContainer}>
+        <View style={styles.commentHeader}>
+          <TouchableOpacity 
+            style={styles.leftContainer}
+            onPress={() => handleProfilePress(item.user_id)}  // Use user_id directly from item
+          >
+            <Image 
+              style={styles.profileImage}
+              source={{ uri: item.pfp }}
+            />
+            <Text style={[styles.username, { color: Colors[colorScheme].text }]}>
+              {item.firstname + " " + item.lastname}
+            </Text>
+          </TouchableOpacity>
+          <Text style={styles.timestamp}>{handleDate(item.data.time)}</Text>
+        </View>
+        <Text style={[styles.commentText, { color: Colors[colorScheme].text }]}>
+          {item.data.text}
         </Text>
       </View>
-      <Text style={styles.timestamp}>{handleDate(item.data.time)}</Text>
-    </View>
-    <Text style={[styles.commentText, { color: Colors[colorScheme].text }]}>
-      {item.data.text}
-    </Text>
-  </View>
-);
+    );
+  };
+
   return (
     <SafeAreaView 
-      style={[
-        styles.container, 
-        { backgroundColor: Colors[colorScheme].background }
-      ]} 
+      style={[styles.container, { backgroundColor: Colors[colorScheme].background }]} 
       edges={['top']}
     >
       {/* Header */}
@@ -195,7 +203,7 @@ const styles = StyleSheet.create({
     marginLeft: -8,
   },
   headerRight: {
-    width: 40, // For balance with back button
+    width: 40,
   },
   commentsList: {
     padding: 16,
@@ -247,4 +255,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: 'gray',
   },
+  profileImage: {
+    height: 40, 
+    width: 40, 
+    borderRadius: 20, 
+    borderWidth: 2, 
+    borderColor: "green", 
+    marginRight: 10
+  }
 });
