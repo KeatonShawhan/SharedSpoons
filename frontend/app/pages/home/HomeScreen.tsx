@@ -10,22 +10,24 @@ import LoginContext from '@/contexts/loginContext';
 import { fetchPosts } from './homeHelpers';
 const HEADER_HEIGHT = 80; 
 const SCROLL_THRESHOLD = 50;
+import LoadingIndicator from '../LoadingIndicator';
 
 export default function HomeScreen() {
   const colorScheme = useColorScheme();
-  const loginContext = useContext(LoginContext)!
-  const [homePosts, setHomePosts] = useState([])
+  const loginContext = useContext(LoginContext)!;
+  const [homePosts, setHomePosts] = useState([]);
 
   useEffect(() => {
     const getPosts = async () => {
+      // Wait until the context is fully initialized
+      if (!loginContext.isInitialized) return;
+
       // Ensure the accessToken is set correctly before making the fetch call
-      await loginContext.decodeToken();
       if (!loginContext.accessToken) {
-        console.log("No access token available.");
+        console.log('No access token available.');
         return;
       }
 
-      // Proceed with fetching posts once login context is updated
       const posts = await fetchPosts(
         loginContext.userId,
         loginContext.accessToken,
@@ -37,6 +39,7 @@ export default function HomeScreen() {
 
     getPosts();
   }, [
+    loginContext.isInitialized,
     loginContext.followed,
     loginContext.addedEat,
     loginContext.isAuthenticated,
@@ -57,6 +60,10 @@ export default function HomeScreen() {
     outputRange: [1, 0],
     extrapolate: 'clamp'
   });
+
+  if (!loginContext.isInitialized) {
+    return <LoadingIndicator message="Loading your data..." />;
+  }
 
   return (
     <SafeAreaView 
