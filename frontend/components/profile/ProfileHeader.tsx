@@ -14,12 +14,12 @@ interface ProfileHeaderProps {
   lastname: string;
   bio: string;
   rank: string;
-  pfp: string;
   colorScheme: string;
   showBackButton?: boolean;
   isOwnProfile: boolean;
   isFollowing: boolean;
   handleFollowPress: () => void;
+  pfp: string;
 }
 
 const ProfileHeader: React.FC<ProfileHeaderProps> = ({
@@ -27,15 +27,16 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   firstname,
   lastname,
   bio,
-  pfp,
   rank,
   colorScheme,
   showBackButton,
   isOwnProfile,
   isFollowing,
   handleFollowPress,
+  pfp,
 }) => {
   const navigation = useNavigation();
+  console.log("pfp: ",pfp);
 
   return (
     <View style={[styles.headerSection, { backgroundColor: Colors[colorScheme].background }]}>

@@ -69,10 +69,10 @@ export default function MainScreen() {
       try {
         // Fetch user info
         const userData = await fetchUserInfo(profileId, loginContext.accessToken, loginContext.handleLogout);
+        setPfp(userData.pfp);
         setFirstName(`${userData.firstname}`);
         setLastName(`${userData.lastname}`);
         setUsername(`${userData.username}`);
-        setPfp(`${userData.pfp}`);
         setBio(userData.bio || 'No bio available');
         setRank(isOwnProfile ? 'Food Connoisseur' : 'Food Enthusiast');
 
