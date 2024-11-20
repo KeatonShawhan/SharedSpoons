@@ -116,7 +116,7 @@ export const fetchUserInfo = async (userId, accessToken, handleLogout) => {
     }
 
     const json = await response.json();
-    // console.log(json);
+    console.log(json);
     return json;
   } catch (err) {
     if (err.message.includes("401")) {

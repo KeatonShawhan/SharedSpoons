@@ -9,9 +9,12 @@ import { useNavigation } from '@react-navigation/native';
 const { width } = Dimensions.get('window');
 
 interface ProfileHeaderProps {
-  name: string;
+  username: string;
+  firstname: string;
+  lastname: string;
   bio: string;
   rank: string;
+  pfp: string;
   colorScheme: string;
   showBackButton?: boolean;
   isOwnProfile: boolean;
@@ -20,8 +23,11 @@ interface ProfileHeaderProps {
 }
 
 const ProfileHeader: React.FC<ProfileHeaderProps> = ({
-  name,
+  username,
+  firstname,
+  lastname,
   bio,
+  pfp,
   rank,
   colorScheme,
   showBackButton,
@@ -44,13 +50,14 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
         <View style={[styles.rankContainer, showBackButton && { marginLeft: 40 }]}>
           <Text style={styles.rankText}>{rank}</Text>
         </View>
-        <Text style={[styles.name, { color: Colors[colorScheme].text }]}>{name}</Text>
+        <Text style={[styles.username, { color: Colors[colorScheme].text }]}>{username}</Text>
+        <Text style={[styles.name, { color: Colors[colorScheme].text }]}>{firstname + ' ' + lastname}</Text>
         <Text style={[styles.bio, { color: Colors[colorScheme].text }]}>{bio}</Text>
       </View>
       <View style={styles.profileImageContainer}>
         <Image
           style={[styles.profileImage, { borderColor: Colors[colorScheme].icon }]}
-          source={{ uri: 'https://via.placeholder.com/150' }}
+          source={{ uri: pfp || 'https://via.placeholder.com/150' }}
         />
         {/* Conditionally render the follow/unfollow button */}
         {!isOwnProfile && (
@@ -132,7 +139,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     letterSpacing: 0.5,
   },
-  name: {
+  username: {
     fontSize: width * 0.08,
     fontWeight: '700',
     fontFamily: 'Inter_400Regular',
@@ -140,6 +147,11 @@ const styles = StyleSheet.create({
   },
   bio: {
     fontSize: width * 0.038,
+    lineHeight: width * 0.05,
+    marginBottom: 0.1,
+  },
+  name: {
+    fontSize: width * 0.05,
     lineHeight: width * 0.05,
     marginBottom: 0.1,
   },

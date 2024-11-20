@@ -18,23 +18,30 @@ import {
 export class AccountController extends Controller {
   
   private s3Service = new S3Service();
-  @Put("/update")
-  public async updateAccount(
+  @Put('/update')
+public async updateAccount(
     @FormField() updateRequest: string,
     @UploadedFile() file: Express.Multer.File,
     @Request() request: express.Request
-): Promise<{ message: string }> {
+): Promise<{ message: string, updatedRequest?: UpdateAccountRequest }> {
     try {
         if (!request.user) {
             this.setStatus(401);
             console.error('Unauthorized user');
             return { message: 'Unauthorized user' };
         }
+
         const updateRequestJson: UpdateAccountRequest = JSON.parse(updateRequest);
 
-        if (updateRequestJson.username){
-            console.log(updateRequestJson.username);
-            const usernameAvailable = await AccountService.usernameAvailable(updateRequestJson.username);
+        if (updateRequestJson.username && updateRequestJson.username.trim().length === 0) {
+            this.setStatus(400);
+            console.error('Username cannot be empty');
+            return { message: 'Username cannot be empty' };
+        }
+
+        // Check if username is available if updated
+        if (updateRequestJson.username && updateRequestJson.username.trim().length > 0) {
+            const usernameAvailable = await AccountService.usernameAvailable(updateRequestJson.username, request.user.id);
             if (!usernameAvailable) {
                 this.setStatus(400);
                 console.error('Username already in use');
@@ -42,7 +49,7 @@ export class AccountController extends Controller {
             }
         }
 
-        let updatedAccount: boolean;
+        let updatedAccount: UpdateAccountRequest | null;
 
         if (file) {
             const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
@@ -58,9 +65,17 @@ export class AccountController extends Controller {
                 console.error('Could not upload file');
                 return { message: 'Could not upload file' };
             }
+
+            // Update user data with the S3 key
             updatedAccount = await AccountService.updateUserAccount(request.user.id, updateRequestJson, s3key);
-        } else{
-            updatedAccount = await AccountService.updateUserAccount(request.user.id, updateRequestJson)
+            console.log("controller updatedAccount: ", updatedAccount);
+        } else {
+            updatedAccount = await AccountService.updateUserAccount(request.user.id, updateRequestJson);
+        }
+
+        if (updatedAccount?.profilePicture !== undefined) {
+            updatedAccount.profilePicture = await this.s3Service.getFileLink(updatedAccount?.profilePicture);
+            console.log("controller updatedAccount with filelink: ", updatedAccount);
         }
 
         if (!updatedAccount) {
@@ -70,7 +85,10 @@ export class AccountController extends Controller {
         }
 
         this.setStatus(200);
-        return { message: 'Account updated successfully' };
+        return { 
+            message: 'Account updated successfully',
+            updatedRequest: updatedAccount
+        };
     } catch (error) {
         this.setStatus(500);
         console.error('Error in account update route:', error);

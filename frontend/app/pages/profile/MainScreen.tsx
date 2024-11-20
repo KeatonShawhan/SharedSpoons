@@ -48,7 +48,9 @@ export default function MainScreen() {
   // console.log(isFromExploreTab);
 
   // State variables
-  const [userName, setUserName] = useState('Loading name...');
+  const [username, setUsername] = useState('Loading name...');
+  const [firstName, setFirstName] = useState('Loading firstname...');
+  const [lastName, setLastName] = useState('Loading lastname...')
   const [bio, setBio] = useState('Loading bio...');
   const [rank, setRank] = useState('Loading rank...');
   const [activeTab, setActiveTab] = useState<'posts' | 'achievements' | 'settings'>('posts');
@@ -60,13 +62,17 @@ export default function MainScreen() {
   const [postCount, setPostCount] = useState(0);
   const [posts, setPosts] = useState([]);
   const [isFollowing, setIsFollowing] = useState(false);
+  const [pfp, setPfp] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         // Fetch user info
         const userData = await fetchUserInfo(profileId, loginContext.accessToken, loginContext.handleLogout);
-        setUserName(`${userData.firstname} ${userData.lastname}`);
+        setFirstName(`${userData.firstname}`);
+        setLastName(`${userData.lastname}`);
+        setUsername(`${userData.username}`);
+        setPfp(`${userData.pfp}`);
         setBio(userData.bio || 'No bio available');
         setRank(isOwnProfile ? 'Food Connoisseur' : 'Food Enthusiast');
 
@@ -165,7 +171,9 @@ export default function MainScreen() {
     <SafeAreaView style={[styles.container, { backgroundColor: Colors[colorScheme].background }]} edges={['top']}>
       <View style={styles.headerContainer}>
         <ProfileHeader
-          name={userName}
+          username={username}
+          firstname={firstName}
+          lastname={lastName}
           bio={bio}
           rank={rank}
           colorScheme={colorScheme}
@@ -174,6 +182,7 @@ export default function MainScreen() {
           isOwnProfile={isOwnProfile}
           isFollowing={isFollowing}
           handleFollowPress={handleFollowPress}
+          pfp={pfp}
         />
         <ProfileStats
           postCount={postCount}
@@ -259,7 +268,7 @@ export default function MainScreen() {
               <AchievementList achievements={achievements} colorScheme={colorScheme} />
             )}
             {tabName === 'settings' && (
-              <SettingsTab userName={userName} bio={bio} colorScheme={colorScheme} />
+              <SettingsTab pfp={pfp} setPfp={setPfp} setUsername={setUsername} setBio={setBio} userName={username} bio={bio} colorScheme={colorScheme} />
             )}
           </View>
         ))}
