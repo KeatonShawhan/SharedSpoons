@@ -68,7 +68,7 @@ INSERT INTO comment (id, post_id, user_id, data) VALUES
     json_build_object('time', '2024-10-21T12:45:00.000Z', 'comment', 'I love this cat!'));
 
 INSERT INTO likes (post_id, user_id) VALUES
-    ((SELECT id FROM post WHERE data->>'caption' = 'look at cat', 
-    SELECT id FROM app_user WHERE data->>'email' = 'kshawhan@ucsc.edu'),
-    (SELECT id FROM post WHERE data->>'caption' = 'cat!',
-    SELECT id FROM app_user WHERE data->>'email' = 'lschram@ucsc.edu'));
+    ((SELECT id FROM post WHERE data->>'caption' = 'look at cat'), 
+    (SELECT id FROM app_user WHERE data->>'email' = 'kshawhan@ucsc.edu')),
+    ((SELECT id FROM post WHERE data->>'caption' = 'cat!'),
+    (SELECT id FROM app_user WHERE data->>'email' = 'lschram@ucsc.edu'));

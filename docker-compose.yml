@@ -17,6 +17,7 @@ services:
       - ./sql/schema.sql:/docker-entrypoint-initdb.d/1.schema.sql
       - ./sql/test.sql:/docker-entrypoint-initdb.d/2.test.sql
       - ./sql/data.sql:/docker-entrypoint-initdb.d/3.data.sql
+      - ./sql/seed.sql:/docker-entrypoint-initdb.d/4.seed.sql
   backend:
     container_name: sharedspoons-backend
     build:
