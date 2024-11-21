@@ -14,7 +14,7 @@ type PostPageRouteProp = RouteProp<ProfileStackParamList, 'PostPage'>;
 // Match the API response type to your backend
 interface PostApiResponse {
   id: string;
-  user_id: string;
+  user: string;
   data: {
     image: string;
     rating: number;
@@ -22,9 +22,9 @@ interface PostApiResponse {
     dish: string;
     time: string;
     caption: string;
+    pfp: string;
+    username: string;
   };
-  firstname: string;
-  lastname:string;
   is_saved:boolean;
 }
 
@@ -60,19 +60,21 @@ export default function PostPage() {
             }
 
             const apiData: PostApiResponse = await response.json();
+            console.log("apiData: ", apiData);
             
             // Transform API data to match PostCard props
             const transformedData: PostCardProps = {
                 isSaved: apiData.is_saved,
                 id: apiData.id,
-                user_id: apiData.user_id,
-                username: apiData.firstname + " " + apiData.lastname, // You might want to fetch this separately or get from context
+                user_id: apiData.user,
+                username: apiData.data.username,
                 caption: apiData.data.caption,
                 dish: apiData.data.dish,
                 rating: apiData.data.rating,
                 place: apiData.data.restaurant,
                 image: apiData.data.image,
-                parentTab: 'ProfileTab' 
+                parentTab: 'ProfileTab',
+                pfp: apiData.data.pfp
             };
             
             setPostData(transformedData);

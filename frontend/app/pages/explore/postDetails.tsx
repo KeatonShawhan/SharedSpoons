@@ -73,16 +73,17 @@ export default function PostDetails({ route }: Props) {
       // Transform API data to match PostCard props
       const transformedData: PostCardProps = {
         id: apiData.id || '',
-        user_id: apiData.user_id || '',
-        username: apiData.username || `${apiData.firstname} ${apiData.lastname}` || 'User',
+        user_id: apiData.user || '',
+        username: apiData.data.username || 'User',
         caption: apiData.data.caption || '',
         dish: apiData.data.dish || '',
         rating: apiData.data.rating || 0,
         place: apiData.data.restaurant || '',
         image: apiData.data.image || '',
-        likes: apiData.likes || 0, // Ensure your API provides 'likes'
-        commentsCount: apiData.commentsCount || 0, // Ensure your API provides 'commentsCount'
-        parentTab: 'ExploreTab', // Since navigating from Explore
+        pfp: apiData.data.pfp,
+        likes: apiData.likes || 0, // Add if your API provides these
+        commentsCount: apiData.commentsCount || 0, // Add if your API provides these
+        parentTab: 'ExploreTab', // Since we're in the explore tab
       };
 
       setPostData(transformedData);

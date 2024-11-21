@@ -89,66 +89,117 @@ export class postService{
         }
     }
 
-    public async getPost(postID: UUID, userId:UUID): Promise < PostContent | undefined > {
+    public async getPost(postID: UUID, userId: UUID): Promise<PostTotal | undefined> {
         const client = await pool.connect();
-
+    
         try {
             const selectQuery = `
-            SELECT 
-                post.*, 
-                app_user.data->>'firstname' AS firstname,
-                app_user.data->>'lastname' AS lastname,
-                CASE 
-                    WHEN toEat.post_id IS NOT NULL THEN TRUE 
-                    ELSE FALSE 
-                END AS is_saved
-            FROM 
-                post
-            LEFT JOIN 
-                app_user ON app_user.id = post.user_id
-            LEFT JOIN 
-                toEat ON toEat.post_id = post.id AND toEat.user_id = $2
-            WHERE 
-                post.id = $1;
+                SELECT 
+                    post.*, 
+                    app_user.data->>'username' AS username,
+                    app_user.data->>'pfp' AS pfp,
+                    CASE 
+                        WHEN toEat.post_id IS NOT NULL THEN TRUE 
+                        ELSE FALSE 
+                    END AS is_saved
+                FROM 
+                    post
+                LEFT JOIN 
+                    app_user ON app_user.id = post.user_id
+                LEFT JOIN 
+                    toEat ON toEat.post_id = post.id AND toEat.user_id = $2
+                WHERE 
+                    post.id = $1;
             `;
-
+    
             const query = {
                 text: selectQuery,
-                values: [postID, userId]
-            }
-
+                values: [postID, userId],
+            };
+    
             const res = await client.query(query.text, query.values);
-
-            if(res.rows.length === 0) {
-                console.error('Database retrieval of post failed');
+    
+            if (res.rows.length === 0) {
+                console.error('Database retrieval of post failed for postID:', postID);
                 return undefined;
             }
-            return res.rows[0];
-
+    
+            const row = res.rows[0];
+    
+            const post: PostTotal = {
+                id: row.id,
+                user: row.user_id,
+                data: {
+                    image: row.data.image,
+                    rating: row.data.rating,
+                    restaurant: row.data.restaurant,
+                    dish: row.data.dish,
+                    time: row.data.time,
+                    caption: row.data.caption,
+                    pfp: row.pfp || '',
+                    username: row.username || '',
+                },
+            };
+    
+            return post;
         } catch (error) {
             console.error('Error getting post:', error);
             return undefined;
         } finally {
             client.release();
         }
-    }
+    }    
 
-    public async getAllPosts(userID:UUID): Promise<PostTotal[] | undefined> {
-        const select = 
-        `SELECT * from post 
-        WHERE user_id = $1 ORDER BY data->>'time' DESC;`;
-        const query = {
-          text: select,
-          values: [userID]
-        };
-        const { rows } = await pool.query(query);
-        if (rows.length == 0) {
-          return undefined;
+    public async getAllPosts(userID: UUID): Promise<PostTotal[] | undefined> {
+        try {
+            const selectQuery = `
+                SELECT 
+                    post.*, 
+                    app_user.data->>'username' AS username,
+                    app_user.data->>'pfp' AS pfp
+                FROM 
+                    post
+                LEFT JOIN 
+                    app_user ON app_user.id = post.user_id
+                WHERE 
+                    post.user_id = $1
+                ORDER BY 
+                    post.data->>'time' DESC;
+            `;
+    
+            const query = {
+                text: selectQuery,
+                values: [userID],
+            };
+    
+            const { rows } = await pool.query(query);
+    
+            if (rows.length === 0) {
+                console.log('No posts found for user: ' + userID);
+                return undefined;
+            }
+    
+            const posts: PostTotal[] = rows.map((row) => ({
+                id: row.id,
+                user: row.user_id,
+                data: {
+                    image: row.data.image,
+                    rating: row.data.rating,
+                    restaurant: row.data.restaurant,
+                    dish: row.data.dish,
+                    time: row.data.time,
+                    caption: row.data.caption,
+                    pfp: row.pfp || '',
+                    username: row.username || '',
+                },
+            }));
+    
+            return posts;
+        } catch (error) {
+            console.error('Error getting all posts for user:', error);
+            return undefined;
         }
-        console.log(rows)
-        return rows;
-
-    }
+    }    
 
     public async getAllFriendsPosts(id: UUID): Promise<PostTotal[] | undefined> {
         try {

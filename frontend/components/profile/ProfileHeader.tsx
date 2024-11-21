@@ -36,7 +36,7 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   pfp,
 }) => {
   const navigation = useNavigation();
-  console.log("pfp: ",pfp);
+  //console.log("pfp: ",pfp);
 
   return (
     <View style={[styles.headerSection, { backgroundColor: Colors[colorScheme].background }]}>

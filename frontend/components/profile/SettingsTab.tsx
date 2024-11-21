@@ -59,7 +59,7 @@ const SettingsTab: React.FC<SettingsTabProps> = ({ pfp, setUsername, setBio, set
     formData.append('updateRequest', JSON.stringify(updateRequest));
   
     // Add the profile picture if it exists
-    console.log("pfp: ",profilePicture);
+    //console.log("pfp: ",profilePicture);
     if (profilePicture) {
       /* eslint-disable */
       formData.append('file', {

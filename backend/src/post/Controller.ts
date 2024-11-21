@@ -119,7 +119,7 @@ export class PostController extends Controller {
     public async getPost(
         @Request() request: express.Request,
         @Path() postID: string
-    ): Promise< PostContent | undefined > {
+    ): Promise< PostTotal | undefined > {
         try {
             if (!request.user) {
                 this.setStatus(401);
@@ -129,8 +129,8 @@ export class PostController extends Controller {
             return new postService()
                 .getPost(postID, request.user.id)
                 .then(
-                    async (post : PostContent | undefined):
-                        Promise<PostContent | undefined> => {
+                    async (post : PostTotal | undefined):
+                        Promise<PostTotal | undefined> => {
                             if (post === undefined) {
                                 this.setStatus(400);
                                 console.error('Could not get post');
@@ -143,6 +143,13 @@ export class PostController extends Controller {
                                 return undefined;
                             }
                             post.data.image = imageLink;
+                            const pfpLink = await this.s3Service.getFileLink(post.data.pfp);
+                            if (pfpLink === undefined) {
+                                this.setStatus(400);
+                                console.error('Could not get pfp link for post:' + post.id);
+                                return undefined;
+                            }
+                            post.data.pfp = pfpLink;
                             this.setStatus(200);
                             return post;
                         }
@@ -184,6 +191,13 @@ export class PostController extends Controller {
                     return undefined;
                 }
                 posts[i].data.image = imageLink;
+                const pfpLink = await this.s3Service.getFileLink(posts[i].data.pfp);
+                if (pfpLink === undefined) {
+                    this.setStatus(400);
+                    console.error('Could not get pfp link for post:' + posts[i].id);
+                    return undefined;
+                }
+                posts[i].data.pfp = pfpLink;
             }
             this.setStatus(200);
             return posts;
