@@ -51,6 +51,7 @@ describe('Basic Test Suite: Verify basic functionality of all endpoints', () => 
         lastname: 'User',
         email: 'newuser@example.com',
         username: 'newuser',
+        location: 'Santa Cruz, CA',
         password: 'newpassword123',
         phoneNumber: '(111) 111-1111'
       };
@@ -125,6 +126,7 @@ describe('Basic Test Suite: Verify basic functionality of all endpoints', () => 
         email: 'lschram@ucsc.edu', // Existing email
         username: 'duplicateuser',
         password: 'password123',
+        location: 'Los Lobos, CA',
         phoneNumber: '(222) 222-2222'
       };
       const res = await supertest(server)
@@ -141,6 +143,7 @@ describe('Basic Test Suite: Verify basic functionality of all endpoints', () => 
         email: 'uniqueemail@example.com',
         username: 'lucaschram', // Existing username
         password: 'password123',
+        location: 'San Jose, CA',
         phoneNumber: '(222) 222-2222'
       };
       const res = await supertest(server)
@@ -157,6 +160,7 @@ describe('Basic Test Suite: Verify basic functionality of all endpoints', () => 
         email: 'uniqueemail@example.com',
         username: 'uniqueusername',
         password: 'password123',
+        location: 'San Jose, CA',
         phoneNumber: '(123) 123-1232' // Existing phone number
       };
       const res = await supertest(server)

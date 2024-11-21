@@ -20,6 +20,7 @@ export interface Authenticated {
     firstname: string;
     lastname: string;
     password: string;
+    location: string;
     email: string;
     phoneNumber: string;
   };

@@ -61,6 +61,7 @@ import {
       console.log(ret);
       if (!ret) {
         this.setStatus(409);
+        console.log('Signup failed, returning 409.')
         return undefined;
       }
       return this.login({username: info.username, password: info.password});
