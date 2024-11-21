@@ -1,4 +1,5 @@
 // app/pages/explore/postDetails.tsx
+
 import React, { useState, useContext, useEffect } from 'react';
 import {
   StyleSheet,
@@ -7,17 +8,14 @@ import {
   Text,
   ActivityIndicator,
 } from 'react-native';
-// Remove BlurView import if not using it
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
-// Import LoginContext
 import LoginContext from '@/contexts/loginContext';
 import { RouteProp, useNavigation } from '@react-navigation/native';
 import API_URL from '@/config';
 import { ExploreScreenStackParamList } from '@/app/(tabs)/exploreMain';
 import { PostCard, PostCardProps } from '@/components/postCard/postCard';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type PostDetailsRouteProp = RouteProp<ExploreScreenStackParamList, 'Details'>;
 
@@ -50,13 +48,19 @@ export default function PostDetails({ route }: Props) {
       setIsLoading(true);
       setError(null);
 
+      // Debugging: Log the token and postId
+      console.log(`Fetching post with ID: ${postId} and token: ${loginContext.accessToken}`);
+
       const response = await fetch(`${API_URL}post/postID/${postId}`, {
         headers: {
-          Authorization: `Bearer ${AsyncStorage.getItem('accessToken')}`,
+          Authorization: `Bearer ${loginContext.accessToken}`,
         },
       });
 
       if (!response.ok) {
+        if (response.status === 401) {
+          loginContext.handleLogout();
+        }
         throw new Error('Failed to fetch post');
       }
 
@@ -66,23 +70,25 @@ export default function PostDetails({ route }: Props) {
         throw new Error('Invalid post data');
       }
 
-      // Transform API data to match PostCard props, ensuring default values
+      // Transform API data to match PostCard props
       const transformedData: PostCardProps = {
         id: apiData.id || '',
         user_id: apiData.user_id || '',
-        username: apiData.username || 'User', // Fetch username if available
+        username: apiData.username || `${apiData.firstname} ${apiData.lastname}` || 'User',
         caption: apiData.data.caption || '',
         dish: apiData.data.dish || '',
         rating: apiData.data.rating || 0,
         place: apiData.data.restaurant || '',
         image: apiData.data.image || '',
-        likes: apiData.likes || 0, // Add if your API provides these
-        commentsCount: apiData.commentsCount || 0, // Add if your API provides these
-        parentTab: 'ExploreTab', // Since we're in the explore tab
+        likes: apiData.likes || 0, // Ensure your API provides 'likes'
+        commentsCount: apiData.commentsCount || 0, // Ensure your API provides 'commentsCount'
+        parentTab: 'ExploreTab', // Since navigating from Explore
       };
 
       setPostData(transformedData);
-    } catch (err) {
+    /* eslint-disable */
+    } catch (err: any) {
+    /* eslint-enable */
       console.error('Error fetching post:', err);
       if (err.message.includes("401")) {
         loginContext.handleLogout();
@@ -103,7 +109,7 @@ export default function PostDetails({ route }: Props) {
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
         <Ionicons name="arrow-back" size={24} color={Colors.light.text} />
       </TouchableOpacity>
-      <Text style={[styles.headerTitle, { color: Colors.light.text}]}>Post Details</Text>
+      <Text style={[styles.headerTitle, { color: Colors.light.text }]}>Post Details</Text>
       <View style={styles.placeholder} />
     </View>
   );
@@ -154,7 +160,7 @@ const getStyles = (colors: { [key: string]: string }) =>
     header: {
       flexDirection: 'row',
       alignItems: 'center',
-      height: 120,  // Increased height
+      height: 120, // Increased height
       paddingHorizontal: 10, // Reduced padding
       borderBottomWidth: 1,
       borderBottomColor: colors.border,

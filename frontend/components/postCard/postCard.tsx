@@ -93,6 +93,12 @@ export function PostCard({
         break;
 
       case 'ExploreTab':
+        navigation.push('ProfileRoot', {
+          screen: 'Main',
+          params: {
+            userId: user_id,
+          }
+        });
         break;
 
       default:
