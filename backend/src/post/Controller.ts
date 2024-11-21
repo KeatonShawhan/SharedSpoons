@@ -225,6 +225,13 @@ export class PostController extends Controller {
                     return undefined;
                 }
                 posts[i].data.image = imageLink;
+                const pfpLink = await this.s3Service.getFileLink(posts[i].data.pfp);
+                if (pfpLink === undefined) {
+                    this.setStatus(400);
+                    console.error('Could not get pfp link for post:' + posts[i].id);
+                    return undefined;
+                }
+                posts[i].data.pfp = pfpLink;
             }
             this.setStatus(200);
             return posts;

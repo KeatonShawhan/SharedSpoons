@@ -99,14 +99,15 @@ export default function HomeScreen() {
             key={post.id}  
             id={post.id}
             isSaved={post.is_saved}
-            user_id={post.user_id}
-            username={post.firstname + " " + post.lastname}
+            user_id={post.user}
+            username={post.data.username}
             caption={post.data.caption}
             dish={post.data.dish}
             rating={post.data.rating}
             place={post.data.restaurant}
             image={post.data.image}
-            parentTab="HomeTab" 
+            parentTab="HomeTab"
+            pfp={post.data.pfp}
           />
         ))}
       </Animated.ScrollView>

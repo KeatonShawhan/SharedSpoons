@@ -20,6 +20,7 @@ export interface PostCardProps {
   place: string;
   image: string;
   isSaved: boolean;
+  pfp: string;
   parentTab: 'HomeTab' | 'ProfileTab' | 'ToEatTab' | 'ExploreTab';
 }
 
@@ -40,6 +41,7 @@ export function PostCard({
   image,
   parentTab,
   isSaved,
+  pfp
 }: PostCardProps) {
   const navigation = useNavigation<CombinedNavigationProp>();
   const [isFlipped, setIsFlipped] = useState(false);
@@ -103,7 +105,7 @@ export function PostCard({
       <View style={{ width: '95%', borderRadius: 0, borderColor: 'none' }}>
         <TouchableOpacity onPress={handleNavigateToProfile}>
           <View style={{ paddingBottom: 10, paddingLeft: 0 }}>
-            {postHeader({ username, place, user_id, onNavigateToProfile: handleNavigateToProfile })}
+            {postHeader({ username, place, user_id, onNavigateToProfile: handleNavigateToProfile, pfp })}
           </View>
         </TouchableOpacity>
 

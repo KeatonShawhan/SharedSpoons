@@ -13,11 +13,10 @@ interface postHeaderProps {
   place: string;
   user_id: string;
   onNavigateToProfile: () => void;
-
-  
+  pfp: string;
 }
 
-export function postHeader({ username, place, onNavigateToProfile }: postHeaderProps): React.JSX.Element {
+export function postHeader({ username, place, onNavigateToProfile, pfp }: postHeaderProps): React.JSX.Element {
   const colorScheme = useColorScheme();
 
   return (
@@ -26,7 +25,7 @@ export function postHeader({ username, place, onNavigateToProfile }: postHeaderP
         <TouchableOpacity onPress={onNavigateToProfile}>
           <Image 
             style={[styles.profileImage, { borderColor: Colors[colorScheme].icon }]}
-            source={{ uri: 'https://via.placeholder.com/150' }}
+            source={{ uri: pfp || 'https://via.placeholder.com/150' }}
           />
         </TouchableOpacity>
         <View>

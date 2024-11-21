@@ -150,56 +150,77 @@ export class postService{
 
     }
 
-    public async getAllFriendsPosts(id:UUID): Promise<PostTotal[] | undefined> {
+    public async getAllFriendsPosts(id: UUID): Promise<PostTotal[] | undefined> {
         try {
             const findUser = `
-            SELECT id FROM app_user
-            WHERE id = $1 ORDER BY data->>'time' DESC
-            `
+                SELECT id FROM app_user
+                WHERE id = $1
+            `;
             const userQuery = {
                 text: findUser,
-                values: [id]
-            }
+                values: [id],
+            };
             const user = await pool.query(userQuery.text, userQuery.values);
+    
             if (user.rowCount === 0) {
-                console.error('User not found:' + id);
+                console.error('User not found: ' + id);
                 return undefined;
             }
-
+    
             const select = `
-            SELECT 
-                post.*, 
-                app_user.data->>'firstname' AS firstname,
-                app_user.data->>'lastname' AS lastname,
-                CASE 
-                    WHEN toEat.post_id IS NOT NULL THEN TRUE 
-                    ELSE FALSE 
-                END AS is_saved
-
-            FROM 
-                post
-            INNER JOIN 
-                follow ON post.user_id = follow.receiver
-            LEFT JOIN 
-                app_user ON app_user.id = post.user_id
-            LEFT JOIN 
-                toEat ON toEat.post_id = post.id AND toEat.user_id = $1
-            WHERE 
-                follow.sender = $1;
+                SELECT 
+                    post.*,
+                    app_user.data->>'username' AS username,
+                    app_user.data->>'pfp' AS pfp,
+                    CASE 
+                        WHEN toEat.post_id IS NOT NULL THEN TRUE 
+                        ELSE FALSE 
+                    END AS is_saved
+                FROM 
+                    post
+                INNER JOIN 
+                    follow ON post.user_id = follow.receiver
+                LEFT JOIN 
+                    app_user ON app_user.id = post.user_id
+                LEFT JOIN 
+                    toEat ON toEat.post_id = post.id AND toEat.user_id = $1
+                WHERE 
+                    follow.sender = $1
+                ORDER BY 
+                    post.data->>'time' DESC;
             `;
             const query = {
-            text: select,
-            values: [id]
+                text: select,
+                values: [id],
             };
             const { rows } = await pool.query(query);
-            // need to return an empty array if no posts are found, not undefined. 
-            console.log(rows)
-            return rows;
+    
+            if (!rows || rows.length === 0) {
+                console.log('No posts found for user: ' + id);
+                return [];
+            }
+    
+            const posts: PostTotal[] = rows.map((row) => ({
+                id: row.id,
+                user: row.user_id,
+                data: {
+                    image: row.data.image,
+                    rating: row.data.rating,
+                    restaurant: row.data.restaurant,
+                    dish: row.data.dish,
+                    time: row.data.time,
+                    caption: row.data.caption,
+                    pfp: row.pfp || '',
+                    username: row.username || ''
+                },
+            }));
+    
+            return posts;
         } catch (error) {
             console.error('Error getting all posts:', error);
             return undefined;
         }
-    }
+    }    
     
     public async editPost(postID: UUID, rating: number, caption: string): Promise < string | undefined > {
         const client = await pool.connect();
