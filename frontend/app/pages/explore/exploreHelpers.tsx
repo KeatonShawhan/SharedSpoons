@@ -5,7 +5,9 @@ import API_URL from '@/config';
 export const fetchExplorePosts = async (
   accessToken: string,
   handleLogout: () => void
+/* eslint-disable */
 ): Promise<any[]> => {
+/* eslint-enable */
   try {
     const response = await fetch(`${API_URL}explore/posts`, {
       method: 'GET',
@@ -24,7 +26,9 @@ export const fetchExplorePosts = async (
 
     const posts = await response.json();
     return posts; // Should be an array of posts
+  /* eslint-disable */
   } catch (err: any) {
+  /* eslint-enable */
     console.error("Error fetching explore posts:", err);
     return [];
   }
@@ -34,7 +38,9 @@ export const fetchPostById = async (
   postId: string,
   accessToken: string,
   handleLogout: () => void
+/* eslint-disable */
 ): Promise<any | null> => {
+/* eslint-enable */
   try {
     const response = await fetch(`${API_URL}post/postID/${postId}`, {
       method: 'GET',
@@ -53,7 +59,9 @@ export const fetchPostById = async (
 
     const post = await response.json();
     return post;
+  /* eslint-disable */
   } catch (err: any) {
+  /* eslint-enable */
     console.error("Error fetching post by ID:", err);
     return null;
   }
