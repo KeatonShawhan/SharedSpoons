@@ -1,62 +1,78 @@
 import {
-    Query,
-    Controller,
-    Get,
-    Route,
-    Security,
-    Request
-    // Path
-  } from "tsoa";
-    
-  import { ExploreService } from "./service";
-  import {Suggestion} from './index';
-  import * as express from 'express';
+  Query,
+  Controller,
+  Get,
+  Route,
+  Security,
+  Request,
+} from "tsoa";
+
+import { ExploreService } from "./service";
+import { Suggestion } from "./index";
+import * as express from "express";
 import { PostContent } from "../post";
+import { S3Service } from "../s3/service"; // Import S3Service for signed URLs
 
+@Security("jwt", ["member"])
+@Route("explore")
+export class ExploreController extends Controller {
+  private s3Service = new S3Service();
 
-  @Security('jwt', ['member'])
-  @Route("explore")
-  export class ExploreController extends Controller {
-    @Get("/search/suggestion")
-    public async searchSuggestion(
-        @Query() input: string,
-        @Query() currentUsername: string,
-    ): Promise<Suggestion[]> {
-      if (input.length < 1) {
-        this.setStatus(400);
-        return [];
-      }
-      return new ExploreService()
-        .searchSuggestion(input, currentUsername)
-        .then(
-          async (
-            searchResults: Suggestion[]
-          ): Promise<Suggestion[]> => {
-            console.log("Suggestions: " + searchResults);
-            if (!searchResults) {
-              return [];     
-            }
-            return searchResults;
-          }
-    );
+  @Get("/search/suggestion")
+  public async searchSuggestion(
+    @Query() input: string,
+    @Query() currentUsername: string
+  ): Promise<Suggestion[]> {
+    if (input.length < 1) {
+      this.setStatus(400);
+      return [];
+    }
+
+    return new ExploreService()
+      .searchSuggestion(input, currentUsername)
+      .then(async (searchResults: Suggestion[]): Promise<Suggestion[]> => {
+        console.log("Suggestions: " + searchResults);
+        if (!searchResults) {
+          return [];
+        }
+        return searchResults;
+      });
   }
 
   @Get("/posts")
-    public async explorePosts(
-      @Request() request: express.Request,
-    ): Promise<PostContent[]> {
-      return new ExploreService()
-        .getExplorePosts(request.user!.id)
-        .then(
-          async (
-            posts: PostContent[]
-          ): Promise<PostContent[]> => {
-            console.log("posts: " + posts);
-            if (!posts) {
-              return [];     
-            }
-            return posts;
-          }
-    );
+  public async explorePosts(
+    @Request() request: express.Request
+  ): Promise<PostContent[]> {
+    try {
+      if (!request.user) {
+        this.setStatus(401);
+        console.error("Unauthorized user");
+        return [];
+      }
+
+      const posts = await new ExploreService().getExplorePosts(request.user.id);
+
+      if (!posts || posts.length === 0) {
+        this.setStatus(404);
+        return [];
+      }
+
+      // Generate signed URLs for each post image
+      for (const post of posts) {
+        const signedUrl = await this.s3Service.getFileLink(post.data.image);
+        if (signedUrl) {
+          post.data.image = signedUrl;
+        } else {
+          console.error(`Could not generate signed URL for image: ${post.data.image}`);
+        }
+      }
+
+      this.setStatus(200);
+      return posts;
+    } catch (error) {
+      this.setStatus(500);
+      console.error("Error in explore /posts route:", error);
+      return [];
+    }
   }
-  }
+}

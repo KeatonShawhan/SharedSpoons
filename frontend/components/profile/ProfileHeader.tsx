@@ -155,6 +155,7 @@ const styles = StyleSheet.create({
     fontSize: width * 0.05,
     lineHeight: width * 0.05,
     marginBottom: 0.1,
+    fontWeight: '500',
   },
 });
 

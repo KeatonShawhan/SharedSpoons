@@ -159,7 +159,7 @@ const getStyles = (colors: { [key: string]: string }) =>
       borderBottomWidth: 1,
       borderBottomColor: colors.border,
       backgroundColor: colors.background,
-      paddingTop: 20, // Added padding to lower the header
+      paddingTop: 50, // Added padding to lower the header
     },
     backButton: {
       paddingRight: 16,
