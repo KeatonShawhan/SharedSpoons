@@ -12,6 +12,7 @@ interface ToEatDetailsInfoProps extends PostCardProps {
 }
 
 export function ToEatDetailsInfo({ onProfilePress, ...postProps }: ToEatDetailsInfoProps) {
+
   return (
     <View style={{ justifyContent: 'center', alignItems: 'center', paddingBottom: 30 }}>
       <View style={{ width: '95%', borderRadius: 0, borderColor: 'none' }}>

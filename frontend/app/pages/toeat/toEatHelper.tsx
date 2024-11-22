@@ -86,13 +86,15 @@ export const fetchPostData = async (postId, accessToken) => {
             const transformedData: PostCardProps = {
                 isSaved: apiData.is_saved,
                 id: apiData.id,
-                user_id: apiData.user_id,
-                username: apiData.firstname + " " + apiData.lastname, // You might want to fetch this separately or get from context
+                user_id: apiData.user,
+                username: apiData.data.username, // You might want to fetch this separately or get from context
                 caption: apiData.data.caption,
                 dish: apiData.data.dish,
                 rating: apiData.data.rating,
                 place: apiData.data.restaurant,
                 image: apiData.data.image,
+                pfp: apiData.data.pfp,
+
                 parentTab: 'ProfileTab' 
             };
             return transformedData;
