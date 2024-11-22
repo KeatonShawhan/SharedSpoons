@@ -97,6 +97,24 @@ export class toEatService{
         }
     }
 
+    public async isInToEat(userId: string, postId: string): Promise<boolean | undefined> {
+        try {
+            const selectQuery = {
+                text: `SELECT * FROM toEat WHERE user_id = $1 AND post_id = $2`,
+                values: [userId, postId],
+            };
+            const res = await pool.query(selectQuery);
+            if(res.rowCount === 0) {
+                return false;
+            }
+            return true;
+
+        } catch (error) {
+            console.error("Error checking if post is in to eat list:", error);
+            return undefined;
+        }
+    }
+
     
 
 }

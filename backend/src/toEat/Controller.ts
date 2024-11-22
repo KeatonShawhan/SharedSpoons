@@ -110,5 +110,32 @@ export class ToEatController extends Controller {
         }
     }
 
+    @Get('/isInToEat')
+    public async isInToEat(
+        @Request() request: express.Request,
+        @Query() postId: string,
+    ): Promise< boolean | undefined > {
+        try{
+            if (!request.user) {
+                this.setStatus(401);
+                console.error('Unauthorized user');
+                return undefined;
+            }
 
+            return new toEatService()
+                .isInToEat(request.user.id, postId)
+                .then(async (isIn) => {
+                    if (isIn === undefined) {
+                        this.setStatus(400);
+                        console.error('Could not check if post is in to eat list');
+                        return undefined;
+                    }
+                    return isIn;
+                })
+        } catch (error) {
+            console.error('Error checking if post is in toEat', error);
+            this.setStatus(500);
+            return undefined;
+        }
+    }
 }
