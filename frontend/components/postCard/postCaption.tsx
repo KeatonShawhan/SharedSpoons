@@ -48,16 +48,24 @@ export function PostCaption({
     setLikeCount(prev => (isLiked ? prev - 1 : prev + 1));
   };
 
-  const handleSave = () => {
-    if (saved == false){
-      addToEat(postId, loginContext.accessToken)
-      loginContext.setAddedEat(true);
-    } else {
-      deleteToEat(postId, loginContext.accessToken)
-      loginContext.setAddedEat(false);
+  const handleSave = async () => {
+    if (!loginContext) return;
+  
+    try {
+      if (!saved) {
+        await addToEat(postId, loginContext.accessToken);
+        loginContext.triggerToEatRefresh(); // Notify To-Eat Page
+      } else {
+        await deleteToEat(postId, loginContext.accessToken);
+        loginContext.triggerToEatRefresh(); // Notify To-Eat Page
+      }
+      setIsSaved(!saved);
+    } catch (err) {
+      console.error('Error updating To-Eat:', err);
     }
-    setIsSaved(!saved);
   };
+  
+  
 
   const handleComment = () => {
     navigation.navigate('PostStack', {

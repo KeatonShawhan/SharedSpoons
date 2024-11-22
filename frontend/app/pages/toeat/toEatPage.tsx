@@ -23,11 +23,12 @@ export default function ToEatPage() {
         const toEatList = await fetchToEat(loginContext.accessToken);
         setList(toEatList);
       } catch (error) {
-        console.error("Error fetching profile data:", error);
+        console.error("Error fetching To-Eat data:", error);
       }
     };
-    fetchData();
-  }, [loginContext.addedEat]);
+    fetchData(); // Fetch data when the page loads or `addedEat` changes
+  }, [loginContext.addedEat]); // Listen to the `addedEat` counter
+  
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: Colors[colorScheme].background }]}>
