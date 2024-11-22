@@ -40,14 +40,19 @@ export class ExploreService {
     }));
   }
 
-  public async getExplorePosts(userId: string): Promise<PostContent[]> {
+  public async getExplorePosts(userId: string, limit: number, offset: number): Promise<PostContent[]> {
     const select = `
-      SELECT * FROM post WHERE user_id != $1 ORDER BY RANDOM() LIMIT 36
+      SELECT * 
+      FROM post 
+      WHERE user_id != $1 
+      ORDER BY RANDOM() 
+      LIMIT $2 
+      OFFSET $3
     `;
 
     const query = {
       text: select,
-      values: [userId],
+      values: [userId, limit, offset],
     };
 
     const { rows } = await pool.query(query);

@@ -40,39 +40,40 @@ export class ExploreController extends Controller {
   }
 
   @Get("/posts")
-  public async explorePosts(
-    @Request() request: express.Request
-  ): Promise<PostContent[]> {
-    try {
-      if (!request.user) {
-        this.setStatus(401);
-        console.error("Unauthorized user");
-        return [];
-      }
-
-      const posts = await new ExploreService().getExplorePosts(request.user.id);
-
-      if (!posts || posts.length === 0) {
-        this.setStatus(404);
-        return [];
-      }
-
-      // Generate signed URLs for each post image
-      for (const post of posts) {
-        const signedUrl = await this.s3Service.getFileLink(post.data.image);
-        if (signedUrl) {
-          post.data.image = signedUrl;
-        } else {
-          console.error(`Could not generate signed URL for image: ${post.data.image}`);
-        }
-      }
-
-      this.setStatus(200);
-      return posts;
-    } catch (error) {
-      this.setStatus(500);
-      console.error("Error in explore /posts route:", error);
+public async explorePosts(
+  @Request() request: express.Request,
+  @Query("limit") limit = 36,
+  @Query("offset") offset = 0
+): Promise<PostContent[]> {
+  try {
+    if (!request.user) {
+      this.setStatus(401);
+      console.error("Unauthorized user");
       return [];
     }
+
+    const posts = await new ExploreService().getExplorePosts(request.user.id, limit, offset);
+
+    if (!posts || posts.length === 0) {
+      this.setStatus(404);
+      return [];
+    }
+
+    for (const post of posts) {
+      const signedUrl = await this.s3Service.getFileLink(post.data.image);
+      if (signedUrl) {
+        post.data.image = signedUrl;
+      } else {
+        console.error(`Could not generate signed URL for image: ${post.data.image}`);
+      }
+    }
+
+    this.setStatus(200);
+    return posts;
+  } catch (error) {
+    this.setStatus(500);
+    console.error("Error in explore /posts route:", error);
+    return [];
   }
+}
 }

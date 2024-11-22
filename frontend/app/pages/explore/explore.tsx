@@ -1,18 +1,18 @@
-// app/pages/explore/explore.tsx
-
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useRef } from 'react';
 import {
   StyleSheet,
   View,
   Text,
   ActivityIndicator,
-  ScrollView,
+  Animated,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
   Dimensions,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/constants/Colors';
-import type { ExploreScreenNavigationProp } from '@/app/(tabs)/exploreMain';
+import { ExploreScreenNavigationProp } from '@/app/(tabs)/exploreMain';
 import { ExploreSearchBar } from '@/components/explore/ExploreSearchbar';
 import LoginContext from '@/contexts/loginContext';
 import { fetchExplorePosts } from '@/app/pages/explore/exploreHelpers';
@@ -30,54 +30,56 @@ export default function Explore() {
   const themeColors = Colors[colorScheme];
 
   const [posts, setPosts] = useState<Post[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [offset, setOffset] = useState(0);
+
+  const scrollYRef = useRef(new Animated.Value(0)).current;
 
   const loginContext = useContext(LoginContext);
-
-  useEffect(() => {
-    fetchPosts();
-  }, []);
 
   const fetchPosts = async () => {
     if (!loginContext?.accessToken) {
       setError('User not logged in');
-      setIsLoading(false);
+      setLoading(false);
       return;
     }
 
     try {
-      setIsLoading(true);
+      setLoading(true);
       setError(null);
 
       const fetchedPosts = await fetchExplorePosts(
+        loginContext.handleLogout,
         loginContext.accessToken,
-        loginContext.handleLogout
+        36,
+        offset * 36
       );
 
       if (!Array.isArray(fetchedPosts)) {
         throw new Error('Invalid posts data');
       }
-      /* eslint-disable */
-      const mappedPosts = fetchedPosts.map((post: any) => ({
-      /* eslint-enable */
+
+      const mappedPosts = fetchedPosts.map((post) => ({
         id: post.id,
-        image: post.data.image, // Ensure this is a valid URL or base64 string
-        heightRatio: Math.random() * 0.5 + 1.0, // Random heightRatio between 1.0 and 1.5
+        image: post.data.image,
+        heightRatio: Math.random() * 0.5 + 1.0,
       }));
 
-      setPosts(mappedPosts);
-    /* eslint-disable */
-    } catch (error: any) {
-    /* eslint-enable */
+      setPosts((prevPosts) => [...prevPosts, ...mappedPosts]);
+      setOffset((prevOffset) => prevOffset + 1);
+    } catch (error) {
       console.error('Error fetching posts:', error);
       setError('Failed to fetch posts');
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
-  // Function to split posts into three columns
+  useEffect(() => {
+    fetchPosts();
+  }, []);
+
   const splitPostsIntoColumns = (posts: Post[]) => {
     const leftColumn: Post[] = [];
     const middleColumn: Post[] = [];
@@ -86,7 +88,7 @@ export default function Explore() {
     let middleHeight = 0;
     let rightHeight = 0;
 
-    const IMAGE_WIDTH = (Dimensions.get('window').width - 32) / 3; // 8px padding on each side and between columns (3 columns: 8*4 = 32)
+    const IMAGE_WIDTH = (Dimensions.get('window').width - 32) / 3;
 
     posts.forEach((post) => {
       const imageHeight = IMAGE_WIDTH * (post.heightRatio || 1.0);
@@ -118,35 +120,33 @@ export default function Explore() {
     ));
   };
 
-  if (isLoading) {
+  const handleScroll = Animated.event(
+    [{ nativeEvent: { contentOffset: { y: scrollYRef } } }],
+    {
+      useNativeDriver: true,
+      listener: (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+        const contentHeight = event.nativeEvent.contentSize.height;
+        const scrollOffset = event.nativeEvent.contentOffset.y;
+        const layoutHeight = event.nativeEvent.layoutMeasurement.height;
+
+        if (contentHeight - scrollOffset <= layoutHeight + 50 && !loading) {
+          fetchPosts();
+        }
+      },
+    }
+  );
+
+  if (loading && posts.length === 0) {
     return (
-      <View
-        style={[
-          styles.container,
-          {
-            backgroundColor: themeColors.background,
-            justifyContent: 'center',
-            alignItems: 'center',
-          },
-        ]}
-      >
+      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
         <ActivityIndicator size="large" color={themeColors.tint} />
       </View>
     );
   }
 
-  if (error) {
+  if (error && posts.length === 0) {
     return (
-      <View
-        style={[
-          styles.container,
-          {
-            backgroundColor: themeColors.background,
-            justifyContent: 'center',
-            alignItems: 'center',
-          },
-        ]}
-      >
+      <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
         <Text style={{ color: themeColors.text }}>{error}</Text>
       </View>
     );
@@ -158,15 +158,19 @@ export default function Explore() {
         <Text style={[styles.headerTitle, { color: themeColors.text }]}>Explore</Text>
       </View>
       <ExploreSearchBar navigation={navigation} />
-      {/* Add spacing here */}
-      <View style={styles.spacing} />
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <Animated.ScrollView
+        contentContainerStyle={styles.scrollContainer}
+        showsVerticalScrollIndicator={false}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+      >
         <View style={styles.columnsContainer}>
           <View style={styles.column}>{renderColumn(leftColumn)}</View>
           <View style={styles.column}>{renderColumn(middleColumn)}</View>
           <View style={styles.column}>{renderColumn(rightColumn)}</View>
         </View>
-      </ScrollView>
+        {loading && <ActivityIndicator style={styles.loadingIndicator} size="small" color={themeColors.tint} />}
+      </Animated.ScrollView>
     </View>
   );
 }
@@ -186,11 +190,8 @@ const styles = StyleSheet.create({
     fontSize: 32,
     fontWeight: 'bold',
   },
-  spacing: {
-    height: 20, // Adjust the height as needed for desired spacing
-  },
   scrollContainer: {
-    paddingHorizontal: 8, // 8px padding on each side
+    paddingHorizontal: 8,
   },
   columnsContainer: {
     flexDirection: 'row',
@@ -198,7 +199,9 @@ const styles = StyleSheet.create({
   },
   column: {
     flex: 1,
-    marginLeft: 4,
-    marginRight: 4,
+    marginHorizontal: 4,
+  },
+  loadingIndicator: {
+    marginVertical: 16,
   },
 });

@@ -2,18 +2,13 @@
 
 import API_URL from '@/config';
 
-export const fetchExplorePosts = async (
-  accessToken: string,
-  handleLogout: () => void
-/* eslint-disable */
-): Promise<any[]> => {
-/* eslint-enable */
+export const fetchExplorePosts = async (  handleLogout: () => void, accessToken, limit = 36, offset = 0) => {
   try {
-    const response = await fetch(`${API_URL}explore/posts`, {
-      method: 'GET',
+    const response = await fetch(`${API_URL}explore/posts?limit=${limit}&offset=${offset}`, {
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${accessToken}`,
       },
     });
 

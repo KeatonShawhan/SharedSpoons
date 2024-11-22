@@ -27,13 +27,19 @@ const router = Router();
 RegisterRoutes(router);
 app.use('/api/v0', router);
 
-const errorHandler: ErrorRequestHandler = (err, _req, res) => {
-  res.status(err.status || 500).json({
-    message: err.message || 'Internal Server Error',
-    errors: err.errors,
-    status: err.status || 500,
-  });
+const errorHandler: ErrorRequestHandler = (err, _req, res, next) => {
+  if (res && typeof res.status === 'function') {
+    res.status(err.status || 500).json({
+      message: err.message || 'Internal Server Error',
+      errors: err.errors,
+      status: err.status || 500,
+    });
+  } else {
+    console.error('Invalid response object in error handler:', err);
+    next(err); // Ensure the error is passed along if `res` is invalid
+  }
 };
 app.use(errorHandler);
+
 
 export default app;
