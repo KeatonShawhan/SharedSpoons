@@ -44,29 +44,40 @@ export default function Explore() {
       setLoading(false);
       return;
     }
-
+  
     try {
       setLoading(true);
       setError(null);
-
+  
       const fetchedPosts = await fetchExplorePosts(
         loginContext.handleLogout,
         loginContext.accessToken,
         36,
         offset * 36
       );
-
+      if (fetchedPosts.length === 0) {
+        return;
+      }
+  
       if (!Array.isArray(fetchedPosts)) {
         throw new Error('Invalid posts data');
       }
-
+  
       const mappedPosts = fetchedPosts.map((post) => ({
         id: post.id,
         image: post.data.image,
         heightRatio: Math.random() * 0.5 + 1.0,
       }));
-
-      setPosts((prevPosts) => [...prevPosts, ...mappedPosts]);
+  
+      setPosts((prevPosts) => {
+        // Combine new posts with existing ones, removing duplicates
+        const allPosts = [...prevPosts, ...mappedPosts];
+        const uniquePosts = allPosts.filter(
+          (post, index, self) => index === self.findIndex((p) => p.id === post.id)
+        );
+        return uniquePosts;
+      });
+  
       setOffset((prevOffset) => prevOffset + 1);
     } catch (error) {
       console.error('Error fetching posts:', error);
@@ -75,6 +86,7 @@ export default function Explore() {
       setLoading(false);
     }
   };
+  
 
   useEffect(() => {
     fetchPosts();
