@@ -38,21 +38,20 @@ export function PostCaption({
   userId
 }: PostCaptionProps) {
   const [isLiked, setIsLiked] = useState(false);
-  const [saved, setIsSaved] = useState(isSaved);
+  const [saved, setSaved] = useState(isSaved);
   const [likesCount, setLikeCount] = useState(0);
   const [commentCount, setCommentCount] = useState(0);
   const loginContext = useContext(LoginContext)
-
   const handleLike = async () => {
     if (!loginContext) return;
   
     try {
-      if (!isLiked) {
-        await likePost(postId, loginContext.accessToken);
-        loginContext.triggerToEatRefresh(); 
-      } else {
+      if (isLiked) {
         await unlikePost(postId, loginContext.accessToken);
         loginContext.triggerToEatRefresh();
+      } else {
+        await likePost(postId, loginContext.accessToken);
+        loginContext.triggerToEatRefresh(); 
       }
       setIsLiked(!isLiked);
       loginContext.setLiked(!loginContext.liked)
@@ -65,14 +64,15 @@ export function PostCaption({
     if (!loginContext) return;
   
     try {
-      if (!saved) {
-        await addToEat(postId, loginContext.accessToken);
+      if (saved) {
+        await deleteToEat(postId, loginContext.accessToken);
         loginContext.triggerToEatRefresh(); 
       } else {
-        await deleteToEat(postId, loginContext.accessToken);
-        loginContext.triggerToEatRefresh();
+        await addToEat(postId, loginContext.accessToken);
+        loginContext.triggerToEatRefresh(); 
       }
-      setIsSaved(!saved);
+      loginContext.setAddedEat(loginContext.addedEat += 1)
+      setSaved(!saved);
     } catch (err) {
       console.error('Error updating To-Eat:', err);
     }
@@ -99,7 +99,6 @@ export function PostCaption({
     const fetchData = async () => {
       const countlikes = await likeCount(postId, loginContext.accessToken)
       setLikeCount(countlikes)
-      console.log(countlikes)
     }
     fetchData();
   }, [postId, loginContext.liked])
@@ -140,7 +139,7 @@ export function PostCaption({
             { loginContext.userId != userId &&
               (
               <TouchableOpacity onPress={handleSave}>
-              <Ionicons name={saved ? 'bookmark' : 'bookmark-outline'} size={22} color={isSaved ? ORANGE_COLOR : 'gray'} />
+              <Ionicons name={saved ? 'bookmark' : 'bookmark-outline'} size={22} color={saved ? ORANGE_COLOR : 'gray'} />
               </TouchableOpacity>
               )
             }

@@ -112,7 +112,7 @@ export default function HomeScreen() {
           <PostCard 
             key={post.id}  
             id={post.id}
-            isSaved={post.is_saved}
+            isSaved={post.data.is_saved}
             user_id={post.user}
             username={post.data.username}
             caption={post.data.caption}

@@ -9,6 +9,7 @@ export interface PostJSON{
   caption: string;
   pfp: string;
   username: string;
+  is_saved: string;
 }
 
 export interface PostContent {

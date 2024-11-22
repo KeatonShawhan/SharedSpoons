@@ -137,6 +137,7 @@ export class postService{
                     time: row.data.time,
                     caption: row.data.caption,
                     pfp: row.pfp || '',
+                    is_saved: row.is_saved,
                     username: row.username || '',
                 },
             };
@@ -191,6 +192,7 @@ export class postService{
                     caption: row.data.caption,
                     pfp: row.pfp || '',
                     username: row.username || '',
+                    is_saved:row.is_saved
                 },
             }));
     
@@ -276,6 +278,7 @@ export class postService{
                     caption: row.data.caption,
                     pfp: row.pfp || '',
                     username: row.username || '',
+                    is_saved: row.is_saved
                 },
             }));
     
