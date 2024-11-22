@@ -42,7 +42,7 @@ export class ExploreService {
 
   public async getExplorePosts(userId: string): Promise<PostContent[]> {
     const select = `
-      SELECT * FROM post WHERE user_id != $1 ORDER BY RANDOM() LIMIT 10
+      SELECT * FROM post WHERE user_id != $1 ORDER BY RANDOM() LIMIT 36
     `;
 
     const query = {
