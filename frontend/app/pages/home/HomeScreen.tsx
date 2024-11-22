@@ -1,6 +1,5 @@
-//HomeScreen.tsx
 import React, { useContext, useRef, useState, useEffect } from 'react';
-import { Animated, StyleSheet } from 'react-native';
+import { Animated, StyleSheet, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { PostCard } from '@/components/postCard/postCard';
 import { useColorScheme } from '@/hooks/useColorScheme';
@@ -8,47 +7,48 @@ import { Header } from '@/components/home/Header';
 import { Colors } from '@/constants/Colors';
 import LoginContext from '@/contexts/loginContext';
 import { fetchPosts } from './homeHelpers';
-const HEADER_HEIGHT = 80; 
-const SCROLL_THRESHOLD = 50;
 import LoadingIndicator from '../LoadingIndicator';
+
+const HEADER_HEIGHT = 80;
+const SCROLL_THRESHOLD = 50;
 
 export default function HomeScreen() {
   const colorScheme = useColorScheme();
   const loginContext = useContext(LoginContext)!;
   const [homePosts, setHomePosts] = useState([]);
+  const [lastPostTime, setLastPostTime] = useState<string | undefined>(undefined);
+  const [loading, setLoading] = useState(false);
+  const scrollYRef = useRef(new Animated.Value(0)).current;
+
+  const getPosts = async () => {
+    if (!loginContext.isInitialized || !loginContext.accessToken) return;
+    setLoading(true);
+
+    const posts = await fetchPosts(
+      loginContext.userId,
+      loginContext.accessToken,
+      loginContext.handleLogout,
+      10,
+      lastPostTime
+    );
+
+    if (posts && posts.length > 0) {
+      setHomePosts((prevPosts) => [...prevPosts, ...posts]);
+      setLastPostTime(posts[posts.length - 1].data.time);
+    }
+    setLoading(false);
+  };
 
   useEffect(() => {
-    const getPosts = async () => {
-      // Wait until the context is fully initialized
-      if (!loginContext.isInitialized) return;
-
-      // Ensure the accessToken is set correctly before making the fetch call
-      if (!loginContext.accessToken) {
-        console.log('No access token available.');
-        return;
-      }
-
-      const posts = await fetchPosts(
-        loginContext.userId,
-        loginContext.accessToken,
-        loginContext.handleLogout
-      );
-
-      setHomePosts(posts || []);
-    };
-
     getPosts();
   }, [
     loginContext.isInitialized,
+    loginContext.accessToken,
+    loginContext.isAuthenticated,
     loginContext.followed,
     loginContext.addedEat,
-    loginContext.isAuthenticated,
   ]);
-  
-  // Use a ref to track the scroll position
-  const scrollYRef = useRef(new Animated.Value(0)).current;
 
-  // Set up header animations based on scrollY
   const headerTranslateY = scrollYRef.interpolate({
     inputRange: [0, SCROLL_THRESHOLD],
     outputRange: [0, -HEADER_HEIGHT],
@@ -60,6 +60,23 @@ export default function HomeScreen() {
     outputRange: [1, 0],
     extrapolate: 'clamp'
   });
+
+  const handleScroll = Animated.event(
+    [{ nativeEvent: { contentOffset: { y: scrollYRef } } }],
+    { 
+      useNativeDriver: true,
+      listener: (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+        const contentHeight = event.nativeEvent.contentSize.height;
+        const scrollOffset = event.nativeEvent.contentOffset.y;
+        const layoutHeight = event.nativeEvent.layoutMeasurement.height;
+        
+        // check if near the bottom for infinite scroll
+        if (contentHeight - scrollOffset <= layoutHeight + 20 && !loading) {
+          getPosts();
+        }
+      }
+    }
+  );
 
   if (!loginContext.isInitialized) {
     return <LoadingIndicator message="Loading your data..." />;
@@ -88,10 +105,7 @@ export default function HomeScreen() {
       <Animated.ScrollView 
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
-        onScroll={Animated.event(
-          [{ nativeEvent: { contentOffset: { y: scrollYRef } } }],
-          { useNativeDriver: true }
-        )}
+        onScroll={handleScroll}
         scrollEventThrottle={16}
       >
         {homePosts.map(post => (
@@ -110,6 +124,8 @@ export default function HomeScreen() {
             pfp={post.data.pfp}
           />
         ))}
+        
+        {loading && <LoadingIndicator message="Loading more posts..." />}
       </Animated.ScrollView>
     </SafeAreaView>
   );

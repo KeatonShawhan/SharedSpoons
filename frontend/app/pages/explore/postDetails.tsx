@@ -81,9 +81,9 @@ export default function PostDetails({ route }: Props) {
         place: apiData.data.restaurant || '',
         image: apiData.data.image || '',
         pfp: apiData.data.pfp,
-        likes: apiData.likes || 0, // Add if your API provides these
-        commentsCount: apiData.commentsCount || 0, // Add if your API provides these
-        parentTab: 'ExploreTab', // Since we're in the explore tab
+        likes: apiData.likes || 0,
+        commentsCount: apiData.commentsCount || 0,
+        parentTab: 'ExploreTab',
       };
 
       setPostData(transformedData);

@@ -1,8 +1,14 @@
 import API_URL from "@/config";
 
-export const fetchPosts = async (userId, accessToken, handleLogout) => {
+export const fetchPosts = async (userId, accessToken, handleLogout, limit = 10, lastPostTime) => {
   try {
-    const response = await fetch(`${API_URL}post/all/friendsPosts/${userId}`, {
+    const url = new URL(`${API_URL}post/all/friendsPosts/${userId}`);
+    url.searchParams.append('limit', limit.toString());
+    if (lastPostTime) {
+      url.searchParams.append('lastPostTime', lastPostTime);
+    }
+
+    const response = await fetch(url.toString(), {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

@@ -201,7 +201,7 @@ export class postService{
         }
     }    
 
-    public async getAllFriendsPosts(id: UUID): Promise<PostTotal[] | undefined> {
+    public async getAllFriendsPosts(userID: UUID, limit = 10, lastPostTime?: string): Promise<PostTotal[] | undefined> {
         try {
             const findUser = `
                 SELECT id FROM app_user
@@ -209,16 +209,16 @@ export class postService{
             `;
             const userQuery = {
                 text: findUser,
-                values: [id],
+                values: [userID],
             };
             const user = await pool.query(userQuery.text, userQuery.values);
     
             if (user.rowCount === 0) {
-                console.error('User not found: ' + id);
+                console.error('User not found: ' + userID);
                 return undefined;
             }
     
-            const select = `
+            let selectQuery = `
                 SELECT 
                     post.*,
                     app_user.data->>'username' AS username,
@@ -237,17 +237,30 @@ export class postService{
                     toEat ON toEat.post_id = post.id AND toEat.user_id = $1
                 WHERE 
                     follow.sender = $1
-                ORDER BY 
-                    post.data->>'time' DESC;
             `;
+    
+            const queryParams = [userID];
+    
+            if (lastPostTime) {
+                selectQuery += ` AND post.data->>'time' < $2 `;
+                queryParams.push(lastPostTime);
+            }
+    
+            selectQuery += `
+                ORDER BY post.data->>'time' DESC
+                LIMIT $${queryParams.length + 1};
+            `;
+            queryParams.push(limit.toString());
+    
             const query = {
-                text: select,
-                values: [id],
+                text: selectQuery,
+                values: queryParams,
             };
+    
             const { rows } = await pool.query(query);
     
             if (!rows || rows.length === 0) {
-                console.log('No posts found for user: ' + id);
+                console.log('No posts found for user: ' + userID);
                 return [];
             }
     
@@ -262,13 +275,13 @@ export class postService{
                     time: row.data.time,
                     caption: row.data.caption,
                     pfp: row.pfp || '',
-                    username: row.username || ''
+                    username: row.username || '',
                 },
             }));
     
             return posts;
         } catch (error) {
-            console.error('Error getting all posts:', error);
+            console.error('Error getting all friends posts:', error);
             return undefined;
         }
     }    
