@@ -103,3 +103,69 @@ export const fetchPostData = async (postId, accessToken) => {
       console.error('Error fetching post:', err);
   }
 };
+
+export const likePost = async (postId, accessToken) => {
+  try {
+    const response = await fetch(`${API_URL}likes/add?post=${postId}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`, 
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const json = await response.json();
+    return json;
+  } catch (err) {
+    console.log("Error liking post:", err);
+    return [];
+  }
+};
+
+export const unlikePost = async (postId, accessToken) => {
+  try {
+    const response = await fetch(`${API_URL}likes/remove?post=${postId}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`, 
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const json = await response.json();
+    return json;
+  } catch (err) {
+    console.log("Error unliking", err);
+    return [];
+  }
+};
+
+export const likeCount = async (postId, accessToken) => {
+  try {
+    const response = await fetch(`${API_URL}likes/getLikeCount?post=${postId}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`, 
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+
+    const json = await response.json();
+    return json;
+  } catch (err) {
+    console.log("Error getting like count", err);
+    return [];
+  }
+};

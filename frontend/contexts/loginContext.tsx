@@ -30,6 +30,8 @@ interface LoginContextType {
   triggerToEatRefresh: () => void; 
   commented: boolean;
   setCommented: (commented: boolean) => void;
+  liked: boolean;
+  setLiked: (liked: boolean) => void;
   madePost: boolean;
   setMadePost: (madePost: boolean) => void;
   firstName: string;
@@ -49,6 +51,7 @@ export const LoginProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [followed, setFollowed] = useState<boolean>(true);
   const [commented, setCommented] = useState<boolean>(true);
+  const [liked, setLiked] = useState<boolean>(true);
   const [addedEat, setAddedEat] = useState<number>(0); 
   const [madePost, setMadePost] = useState<boolean>(true);
   const [firstName, setFirstName] = useState<string>('');
@@ -120,6 +123,8 @@ export const LoginProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         decodeToken,
         isInitialized,
         setIsInitialized,
+        liked,
+        setLiked
       }}
     >
       {children}
