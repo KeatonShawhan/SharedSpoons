@@ -5,8 +5,9 @@ import {
   StyleSheet,
   View,
   Text,
-  FlatList,
   ActivityIndicator,
+  ScrollView,
+  Dimensions,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useColorScheme } from '@/hooks/useColorScheme';
@@ -57,18 +58,15 @@ export default function Explore() {
       if (!Array.isArray(fetchedPosts)) {
         throw new Error('Invalid posts data');
       }
-      /* eslint-disable */
+
       const mappedPosts = fetchedPosts.map((post: any) => ({
-      /* eslint-enable */
         id: post.id,
         image: post.data.image, // Ensure this is a valid URL or base64 string
         heightRatio: Math.random() * 0.5 + 1.0, // Random heightRatio between 1.0 and 1.5
       }));
 
       setPosts(mappedPosts);
-    /* eslint-disable */
     } catch (error: any) {
-    /* eslint-enable */
       console.error('Error fetching posts:', error);
       setError('Failed to fetch posts');
     } finally {
@@ -76,13 +74,46 @@ export default function Explore() {
     }
   };
 
-  const renderItem = ({ item }: { item: Post }) => (
-    <ExplorePostSquare
-      imageUrl={item.image}
-      onPress={() => navigation.navigate('Details', { postId: item.id })}
-      heightRatio={item.heightRatio}
-    />
-  );
+  // Function to split posts into three columns
+  const splitPostsIntoColumns = (posts: Post[]) => {
+    const leftColumn: Post[] = [];
+    const middleColumn: Post[] = [];
+    const rightColumn: Post[] = [];
+    let leftHeight = 0;
+    let middleHeight = 0;
+    let rightHeight = 0;
+
+    const IMAGE_WIDTH = (Dimensions.get('window').width - 32) / 3; // 8px padding on each side and between columns (3 columns: 8*4 = 32)
+
+    posts.forEach((post) => {
+      const imageHeight = IMAGE_WIDTH * (post.heightRatio || 1.0);
+      if (leftHeight <= middleHeight && leftHeight <= rightHeight) {
+        leftColumn.push(post);
+        leftHeight += imageHeight;
+      } else if (middleHeight <= leftHeight && middleHeight <= rightHeight) {
+        middleColumn.push(post);
+        middleHeight += imageHeight;
+      } else {
+        rightColumn.push(post);
+        rightHeight += imageHeight;
+      }
+    });
+
+    return { leftColumn, middleColumn, rightColumn };
+  };
+
+  const { leftColumn, middleColumn, rightColumn } = splitPostsIntoColumns(posts);
+
+  const renderColumn = (column: Post[]) => {
+    return column.map((post) => (
+      <ExplorePostSquare
+        key={post.id}
+        imageUrl={post.image}
+        onPress={() => navigation.navigate('Details', { postId: post.id })}
+        heightRatio={post.heightRatio}
+      />
+    ));
+  };
 
   if (isLoading) {
     return (
@@ -126,17 +157,16 @@ export default function Explore() {
       <ExploreSearchBar navigation={navigation} />
       {/* Add spacing here */}
       <View style={styles.spacing} />
-      <FlatList
-        data={posts}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        numColumns={2}
-        contentContainerStyle={styles.listContent}
-        showsVerticalScrollIndicator={false}
-      />
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <View style={styles.columnsContainer}>
+          <View style={styles.column}>{renderColumn(leftColumn)}</View>
+          <View style={styles.column}>{renderColumn(middleColumn)}</View>
+          <View style={styles.column}>{renderColumn(rightColumn)}</View>
+        </View>
+      </ScrollView>
     </View>
   );
-}  
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -156,8 +186,16 @@ const styles = StyleSheet.create({
   spacing: {
     height: 20, // Adjust the height as needed for desired spacing
   },
-  listContent: {
-    paddingBottom: 90,
+  scrollContainer: {
+    paddingHorizontal: 8, // 8px padding on each side
+  },
+  columnsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  column: {
+    flex: 1,
+    marginLeft: 4,
+    marginRight: 4,
   },
 });
-
