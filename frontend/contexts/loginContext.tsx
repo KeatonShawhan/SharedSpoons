@@ -1,10 +1,9 @@
-// contexts/LoginContext.tsx
 import React, { createContext, useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from "expo-router";
 import { RootTabParamList } from '@/app/(tabs)/_layout';
 import { StackNavigationProp } from "@react-navigation/stack";
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode'; 
 
 interface DecodedToken {
   id: string;
@@ -21,18 +20,19 @@ interface LoginContextType {
   userId: string;
   setUserId: (userId: string) => void;
   userName: string;
-  setUserName: (userId: string) => void;
+  setUserName: (username: string) => void;
   isAuthenticated: boolean;
   setIsAuthenticated: (isAuthenticated: boolean) => void;
   followed: boolean;
   setFollowed: (followed: boolean) => void;
-  addedEat:boolean;
-  setAddedEat: (followed: boolean) => void;
-  commented:boolean;
+  addedEat: number; 
+  setAddedEat: (addedEat: number) => void;
+  triggerToEatRefresh: () => void; 
+  commented: boolean;
   setCommented: (commented: boolean) => void;
-  madePost:boolean;
-  setMadePost: (commented: boolean) => void;
-  firstName:string;
+  madePost: boolean;
+  setMadePost: (madePost: boolean) => void;
+  firstName: string;
   setFirstName: (firstName: string) => void;
   handleLogout: () => void;
   decodeToken: () => void;
@@ -45,11 +45,11 @@ const LoginContext = createContext<LoginContextType | undefined>(undefined);
 export const LoginProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [accessToken, setAccessToken] = useState<string>('');
   const [userId, setUserId] = useState<string>('');
-  const [userName, setUserName] = useState<string>('')
+  const [userName, setUserName] = useState<string>('');
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [followed, setFollowed] = useState<boolean>(true);
   const [commented, setCommented] = useState<boolean>(true);
-  const [addedEat, setAddedEat] = useState<boolean>(true);
+  const [addedEat, setAddedEat] = useState<number>(0); 
   const [madePost, setMadePost] = useState<boolean>(true);
   const [firstName, setFirstName] = useState<string>('');
   const navigation = useNavigation<StackNavigationProp<RootTabParamList>>();
@@ -70,25 +70,58 @@ export const LoginProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       setIsInitialized(true);
       return;
     }
-    const decoded: DecodedToken = jwtDecode(token);
-    setUserId(decoded.id);
-    setUserName(decoded.username);
-    setFirstName(decoded.firstname);
-    console.log("token: ", token);
-    setAccessToken(token);
-    console.log('Decoded token:', decoded);
+    try {
+      const decoded: DecodedToken = jwtDecode(token);
+      setUserId(decoded.id);
+      setUserName(decoded.username);
+      setFirstName(decoded.firstname);
+      console.log("Decoded token:", decoded);
+      setAccessToken(token);
+    } catch (error) {
+      console.error("Failed to decode token:", error);
+      handleLogout(); // Logout if token is invalid
+    }
   };
-  
+
+  const triggerToEatRefresh = () => {
+    setAddedEat((prev) => prev + 1); // Increment counter for updates
+  };
 
   const handleLogout = async () => {
     await AsyncStorage.removeItem("accessToken");
     setAccessToken('');
-    navigation.navigate('login');
+    navigation.navigate('login'); // Redirect to login page
     setIsAuthenticated(false);
   };
 
   return (
-    <LoginContext.Provider value={{madePost, setMadePost, commented, setCommented, addedEat, setAddedEat, followed, setFollowed, userName, setUserName, accessToken, setAccessToken, userId, setUserId, isAuthenticated, setIsAuthenticated, firstName, setFirstName, handleLogout, decodeToken, isInitialized, setIsInitialized }}>
+    <LoginContext.Provider
+      value={{
+        madePost,
+        setMadePost,
+        commented,
+        setCommented,
+        addedEat,
+        setAddedEat,
+        triggerToEatRefresh,
+        followed,
+        setFollowed,
+        userName,
+        setUserName,
+        accessToken,
+        setAccessToken,
+        userId,
+        setUserId,
+        isAuthenticated,
+        setIsAuthenticated,
+        firstName,
+        setFirstName,
+        handleLogout,
+        decodeToken,
+        isInitialized,
+        setIsInitialized,
+      }}
+    >
       {children}
     </LoginContext.Provider>
   );
