@@ -12,7 +12,7 @@ SELECT
         'bio', 'Enthusiastic about coding.',
         'phoneNumber', '(123) 456-7890',
         'location', 'New York',
-        'pfp', '10bc9173-ff57-4bd6-8e79-10339a57cc4c.jpg',
+        'pfp', 'images/apple_pie/129668.jpg',
         'pwhash', crypt('P4sSw0rD1', s.salt),
         'salt', s.salt
     )
@@ -30,7 +30,7 @@ SELECT
         'bio', 'Loves reading books.',
         'phoneNumber', '(234) 567-8901',
         'location', 'Los Angeles',
-        'pfp', '10bc9173-ff57-4bd6-8e79-10339a57cc4c.jpg',
+        'pfp', 'images/baby_back_ribs/42451.jpg',
         'pwhash', crypt('SeCuReP@ss2', s.salt),
         'salt', s.salt
     )
@@ -48,7 +48,7 @@ SELECT
         'bio', 'Passionate about music.',
         'phoneNumber', '(345) 678-9012',
         'location', 'Chicago',
-        'pfp', '10bc9173-ff57-4bd6-8e79-10339a57cc4c.jpg',
+        'pfp', 'images/baklava/28613.jpg',
         'pwhash', crypt('QwErTy123', s.salt),
         'salt', s.salt
     )
@@ -66,7 +66,7 @@ SELECT
         'bio', 'Enjoys hiking and the outdoors.',
         'phoneNumber', '(456) 789-0123',
         'location', 'Houston',
-        'pfp', '10bc9173-ff57-4bd6-8e79-10339a57cc4c.jpg',
+        'pfp', 'images/beef_carpaccio/30086.jpg',
         'pwhash', crypt('PaSsWoRd4!', s.salt),
         'salt', s.salt
     )
@@ -84,7 +84,7 @@ SELECT
         'bio', 'Avid gamer and tech enthusiast.',
         'phoneNumber', '(567) 890-1234',
         'location', 'Phoenix',
-        'pfp', '10bc9173-ff57-4bd6-8e79-10339a57cc4c.jpg',
+        'pfp', 'images/beet_salad/12969.jpg',
         'pwhash', crypt('123456Abc', s.salt),
         'salt', s.salt
     )
@@ -102,7 +102,7 @@ SELECT
         'bio', 'Artist and painter.',
         'phoneNumber', '(678) 901-2345',
         'location', 'Philadelphia',
-        'pfp', '10bc9173-ff57-4bd6-8e79-10339a57cc4c.jpg',
+        'pfp', 'images/beignets/26379.jpg',
         'pwhash', crypt('MyP@ssw0rd5', s.salt),
         'salt', s.salt
     )
@@ -120,7 +120,7 @@ SELECT
         'bio', 'Fitness enthusiast and runner.',
         'phoneNumber', '(789) 012-3456',
         'location', 'San Antonio',
-        'pfp', '10bc9173-ff57-4bd6-8e79-10339a57cc4c.jpg',
+        'pfp', 'images/beignets/27213.jpg',
         'pwhash', crypt('P@ssw0rd6!', s.salt),
         'salt', s.salt
     )
@@ -138,7 +138,7 @@ SELECT
         'bio', 'Coffee lover and bookworm.',
         'phoneNumber', '(890) 123-4567',
         'location', 'San Diego',
-        'pfp', '10bc9173-ff57-4bd6-8e79-10339a57cc4c.jpg',
+        'pfp', 'images/bibimbap/119243.jpg',
         'pwhash', crypt('SecureP@ss7', s.salt),
         'salt', s.salt
     )
@@ -156,7 +156,7 @@ SELECT
         'bio', 'Photographer and traveler.',
         'phoneNumber', '(901) 234-5678',
         'location', 'Dallas',
-        'pfp', '10bc9173-ff57-4bd6-8e79-10339a57cc4c.jpg',
+        'pfp', 'images/bibimbap/29795.jpg',
         'pwhash', crypt('P@ssw0rd8#', s.salt),
         'salt', s.salt
     )
@@ -174,7 +174,7 @@ SELECT
         'bio', 'Passionate about environmental conservation.',
         'phoneNumber', '(012) 345-6789',
         'location', 'San Jose',
-        'pfp', '10bc9173-ff57-4bd6-8e79-10339a57cc4c.jpg',
+        'pfp', 'images/apple_pie/116697.jpg',
         'pwhash', crypt('MyP@ssw0rd9', s.salt),
         'salt', s.salt
     )
@@ -192,7 +192,7 @@ SELECT
         'bio', 'Music producer and DJ.',
         'phoneNumber', '(123) 456-7891',
         'location', 'Austin',
-        'pfp', '10bc9173-ff57-4bd6-8e79-10339a57cc4c.jpg',
+        'pfp', 'e40b6cef-4b53-41ba-9ebc-1e5cadd4b790.jpg',
         'pwhash', crypt('Passw0rd10!', s.salt),
         'salt', s.salt
     )
@@ -210,7 +210,7 @@ SELECT
         'bio', 'Food blogger and chef.',
         'phoneNumber', '(234) 567-8902',
         'location', 'Jacksonville',
-        'pfp', '10bc9173-ff57-4bd6-8e79-10339a57cc4c.jpg',
+        'pfp', 'da3b7c5b-2e1e-482c-b35a-cf55edd047fc.jpg',
         'pwhash', crypt('P@ssw0rd12', s.salt),
         'salt', s.salt
     )
@@ -228,7 +228,7 @@ SELECT
         'bio', 'Tech entrepreneur and investor.',
         'phoneNumber', '(345) 678-9013',
         'location', 'Fort Worth',
-        'pfp', '10bc9173-ff57-4bd6-8e79-10339a57cc4c.jpg',
+        'pfp', 'd604c69d-d776-49ef-8b4e-aab9b210c986.jpg',
         'pwhash', crypt('SecUr3P@ss13', s.salt),
         'salt', s.salt
     )
@@ -246,7 +246,7 @@ SELECT
         'bio', 'Yoga instructor and wellness coach.',
         'phoneNumber', '(456) 789-0124',
         'location', 'Columbus',
-        'pfp', '10bc9173-ff57-4bd6-8e79-10339a57cc4c.jpg',
+        'pfp', 'cc5c6254-3f08-42b3-86f5-1b456ddc844d.jpg',
         'pwhash', crypt('P@ssw0rd14$', s.salt),
         'salt', s.salt
     )
@@ -264,7 +264,7 @@ SELECT
         'bio', 'Graphic designer and illustrator.',
         'phoneNumber', '(567) 890-1235',
         'location', 'Charlotte',
-        'pfp', '10bc9173-ff57-4bd6-8e79-10339a57cc4c.jpg',
+        'pfp', 'c83d523a-3ca0-43ed-acf6-cdad9384294e.jpg',
         'pwhash', crypt('MyP@ssw0rd15', s.salt),
         'salt', s.salt
     )
@@ -282,7 +282,7 @@ SELECT
         'bio', 'Fitness coach and nutritionist.',
         'phoneNumber', '(678) 901-2346',
         'location', 'San Francisco',
-        'pfp', '10bc9173-ff57-4bd6-8e79-10339a57cc4c.jpg',
+        'pfp', 'images/apple_pie/63651.jpg',
         'pwhash', crypt('P@ssw0rd16%', s.salt),
         'salt', s.salt
     )
@@ -300,7 +300,7 @@ SELECT
         'bio', 'Digital marketer and blogger.',
         'phoneNumber', '(789) 012-3457',
         'location', 'Indianapolis',
-        'pfp', '10bc9173-ff57-4bd6-8e79-10339a57cc4c.jpg',
+        'pfp', 'images/apple_pie/89035.jpg',
         'pwhash', crypt('SecureP@ss17', s.salt),
         'salt', s.salt
     )
@@ -318,7 +318,7 @@ SELECT
         'bio', 'Fashion designer and stylist.',
         'phoneNumber', '(890) 123-4568',
         'location', 'Seattle',
-        'pfp', '10bc9173-ff57-4bd6-8e79-10339a57cc4c.jpg',
+        'pfp', 'images/baby_back_ribs/2432.jpg',
         'pwhash', crypt('P@ssw0rd18^', s.salt),
         'salt', s.salt
     )
@@ -336,7 +336,7 @@ SELECT
         'bio', 'Adventure seeker and blogger.',
         'phoneNumber', '(901) 234-5679',
         'location', 'Denver',
-        'pfp', '10bc9173-ff57-4bd6-8e79-10339a57cc4c.jpg',
+        'pfp', 'images/beet_salad/53.jpg',
         'pwhash', crypt('Passw0rd19&', s.salt),
         'salt', s.salt
     )
@@ -354,7 +354,7 @@ SELECT
         'bio', 'Teacher and lifelong learner.',
         'phoneNumber', '(012) 345-6790',
         'location', 'Washington',
-        'pfp', '10bc9173-ff57-4bd6-8e79-10339a57cc4c.jpg',
+        'pfp', 'images/bibimbap/21339.jpg',
         'pwhash', crypt('MyP@ssw0rd20', s.salt),
         'salt', s.salt
     )

@@ -40,17 +40,17 @@ FROM salt;
 -- Insert data into post table
 INSERT INTO post (id, user_id, data) VALUES
     ('a5059ef4-971b-4e60-a692-a3af3365ba85', (SELECT id FROM app_user WHERE data->>'email' = 'lschram@ucsc.edu'), 
-    json_build_object('image', '10bc9173-ff57-4bd6-8e79-10339a57cc4c.jpg', 
+    json_build_object('image', 'images/beignets/26379.jpg', 
                       'rating', 4, 'adds', 2, 'restaurant', 'CatFood', 'dish', 'Stare', 'time', '2024-10-24T12:45:00.000Z', 'caption', 'look at cat')),
     ('a9359ef4-971b-4e60-a692-a3af3365ba85', (SELECT id FROM app_user WHERE data->>'email' = 'kshawhan@ucsc.edu'), 
-    json_build_object('image', '10bc9173-ff57-4bd6-8e79-10339a57cc4c.jpg', 
+    json_build_object('image', 'images/baklava/66916.jpg', 
                       'rating', 3, 'adds', 1, 'restaurant', 'CatFood', 'dish', 'Stare', 'time', '2024-10-24T11:23:44.336Z', 'caption', 'cat!'));
 
 -- Insert data into sponsor table
 INSERT INTO sponsor (data, active) VALUES
-    (json_build_object('image', '10bc9173-ff57-4bd6-8e79-10339a57cc4c.jpg', 
+    (json_build_object('image', 'images/bibimbap/152957.jpg', 
                        'adds', 3, 'restaurant', 'CatPlace', 'dish', 'catnip', 'start', '2024-10-22T12:45:00.000Z', 'end', '2024-10-25T12:45:00.000Z'), true),
-    (json_build_object('image', '10bc9173-ff57-4bd6-8e79-10339a57cc4c.jpg', 
+    (json_build_object('image', 'images/bibimbap/182650.jpg', 
                        'adds', 5, 'restaurant', 'war.', 'dish', 'death', 'start', '2024-10-21T12:45:00.000Z', 'end', '2024-10-24T12:45:00.000Z'), false);
 
 -- Insert data into follow table
