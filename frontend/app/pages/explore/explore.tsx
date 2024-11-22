@@ -203,6 +203,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   scrollContainer: {
+    paddingTop: 10,
     paddingHorizontal: 8,
   },
   columnsContainer: {
