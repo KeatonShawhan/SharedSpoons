@@ -363,1303 +363,1303 @@ FROM (SELECT gen_salt('bf') AS salt) s;
 -- Post seed data
 INSERT INTO post (id, user_id, data)
     SELECT
-        '142f5c6a-8560-4ce5-b93e-e868be6de759'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'michael.miller@example.com'),
-        json_build_object(
-            'image', 'images/beet_salad/12969.jpg',
-            'rating', 4,
-            'adds', 0,
-            'restaurant', 'Taste Buds Delight',
-            'dish', 'Vegan Burger',
-            'time', '2024-10-23T04:22:26.041706',
-            'caption', 'Ok, could use more seasoning.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '9de41342-88d5-4ff4-8e6d-5e0b7c6d67c7'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'patricia.brown@example.com'),
-        json_build_object(
-            'image', 'images/beet_salad/21925.jpg',
-            'rating', 2,
-            'adds', 0,
-            'restaurant', 'Zankou Chicken',
-            'dish', 'Chicken Alfredo',
-            'time', '2024-09-04T03:22:17.055823',
-            'caption', 'This was pretty bad.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '401898e8-f5ce-4094-9f1e-b023b58145fe'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'kshawhan@ucsc.edu'),
-        json_build_object(
-            'image', 'images/beef_carpaccio/60660.jpg',
-            'rating', 1,
-            'adds', 0,
-            'restaurant', 'Food Paradise',
-            'dish', 'Baklava',
-            'time', '2024-05-17T15:48:27.378319',
-            'caption', 'Would highly recommend.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '6331d087-0481-4e66-b9e2-cc907fd4062f'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'william.anderson@example.com'),
-        json_build_object(
-            'image', 'images/baklava/21435.jpg',
-            'rating', 1,
-            'adds', 0,
-            'restaurant', 'Americana Diner',
-            'dish', 'Vegan Burger',
-            'time', '2024-10-30T02:56:58.389051',
-            'caption', 'Mid.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        'bcafce5c-494e-4c2e-97bc-4b8db13378d3'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'david.taylor@example.com'),
-        json_build_object(
-            'image', 'images/baklava/65891.jpg',
-            'rating', 4,
-            'adds', 0,
-            'restaurant', 'The Gourmet Kitchen',
-            'dish', 'Bibimbap',
-            'time', '2024-10-22T16:49:06.112367',
-            'caption', 'I am never coming here ever again.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '3d45a873-08da-4678-aa79-d0c790d794bc'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'elizabeth.thomas@example.com'),
-        json_build_object(
-            'image', 'images/baby_back_ribs/24726.jpg',
-            'rating', 5,
-            'adds', 0,
-            'restaurant', 'Americana Diner',
-            'dish', 'Grilled Salmon',
-            'time', '2024-08-05T15:50:27.336148',
-            'caption', 'Best food I have ever had.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '9c75473b-3a45-44be-afc6-7b8700f8d841'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'kshawhan@ucsc.edu'),
-        json_build_object(
-            'image', 'images/apple_pie/157083.jpg',
-            'rating', 1,
-            'adds', 0,
-            'restaurant', 'Food Paradise',
-            'dish', 'Bibimbap',
-            'time', '2024-01-12T11:22:05.752525',
-            'caption', 'A culinary masterpiece!'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '20239a0e-8c5f-4b06-9b5a-5012eb108aee'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'patricia.brown@example.com'),
-        json_build_object(
-            'image', 'images/baby_back_ribs/42451.jpg',
-            'rating', 1,
-            'adds', 0,
-            'restaurant', 'New Culinary World',
-            'dish', 'Beignets',
-            'time', '2024-01-12T19:02:29.810252',
-            'caption', 'Could be better.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '8ed7d23f-87c9-4d96-8949-5db5fc9a24bc'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'robert.williams@example.com'),
-        json_build_object(
-            'image', 'images/baby_back_ribs/41235.jpg',
-            'rating', 2,
-            'adds', 0,
-            'restaurant', 'Florentine Trattoria',
-            'dish', 'Grilled Salmon',
-            'time', '2024-02-25T11:06:56.268722',
-            'caption', 'Absolutely delicious!'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '4f6fc5ff-58bb-4457-858a-7f57199efa0d'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'susan.clark@example.com'),
-        json_build_object(
-            'image', 'images/beef_tartare/6149.jpg',
-            'rating', 5,
-            'adds', 0,
-            'restaurant', 'Avanti',
-            'dish', 'Beet Salad',
-            'time', '2024-10-21T06:23:09.029136',
-            'caption', 'Delicious, compliments to the chef.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        'b2b0ae42-5bb2-481d-a5e7-e74e11890de5'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'michael.miller@example.com'),
-        json_build_object(
-            'image', 'images/baklava/28613.jpg',
-            'rating', 1,
-            'adds', 0,
-            'restaurant', 'Americana Diner',
-            'dish', 'Chicken Alfredo',
-            'time', '2024-06-21T02:33:51.934352',
-            'caption', 'Not my favorite, but decent.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        'e772c111-dad2-4c9c-bb50-f5230624166c'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'kshawhan@ucsc.edu'),
-        json_build_object(
-            'image', 'images/baklava/21435.jpg',
-            'rating', 5,
-            'adds', 0,
-            'restaurant', 'Achilles Mediterranean',
-            'dish', 'Steak Tartare',
-            'time', '2023-11-30T08:00:39.894515',
-            'caption', 'This was pretty bad.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        'df41a59c-0692-484a-b6da-c73d3bf41125'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'robert.williams@example.com'),
-        json_build_object(
-            'image', 'images/apple_pie/98449.jpg',
-            'rating', 4,
-            'adds', 0,
-            'restaurant', 'Food Paradise',
-            'dish', 'Sushi Platter',
-            'time', '2023-11-26T03:33:51.015418',
-            'caption', 'Absolutely delicious!'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '4776aba3-5860-4425-be14-48491f1eb4a5'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'james.smith@example.com'),
-        json_build_object(
-            'image', 'images/bibimbap/28048.jpg',
-            'rating', 4,
-            'adds', 0,
-            'restaurant', 'New Culinary World',
-            'dish', 'Beet Salad',
-            'time', '2024-05-09T23:45:43.567088',
-            'caption', 'Couldnt recommend this more.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '1913d9e6-fc6c-46b4-812a-d3bc85d9cd46'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'lschram@ucsc.edu'),
-        json_build_object(
-            'image', 'images/apple_pie/64846.jpg',
-            'rating', 1,
-            'adds', 0,
-            'restaurant', 'Americana Diner',
-            'dish', 'Apple Pie',
-            'time', '2024-10-30T19:17:56.206961',
-            'caption', 'Would highly recommend.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '0596f301-4bc4-4bee-a405-647f72ba981e'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'patricia.brown@example.com'),
-        json_build_object(
-            'image', 'images/bibimbap/115959.jpg',
-            'rating', 5,
-            'adds', 0,
-            'restaurant', 'New Culinary World',
-            'dish', 'Grilled Salmon',
-            'time', '2024-01-06T04:54:05.332173',
-            'caption', 'A culinary masterpiece!'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '2bd7b9f0-a9e2-44a3-9f68-aa583f07851f'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'james.smith@example.com'),
-        json_build_object(
-            'image', 'images/apple_pie/101251.jpg',
-            'rating', 1,
-            'adds', 0,
-            'restaurant', 'Dish n Dash',
-            'dish', 'Beef Carpaccio',
-            'time', '2024-05-21T09:09:20.391709',
-            'caption', 'Amazing, would eat again.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '87ceddd1-e6e9-47c7-9084-d7089ca719af'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'nancy.king@example.com'),
-        json_build_object(
-            'image', 'images/apple_pie/157083.jpg',
-            'rating', 4,
-            'adds', 0,
-            'restaurant', 'Achilles Mediterranean',
-            'dish', 'Baklava',
-            'time', '2024-07-09T21:41:52.893604',
-            'caption', 'Ok, could use more seasoning.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        'a2bccfb5-778b-4a36-a6b6-8a52dc67fc74'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'jennifer.moore@example.com'),
-        json_build_object(
-            'image', 'images/apple_pie/156078.jpg',
-            'rating', 1,
-            'adds', 0,
-            'restaurant', 'Delicious Dishes',
-            'dish', 'Chicken Alfredo',
-            'time', '2024-06-20T17:17:35.950224',
-            'caption', 'Best food I have ever had.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        'c37e598d-22b7-4c22-8050-b7ed4baa783f'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'kshawhan@ucsc.edu'),
-        json_build_object(
-            'image', 'images/apple_pie/195087.jpg',
-            'rating', 3,
-            'adds', 0,
-            'restaurant', 'Achilles Mediterranean',
-            'dish', 'Grilled Salmon',
-            'time', '2024-05-10T21:11:03.452616',
-            'caption', 'This was pretty bad.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '0a8be25a-6550-464f-ba2a-1ab67bf42f4c'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'james.smith@example.com'),
-        json_build_object(
-            'image', 'images/beef_tartare/35446.jpg',
-            'rating', 1,
-            'adds', 0,
-            'restaurant', 'Avanti',
-            'dish', 'Vegan Burger',
-            'time', '2023-12-27T23:47:18.125729',
-            'caption', 'Delicious, compliments to the chef.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '1121b25e-3f4e-4c05-8902-f2a6babda153'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'linda.davis@example.com'),
-        json_build_object(
-            'image', 'images/baby_back_ribs/16366.jpg',
-            'rating', 4,
-            'adds', 0,
-            'restaurant', 'Taste Buds Delight',
-            'dish', 'Baby Back Ribs',
-            'time', '2024-09-03T02:20:31.051871',
-            'caption', 'Yum!'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        'a8e8d04d-a8ed-487f-9a8c-b8f9a5133d73'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'mary.johnson@example.com'),
-        json_build_object(
-            'image', 'images/baklava/72326.jpg',
-            'rating', 5,
-            'adds', 0,
-            'restaurant', 'Culinary Haven',
-            'dish', 'Baby Back Ribs',
-            'time', '2024-05-24T02:14:53.532036',
-            'caption', 'This was pretty bad.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        'f65e70b7-5ab1-478d-8cdb-0bf075547790'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'david.taylor@example.com'),
-        json_build_object(
-            'image', 'images/apple_pie/101251.jpg',
-            'rating', 5,
-            'adds', 0,
-            'restaurant', 'Dish n Dash',
-            'dish', 'Chicken Alfredo',
-            'time', '2024-06-23T18:58:43.226221',
-            'caption', 'Yum!'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '31c0fb67-ac5e-4b40-b690-fe8cbf255948'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'michael.miller@example.com'),
-        json_build_object(
-            'image', 'images/beef_carpaccio/60660.jpg',
-            'rating', 5,
-            'adds', 0,
-            'restaurant', 'Culinary Haven',
-            'dish', 'Beet Salad',
-            'time', '2023-11-21T21:21:13.434431',
-            'caption', 'Amazing, would eat again.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '73016385-c336-408f-b4ed-c39ad235cc26'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'susan.clark@example.com'),
-        json_build_object(
-            'image', 'images/apple_pie/116697.jpg',
-            'rating', 3,
-            'adds', 0,
-            'restaurant', 'Avanti',
-            'dish', 'Chicken Alfredo',
-            'time', '2024-10-25T16:13:59.066327',
-            'caption', 'Would highly recommend.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '57190eb6-d8d2-47c5-8d78-89f4f71f0d35'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'michael.miller@example.com'),
-        json_build_object(
-            'image', 'images/apple_pie/118237.jpg',
-            'rating', 2,
-            'adds', 0,
-            'restaurant', 'Zankou Chicken',
-            'dish', 'Beignets',
-            'time', '2024-03-17T11:15:53.262749',
-            'caption', 'Mid.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '7c424400-422e-4371-9fe4-2dfdfe08833e'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'jennifer.moore@example.com'),
-        json_build_object(
-            'image', 'images/bibimbap/149817.jpg',
-            'rating', 4,
-            'adds', 0,
-            'restaurant', 'Florentine Trattoria',
-            'dish', 'Beignets',
-            'time', '2024-09-01T03:45:55.948368',
-            'caption', 'Not my favorite, but decent.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        'dc12d875-e4eb-4c1d-9e5d-bdbc3271eeeb'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'sarah.allen@example.com'),
-        json_build_object(
-            'image', 'images/bibimbap/115959.jpg',
-            'rating', 4,
-            'adds', 0,
-            'restaurant', 'Food Paradise',
-            'dish', 'Bibimbap',
-            'time', '2024-02-29T04:21:57.504069',
-            'caption', 'Not my favorite, but decent.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '07064ac0-72fa-4e02-a888-d0a85798835b'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'jennifer.moore@example.com'),
-        json_build_object(
-            'image', 'images/apple_pie/112378.jpg',
-            'rating', 5,
-            'adds', 0,
-            'restaurant', 'Avanti',
-            'dish', 'Steak Tartare',
-            'time', '2023-11-24T17:08:46.351931',
-            'caption', 'I am never coming here ever again.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '4daf3490-4d51-4a9e-b184-36d42f447df2'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'thomas.hall@example.com'),
-        json_build_object(
-            'image', 'images/baklava/29744.jpg',
-            'rating', 1,
-            'adds', 0,
-            'restaurant', 'Taste Buds Delight',
-            'dish', 'Beignets',
-            'time', '2024-09-16T04:15:39.235168',
-            'caption', 'Ok, could use more seasoning.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        'd12d1d0b-1628-492a-8e1b-46cd22ae15b5'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'nancy.king@example.com'),
-        json_build_object(
-            'image', 'images/baklava/50627.jpg',
-            'rating', 3,
-            'adds', 0,
-            'restaurant', 'Zankou Chicken',
-            'dish', 'Beet Salad',
-            'time', '2024-04-10T11:17:01.904147',
-            'caption', 'Couldnt recommend this more.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '33bcc3b2-c271-4b61-9ce8-e7e25410b664'::uuid,
+        'b75dd53a-c419-4162-8e83-daae87d2d800'::uuid,
         (SELECT id FROM app_user WHERE data->>'email' = 'christopher.young@example.com'),
         json_build_object(
-            'image', 'images/apple_pie/128259.jpg',
+            'image', 'images/apple_pie/101251.jpg',
+            'rating', 4,
+            'adds', 0,
+            'restaurant', 'Americana Diner',
+            'dish', 'Beet Salad',
+            'time', '2024-03-30T01:33:22.495328',
+            'caption', 'Delicious, compliments to the chef.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        'ef9d998c-2a7d-411d-b912-4b63cf800833'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'kshawhan@ucsc.edu'),
+        json_build_object(
+            'image', 'images/apple_pie/103801.jpg',
             'rating', 2,
+            'adds', 0,
+            'restaurant', 'Dish n Dash',
+            'dish', 'Apple Pie',
+            'time', '2024-02-24T16:07:14.832293',
+            'caption', 'Ok, could use more seasoning.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        '6ff77d11-ba05-4dff-b96d-3e35edc23832'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'patricia.brown@example.com'),
+        json_build_object(
+            'image', 'images/apple_pie/110043.jpg',
+            'rating', 3,
             'adds', 0,
             'restaurant', 'Zankou Chicken',
-            'dish', 'Beef Carpaccio',
-            'time', '2024-10-06T10:33:07.564226',
-            'caption', 'I am never coming here ever again.'
+            'dish', 'Beet Salad',
+            'time', '2024-02-02T06:24:02.221343',
+            'caption', 'Couldnt recommend this more.'
         );
 INSERT INTO post (id, user_id, data)
     SELECT
-        '4c739a7a-193f-4c4c-bed4-66e2328049d9'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'david.taylor@example.com'),
-        json_build_object(
-            'image', 'images/beef_tartare/33502.jpg',
-            'rating', 2,
-            'adds', 0,
-            'restaurant', 'Delicious Dishes',
-            'dish', 'Vegan Burger',
-            'time', '2024-06-02T09:32:05.938290',
-            'caption', 'A culinary masterpiece!'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        'f724c445-e135-45da-beba-69df14cbdb64'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'michael.miller@example.com'),
-        json_build_object(
-            'image', 'images/baklava/72326.jpg',
-            'rating', 2,
-            'adds', 0,
-            'restaurant', 'Achilles Mediterranean',
-            'dish', 'Beignets',
-            'time', '2024-11-14T14:40:49.029145',
-            'caption', 'Best food I have ever had.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        'd84b7325-6ae4-4bf1-ad5d-470c74eac1b2'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'sarah.allen@example.com'),
-        json_build_object(
-            'image', 'images/apple_pie/89035.jpg',
-            'rating', 5,
-            'adds', 0,
-            'restaurant', 'Avanti',
-            'dish', 'Sushi Platter',
-            'time', '2024-01-24T07:14:53.392458',
-            'caption', 'A culinary masterpiece!'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '1377634f-dbfe-4a79-a2d3-a1d629d4f46c'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'elizabeth.thomas@example.com'),
-        json_build_object(
-            'image', 'images/beef_tartare/39168.jpg',
-            'rating', 2,
-            'adds', 0,
-            'restaurant', 'New Culinary World',
-            'dish', 'Sushi Platter',
-            'time', '2024-05-13T07:36:35.583559',
-            'caption', 'Ok, could use more seasoning.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '51403b31-5f9b-4c78-8e3f-0305a874e1e0'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'david.taylor@example.com'),
-        json_build_object(
-            'image', 'images/beef_carpaccio/19705.jpg',
-            'rating', 5,
-            'adds', 0,
-            'restaurant', 'Achilles Mediterranean',
-            'dish', 'Vegan Burger',
-            'time', '2024-07-13T20:37:13.055781',
-            'caption', 'I am never coming here ever again.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        'e3ccffa1-557c-4935-bad2-75b283071789'::uuid,
+        '535d7362-bcc5-4291-8edd-4b1cf1ead0ab'::uuid,
         (SELECT id FROM app_user WHERE data->>'email' = 'james.smith@example.com'),
         json_build_object(
-            'image', 'images/beef_tartare/2896.jpg',
-            'rating', 5,
+            'image', 'images/apple_pie/112378.jpg',
+            'rating', 1,
             'adds', 0,
-            'restaurant', 'Avanti',
-            'dish', 'Steak Tartare',
-            'time', '2024-06-27T19:10:22.279698',
-            'caption', 'Ok, could use more seasoning.'
+            'restaurant', 'Florentine Trattoria',
+            'dish', 'Beignets',
+            'time', '2024-07-11T01:06:23.409087',
+            'caption', 'Not my favorite, but decent.'
         );
 INSERT INTO post (id, user_id, data)
     SELECT
-        'e579798b-c6b2-4f98-ac1a-07d43b40e399'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'michael.miller@example.com'),
+        '3bb3404e-30c1-4790-958b-bf5125255238'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'patricia.brown@example.com'),
         json_build_object(
-            'image', 'images/baby_back_ribs/65686.jpg',
+            'image', 'images/apple_pie/116697.jpg',
+            'rating', 5,
+            'adds', 0,
+            'restaurant', 'Achilles Mediterranean',
+            'dish', 'Vegan Burger',
+            'time', '2024-09-23T21:06:18.891226',
+            'caption', 'Not my favorite, but decent.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        '93adbeab-d8d5-40db-a58b-a686b65407a2'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'elizabeth.thomas@example.com'),
+        json_build_object(
+            'image', 'images/apple_pie/116705.jpg',
+            'rating', 4,
+            'adds', 0,
+            'restaurant', 'Taste Buds Delight',
+            'dish', 'Apple Pie',
+            'time', '2024-02-29T02:27:36.084375',
+            'caption', 'Couldnt recommend this more.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        'cf307879-3b27-4240-9120-34a5b63b1ea3'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'lschram@ucsc.edu'),
+        json_build_object(
+            'image', 'images/apple_pie/118237.jpg',
+            'rating', 3,
+            'adds', 0,
+            'restaurant', 'Culinary Haven',
+            'dish', 'Sushi Platter',
+            'time', '2024-10-16T22:10:10.334793',
+            'caption', 'Not my favorite, but decent.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        '221ab468-c5ad-4c2e-bcd6-962c9afdb76b'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'david.taylor@example.com'),
+        json_build_object(
+            'image', 'images/apple_pie/123782.jpg',
             'rating', 4,
             'adds', 0,
             'restaurant', 'Dish n Dash',
-            'dish', 'Beef Carpaccio',
-            'time', '2024-10-26T03:24:35.466239',
-            'caption', 'Not my favorite, but decent.'
+            'dish', 'Vegan Burger',
+            'time', '2024-05-26T18:09:54.715890',
+            'caption', 'Ok, could use more seasoning.'
         );
 INSERT INTO post (id, user_id, data)
     SELECT
-        '0d664d73-a3ff-4e71-82c4-a39d4ab47c10'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'john.jones@example.com'),
-        json_build_object(
-            'image', 'images/beet_salad/3685.jpg',
-            'rating', 4,
-            'adds', 0,
-            'restaurant', 'New Culinary World',
-            'dish', 'Sushi Platter',
-            'time', '2024-06-09T04:32:57.154077',
-            'caption', 'A culinary masterpiece!'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '979c6624-c33b-4847-8837-b7882bdf2f0d'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'james.smith@example.com'),
-        json_build_object(
-            'image', 'images/bibimbap/28048.jpg',
-            'rating', 5,
-            'adds', 0,
-            'restaurant', 'Achilles Mediterranean',
-            'dish', 'Steak Tartare',
-            'time', '2024-01-18T03:36:06.873701',
-            'caption', 'I am never coming here ever again.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '8be352ef-fb4f-4088-88bc-686cf4853410'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'mary.johnson@example.com'),
-        json_build_object(
-            'image', 'images/apple_pie/175848.jpg',
-            'rating', 5,
-            'adds', 0,
-            'restaurant', 'Florentine Trattoria',
-            'dish', 'Steak Tartare',
-            'time', '2024-11-06T14:18:30.811048',
-            'caption', 'Absolutely delicious!'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '22873fa4-78a3-40c6-8d34-edfa5f12b8e1'::uuid,
+        '47fdabab-6207-44bd-a7de-2e2883d4e512'::uuid,
         (SELECT id FROM app_user WHERE data->>'email' = 'robert.williams@example.com'),
         json_build_object(
-            'image', 'images/beet_salad/3685.jpg',
-            'rating', 3,
+            'image', 'images/apple_pie/127721.jpg',
+            'rating', 4,
             'adds', 0,
             'restaurant', 'Americana Diner',
-            'dish', 'Grilled Salmon',
-            'time', '2024-08-25T15:42:00.544477',
-            'caption', 'Ok, could use more seasoning.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        'cdfdb794-cbfb-4329-8304-c20986cae576'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'jennifer.moore@example.com'),
-        json_build_object(
-            'image', 'images/beignets/8028.jpg',
-            'rating', 1,
-            'adds', 0,
-            'restaurant', 'The Gourmet Kitchen',
-            'dish', 'Beignets',
-            'time', '2024-09-20T19:50:46.781144',
-            'caption', 'Couldnt recommend this more.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        'a51cac9a-36ae-4ffb-93f2-7c27dd95bdb6'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'john.jones@example.com'),
-        json_build_object(
-            'image', 'images/baby_back_ribs/37492.jpg',
-            'rating', 3,
-            'adds', 0,
-            'restaurant', 'Delicious Dishes',
             'dish', 'Sushi Platter',
-            'time', '2024-07-05T07:56:03.304382',
-            'caption', 'Ok, could use more seasoning.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '5f1c30f5-5f42-4e35-9da0-5bf42c8c1e1f'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'william.anderson@example.com'),
-        json_build_object(
-            'image', 'images/bibimbap/29190.jpg',
-            'rating', 4,
-            'adds', 0,
-            'restaurant', 'Achilles Mediterranean',
-            'dish', 'Steak Tartare',
-            'time', '2024-10-10T11:48:08.316395',
-            'caption', 'A culinary masterpiece!'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '0e228c98-6396-4c65-91b9-feda10e5ffb0'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'sarah.allen@example.com'),
-        json_build_object(
-            'image', 'images/beef_carpaccio/11466.jpg',
-            'rating', 4,
-            'adds', 0,
-            'restaurant', 'Avanti',
-            'dish', 'Beef Carpaccio',
-            'time', '2024-07-29T17:57:02.366898',
-            'caption', 'A culinary masterpiece!'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '62e6747b-66f9-4403-ae08-c91027bdcbed'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'barbara.wilson@example.com'),
-        json_build_object(
-            'image', 'images/beet_salad/53.jpg',
-            'rating', 4,
-            'adds', 0,
-            'restaurant', 'Florentine Trattoria',
-            'dish', 'Baby Back Ribs',
-            'time', '2024-05-07T19:00:42.655754',
-            'caption', 'Couldnt recommend this more.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '07f9fe7d-a915-4147-9cd8-5deb830ae618'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'william.anderson@example.com'),
-        json_build_object(
-            'image', 'images/bibimbap/32126.jpg',
-            'rating', 2,
-            'adds', 0,
-            'restaurant', 'Americana Diner',
-            'dish', 'Apple Pie',
-            'time', '2024-05-02T14:57:16.469093',
-            'caption', 'Amazing, would eat again.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        'eaa85a07-40a4-4477-8e62-3b4cd56485a5'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'richard.lee@example.com'),
-        json_build_object(
-            'image', 'images/beef_tartare/6149.jpg',
-            'rating', 3,
-            'adds', 0,
-            'restaurant', 'New Culinary World',
-            'dish', 'Beef Carpaccio',
-            'time', '2024-10-02T01:39:38.749878',
-            'caption', 'Not my favorite, but decent.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '6847a779-7bec-4b9a-82f8-7c427f6ac22a'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'jennifer.moore@example.com'),
-        json_build_object(
-            'image', 'images/baby_back_ribs/2432.jpg',
-            'rating', 4,
-            'adds', 0,
-            'restaurant', 'Achilles Mediterranean',
-            'dish', 'Baklava',
-            'time', '2024-06-16T07:16:35.021314',
-            'caption', 'Best food I have ever had.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        'e77f0f3e-1651-490a-a392-8103943619de'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'richard.lee@example.com'),
-        json_build_object(
-            'image', 'images/apple_pie/23893.jpg',
-            'rating', 3,
-            'adds', 0,
-            'restaurant', 'Food Paradise',
-            'dish', 'Grilled Salmon',
-            'time', '2024-03-11T20:50:11.236554',
-            'caption', 'I am never coming here ever again.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        'dc467917-46cd-48b6-8743-1de12611a4b3'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'nancy.king@example.com'),
-        json_build_object(
-            'image', 'images/bibimbap/152957.jpg',
-            'rating', 2,
-            'adds', 0,
-            'restaurant', 'Culinary Haven',
-            'dish', 'Beef Carpaccio',
-            'time', '2024-10-25T09:49:25.103896',
+            'time', '2024-03-03T23:02:55.389960',
             'caption', 'Would highly recommend.'
         );
 INSERT INTO post (id, user_id, data)
     SELECT
-        'e9496372-2b39-40e6-8063-fb058b4ec067'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'barbara.wilson@example.com'),
+        'c8e95787-1184-4f49-a3dc-f72ce997a71d'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'sarah.allen@example.com'),
         json_build_object(
-            'image', 'images/beignets/11464.jpg',
-            'rating', 2,
+            'image', 'images/apple_pie/128259.jpg',
+            'rating', 5,
             'adds', 0,
-            'restaurant', 'Florentine Trattoria',
-            'dish', 'Bibimbap',
-            'time', '2024-01-23T16:03:36.368800',
-            'caption', 'This was pretty bad.'
+            'restaurant', 'Dish n Dash',
+            'dish', 'Steak Tartare',
+            'time', '2024-02-06T05:19:23.060124',
+            'caption', 'Best food I have ever had.'
         );
 INSERT INTO post (id, user_id, data)
     SELECT
-        '2ad01c1a-2ac7-4c26-968f-72567046f79d'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'barbara.wilson@example.com'),
+        '0f62ed7e-7d74-468c-81ff-4273c8829ee0'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'john.jones@example.com'),
         json_build_object(
-            'image', 'images/beef_carpaccio/19705.jpg',
-            'rating', 1,
+            'image', 'images/apple_pie/129668.jpg',
+            'rating', 5,
             'adds', 0,
-            'restaurant', 'The Gourmet Kitchen',
+            'restaurant', 'Delicious Dishes',
             'dish', 'Beet Salad',
-            'time', '2024-08-02T05:48:42.620669',
+            'time', '2024-04-24T04:27:48.454412',
             'caption', 'Mid.'
         );
 INSERT INTO post (id, user_id, data)
     SELECT
-        'f2fbab68-7ce5-4205-9dcd-3644c907a894'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'jennifer.moore@example.com'),
+        'd5746aa7-aa50-4676-aae6-adad79e10606'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'lschram@ucsc.edu'),
         json_build_object(
-            'image', 'images/beef_carpaccio/11466.jpg',
-            'rating', 5,
+            'image', 'images/apple_pie/134.jpg',
+            'rating', 3,
             'adds', 0,
-            'restaurant', 'New Culinary World',
-            'dish', 'Apple Pie',
-            'time', '2024-02-09T04:48:42.185854',
+            'restaurant', 'Avanti',
+            'dish', 'Vegan Burger',
+            'time', '2024-03-07T17:38:16.595810',
             'caption', 'A culinary masterpiece!'
         );
 INSERT INTO post (id, user_id, data)
     SELECT
-        'dd9f8ed9-c3de-42da-9d84-36c1509f45b3'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'david.taylor@example.com'),
+        'fa8fefe2-e3cc-4ed1-a4a4-01af117d3e27'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'james.smith@example.com'),
         json_build_object(
-            'image', 'images/baby_back_ribs/16366.jpg',
-            'rating', 3,
+            'image', 'images/apple_pie/136256.jpg',
+            'rating', 4,
             'adds', 0,
-            'restaurant', 'Americana Diner',
-            'dish', 'Grilled Salmon',
-            'time', '2024-06-05T14:31:05.653102',
-            'caption', 'Would highly recommend.'
+            'restaurant', 'New Culinary World',
+            'dish', 'Beef Carpaccio',
+            'time', '2023-12-04T01:41:58.816766',
+            'caption', 'A culinary masterpiece!'
         );
 INSERT INTO post (id, user_id, data)
     SELECT
-        '3ab729d3-56dd-4090-9ff9-ac40059ff097'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'barbara.wilson@example.com'),
+        '359f023d-69fd-4014-bc33-eb1b5f43dbee'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'mary.johnson@example.com'),
         json_build_object(
-            'image', 'images/apple_pie/83981.jpg',
-            'rating', 1,
+            'image', 'images/apple_pie/142332.jpg',
+            'rating', 4,
             'adds', 0,
-            'restaurant', 'Taste Buds Delight',
-            'dish', 'Bibimbap',
-            'time', '2024-07-26T01:25:31.810757',
-            'caption', 'This was pretty bad.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '1d34eb5f-77f6-4555-8df3-7e970d29e906'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'lschram@ucsc.edu'),
-        json_build_object(
-            'image', 'images/apple_pie/80734.jpg',
-            'rating', 3,
-            'adds', 0,
-            'restaurant', 'The Gourmet Kitchen',
-            'dish', 'Sushi Platter',
-            'time', '2024-05-19T15:00:29.932874',
-            'caption', 'Couldnt recommend this more.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '9c9ae696-e9a5-45a9-9c86-c82cfcbaa06d'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'barbara.wilson@example.com'),
-        json_build_object(
-            'image', 'images/apple_pie/185537.jpg',
-            'rating', 2,
-            'adds', 0,
-            'restaurant', 'Delicious Dishes',
-            'dish', 'Bibimbap',
-            'time', '2024-05-11T16:27:21.235641',
+            'restaurant', 'Zankou Chicken',
+            'dish', 'Baklava',
+            'time', '2024-08-07T05:57:59.578055',
             'caption', 'Not my favorite, but decent.'
         );
 INSERT INTO post (id, user_id, data)
     SELECT
-        '17b76d96-9384-4fbe-9b6f-4cc850c9c64c'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'jennifer.moore@example.com'),
+        'db00349e-9424-45a9-a152-baf6bc3512b3'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'robert.williams@example.com'),
         json_build_object(
-            'image', 'images/beet_salad/16364.jpg',
-            'rating', 1,
-            'adds', 0,
-            'restaurant', 'Delicious Dishes',
-            'dish', 'Spaghetti Bolognese',
-            'time', '2024-09-09T03:23:10.281834',
-            'caption', 'Would highly recommend.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '0570d2d6-8982-424f-a244-bcc917eccae0'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'susan.clark@example.com'),
-        json_build_object(
-            'image', 'images/beet_salad/15302.jpg',
+            'image', 'images/apple_pie/156078.jpg',
             'rating', 2,
             'adds', 0,
-            'restaurant', 'Americana Diner',
-            'dish', 'Vegan Burger',
-            'time', '2024-05-15T10:47:22.058676',
-            'caption', 'Could be better.'
+            'restaurant', 'New Culinary World',
+            'dish', 'Grilled Salmon',
+            'time', '2024-06-28T20:29:01.364778',
+            'caption', 'Yum!'
         );
 INSERT INTO post (id, user_id, data)
     SELECT
-        '9dc25f09-742a-4401-815a-8e9da40a33c6'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'nancy.king@example.com'),
+        'f1e40edc-a602-47a4-b441-569f1d76054c'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'james.smith@example.com'),
         json_build_object(
-            'image', 'images/baklava/67320.jpg',
+            'image', 'images/apple_pie/157083.jpg',
+            'rating', 5,
+            'adds', 0,
+            'restaurant', 'Dish n Dash',
+            'dish', 'Grilled Salmon',
+            'time', '2024-02-19T17:25:55.949394',
+            'caption', 'Mid.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        'ad7c7ec5-7154-4b2d-90bf-1e56ee804378'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'jennifer.moore@example.com'),
+        json_build_object(
+            'image', 'images/apple_pie/168971.jpg',
+            'rating', 2,
+            'adds', 0,
+            'restaurant', 'Dish n Dash',
+            'dish', 'Baklava',
+            'time', '2024-09-30T21:06:22.431238',
+            'caption', 'Ok, could use more seasoning.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        '96f42d9c-5d3c-482b-b24e-7f0b63651329'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'john.jones@example.com'),
+        json_build_object(
+            'image', 'images/apple_pie/175848.jpg',
+            'rating', 3,
+            'adds', 0,
+            'restaurant', 'Dish n Dash',
+            'dish', 'Baklava',
+            'time', '2024-11-12T02:12:12.607952',
+            'caption', 'This was pretty bad.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        'cb8a24b3-3a1e-4bcb-b580-0cb2d04a249e'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'barbara.wilson@example.com'),
+        json_build_object(
+            'image', 'images/apple_pie/182745.jpg',
+            'rating', 5,
+            'adds', 0,
+            'restaurant', 'Taste Buds Delight',
+            'dish', 'Beef Carpaccio',
+            'time', '2024-01-13T08:17:33.796667',
+            'caption', 'Ok, could use more seasoning.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        'eaf7ccec-eb75-46ce-a77a-004219d737eb'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'thomas.hall@example.com'),
+        json_build_object(
+            'image', 'images/apple_pie/185537.jpg',
+            'rating', 3,
+            'adds', 0,
+            'restaurant', 'Food Paradise',
+            'dish', 'Spaghetti Bolognese',
+            'time', '2024-04-22T12:18:48.140715',
+            'caption', 'This was pretty bad.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        '7d650fc1-8ca6-4164-a70a-3726a0f6e16e'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'jennifer.moore@example.com'),
+        json_build_object(
+            'image', 'images/apple_pie/195087.jpg',
             'rating', 4,
             'adds', 0,
             'restaurant', 'Florentine Trattoria',
-            'dish', 'Bibimbap',
-            'time', '2024-05-12T04:34:45.949932',
+            'dish', 'Baklava',
+            'time', '2024-08-21T20:43:39.528254',
             'caption', 'Couldnt recommend this more.'
         );
 INSERT INTO post (id, user_id, data)
     SELECT
-        'a0e6f652-b7c4-47d8-b88e-2a36111bf0c3'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'joseph.lewis@example.com'),
+        'f1263c7b-c47f-49c7-b8c0-352c95676e37'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'elizabeth.thomas@example.com'),
+        json_build_object(
+            'image', 'images/apple_pie/202741.jpg',
+            'rating', 4,
+            'adds', 0,
+            'restaurant', 'Florentine Trattoria',
+            'dish', 'Beef Carpaccio',
+            'time', '2024-03-23T08:37:19.300720',
+            'caption', 'Could be better.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        'aa11041a-cbae-40c4-b4e5-6a9bf3cdea97'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'elizabeth.thomas@example.com'),
+        json_build_object(
+            'image', 'images/apple_pie/21063.jpg',
+            'rating', 2,
+            'adds', 0,
+            'restaurant', 'New Culinary World',
+            'dish', 'Grilled Salmon',
+            'time', '2024-10-22T15:31:18.345514',
+            'caption', 'Mid.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        '021e0d05-bb5e-4142-92d9-7c50151c52f4'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'elizabeth.thomas@example.com'),
+        json_build_object(
+            'image', 'images/apple_pie/23893.jpg',
+            'rating', 4,
+            'adds', 0,
+            'restaurant', 'Taste Buds Delight',
+            'dish', 'Sushi Platter',
+            'time', '2024-09-12T13:53:07.539777',
+            'caption', 'Absolutely delicious!'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        '375ae4c2-e95e-4bc4-a3af-792ac8bb6bcd'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'john.jones@example.com'),
         json_build_object(
             'image', 'images/apple_pie/38795.jpg',
             'rating', 5,
             'adds', 0,
-            'restaurant', 'Avanti',
-            'dish', 'Baby Back Ribs',
-            'time', '2024-02-06T15:53:02.553365',
-            'caption', 'Amazing, would eat again.'
+            'restaurant', 'Achilles Mediterranean',
+            'dish', 'Apple Pie',
+            'time', '2024-10-04T16:48:22.786435',
+            'caption', 'Could be better.'
         );
 INSERT INTO post (id, user_id, data)
     SELECT
-        'fe41c54f-e43d-498e-b3a9-af5b546c94ef'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'christopher.young@example.com'),
+        'bb03251f-be2d-4752-b841-7f99abfe64d6'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'kshawhan@ucsc.edu'),
         json_build_object(
-            'image', 'images/bibimbap/19793.jpg',
-            'rating', 5,
+            'image', 'images/apple_pie/63651.jpg',
+            'rating', 1,
             'adds', 0,
             'restaurant', 'Avanti',
             'dish', 'Beef Carpaccio',
-            'time', '2024-06-28T11:42:31.471095',
-            'caption', 'A culinary masterpiece!'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        'edc2bd36-8983-49c4-8a14-aa9e55088840'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'kshawhan@ucsc.edu'),
-        json_build_object(
-            'image', 'images/apple_pie/182745.jpg',
-            'rating', 4,
-            'adds', 0,
-            'restaurant', 'Food Paradise',
-            'dish', 'Beignets',
-            'time', '2024-10-29T11:15:04.944751',
-            'caption', 'Not my favorite, but decent.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '959b9db0-c8a7-43b2-92ad-268e00a8a2e8'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'william.anderson@example.com'),
-        json_build_object(
-            'image', 'images/beignets/26379.jpg',
-            'rating', 2,
-            'adds', 0,
-            'restaurant', 'Dish n Dash',
-            'dish', 'Grilled Salmon',
-            'time', '2024-08-30T15:04:07.960071',
-            'caption', 'Amazing, would eat again.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '18d89677-c5e6-444a-87fe-a6812d0c45e3'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'joseph.lewis@example.com'),
-        json_build_object(
-            'image', 'images/apple_pie/142332.jpg',
-            'rating', 2,
-            'adds', 0,
-            'restaurant', 'Achilles Mediterranean',
-            'dish', 'Sushi Platter',
-            'time', '2024-07-17T04:02:06.092775',
-            'caption', 'Amazing, would eat again.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        'a671a089-291f-427b-9392-969fde3f5bb5'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'linda.davis@example.com'),
-        json_build_object(
-            'image', 'images/apple_pie/116697.jpg',
-            'rating', 4,
-            'adds', 0,
-            'restaurant', 'The Gourmet Kitchen',
-            'dish', 'Chicken Alfredo',
-            'time', '2024-08-15T07:57:09.189951',
-            'caption', 'Mid.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '2466d4ec-5018-4c62-829c-c405b0672ff9'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'barbara.wilson@example.com'),
-        json_build_object(
-            'image', 'images/beignets/8028.jpg',
-            'rating', 4,
-            'adds', 0,
-            'restaurant', 'Dish n Dash',
-            'dish', 'Vegan Burger',
-            'time', '2024-04-16T13:02:34.647078',
-            'caption', 'Amazing, would eat again.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '3a6f6277-6a39-48a6-9a38-4bf937cd9743'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'thomas.hall@example.com'),
-        json_build_object(
-            'image', 'images/apple_pie/134.jpg',
-            'rating', 4,
-            'adds', 0,
-            'restaurant', 'Florentine Trattoria',
-            'dish', 'Chicken Alfredo',
-            'time', '2024-05-27T07:18:52.299313',
-            'caption', 'This was pretty bad.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '324a2ae4-fd15-4edb-ae49-ed25c0a2e70f'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'linda.davis@example.com'),
-        json_build_object(
-            'image', 'images/beet_salad/3685.jpg',
-            'rating', 5,
-            'adds', 0,
-            'restaurant', 'Florentine Trattoria',
-            'dish', 'Spaghetti Bolognese',
-            'time', '2024-07-21T11:57:36.650276',
-            'caption', 'Would highly recommend.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '87f17d4f-a9be-474c-9759-473ff404a61a'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'sarah.allen@example.com'),
-        json_build_object(
-            'image', 'images/apple_pie/142332.jpg',
-            'rating', 2,
-            'adds', 0,
-            'restaurant', 'Americana Diner',
-            'dish', 'Bibimbap',
-            'time', '2024-08-26T00:38:27.176238',
-            'caption', 'A culinary masterpiece!'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '7f740aee-746b-44c5-8949-77ab1dfd2fe1'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'karen.walker@example.com'),
-        json_build_object(
-            'image', 'images/apple_pie/182745.jpg',
-            'rating', 3,
-            'adds', 0,
-            'restaurant', 'Culinary Haven',
-            'dish', 'Apple Pie',
-            'time', '2024-09-12T10:17:16.321077',
+            'time', '2023-11-23T15:43:18.393699',
             'caption', 'Best food I have ever had.'
         );
 INSERT INTO post (id, user_id, data)
     SELECT
-        'f93a2906-bdc4-4618-bbf2-c40986109083'::uuid,
+        'e425536a-d03d-470d-9f76-7d4181f570a8'::uuid,
         (SELECT id FROM app_user WHERE data->>'email' = 'barbara.wilson@example.com'),
         json_build_object(
-            'image', 'images/beignets/26379.jpg',
-            'rating', 4,
+            'image', 'images/apple_pie/64846.jpg',
+            'rating', 1,
             'adds', 0,
-            'restaurant', 'Taste Buds Delight',
-            'dish', 'Bibimbap',
-            'time', '2023-12-06T23:29:49.063017',
-            'caption', 'Amazing, would eat again.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '332c68c6-e8bc-42d5-b782-2139b7f942ab'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'david.taylor@example.com'),
-        json_build_object(
-            'image', 'images/beet_salad/3685.jpg',
-            'rating', 5,
-            'adds', 0,
-            'restaurant', 'The Gourmet Kitchen',
-            'dish', 'Steak Tartare',
-            'time', '2023-11-23T02:19:58.610153',
-            'caption', 'I am never coming here ever again.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        'c25cfaa8-cb63-45f5-b040-f5c3d2a1af0d'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'linda.davis@example.com'),
-        json_build_object(
-            'image', 'images/beef_carpaccio/3400.jpg',
-            'rating', 5,
-            'adds', 0,
-            'restaurant', 'Dish n Dash',
-            'dish', 'Steak Tartare',
-            'time', '2024-02-12T06:34:37.311468',
-            'caption', 'Would highly recommend.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        'bb8e3fd4-42b6-4803-b02a-73e444709e38'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'mary.johnson@example.com'),
-        json_build_object(
-            'image', 'images/beignets/14824.jpg',
-            'rating', 2,
-            'adds', 0,
-            'restaurant', 'Florentine Trattoria',
+            'restaurant', 'Achilles Mediterranean',
             'dish', 'Beet Salad',
-            'time', '2024-03-25T15:39:52.070062',
-            'caption', 'Couldnt recommend this more.'
+            'time', '2024-07-19T20:53:58.650904',
+            'caption', 'Delicious, compliments to the chef.'
         );
 INSERT INTO post (id, user_id, data)
     SELECT
-        '71176a5c-df07-4af7-a6bc-7bd319d470b0'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'david.taylor@example.com'),
+        'fa5aa379-52d4-4083-af22-27ef1b40d4f2'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'barbara.wilson@example.com'),
         json_build_object(
-            'image', 'images/bibimbap/28048.jpg',
+            'image', 'images/apple_pie/67826.jpg',
             'rating', 4,
             'adds', 0,
-            'restaurant', 'Taste Buds Delight',
-            'dish', 'Vegan Burger',
-            'time', '2024-09-19T06:40:02.122670',
+            'restaurant', 'Food Paradise',
+            'dish', 'Beignets',
+            'time', '2024-09-11T02:44:26.902454',
             'caption', 'Absolutely delicious!'
         );
 INSERT INTO post (id, user_id, data)
     SELECT
-        'eba7eded-1efb-4a37-b2ef-caffc81d954f'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'thomas.hall@example.com'),
+        '03887334-00cd-4f7a-9c8f-2a3e65708f48'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'patricia.brown@example.com'),
         json_build_object(
-            'image', 'images/beef_tartare/39858.jpg',
-            'rating', 5,
+            'image', 'images/apple_pie/68383.jpg',
+            'rating', 3,
             'adds', 0,
-            'restaurant', 'Achilles Mediterranean',
-            'dish', 'Apple Pie',
-            'time', '2024-09-11T23:16:28.247690',
-            'caption', 'Delicious, compliments to the chef.'
+            'restaurant', 'The Gourmet Kitchen',
+            'dish', 'Sushi Platter',
+            'time', '2024-01-09T22:15:10.476503',
+            'caption', 'This was pretty bad.'
         );
 INSERT INTO post (id, user_id, data)
     SELECT
-        'f1cd2c19-649a-4bf1-a1bc-171b8452d3fa'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'christopher.young@example.com'),
+        '98f0affb-6c29-45b5-8d1d-dd3c315d530b'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'jennifer.moore@example.com'),
         json_build_object(
-            'image', 'images/beignets/5159.jpg',
+            'image', 'images/apple_pie/78081.jpg',
             'rating', 5,
             'adds', 0,
             'restaurant', 'Culinary Haven',
-            'dish', 'Apple Pie',
-            'time', '2024-02-24T18:04:06.148172',
+            'dish', 'Steak Tartare',
+            'time', '2024-11-09T10:23:30.461707',
             'caption', 'Ok, could use more seasoning.'
         );
 INSERT INTO post (id, user_id, data)
     SELECT
-        '4dc3c511-ebd7-4458-bc51-4f4c57d5e491'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'nancy.king@example.com'),
+        'e5d4425e-5f0c-4485-8d18-e14647b5df1a'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'william.anderson@example.com'),
         json_build_object(
-            'image', 'images/baby_back_ribs/79780.jpg',
-            'rating', 3,
-            'adds', 0,
-            'restaurant', 'Dish n Dash',
-            'dish', 'Beef Carpaccio',
-            'time', '2024-09-20T17:14:10.369341',
-            'caption', 'A culinary masterpiece!'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        'e5342045-68d1-444b-8a83-41b18757fb04'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'christopher.young@example.com'),
-        json_build_object(
-            'image', 'images/baklava/29744.jpg',
-            'rating', 3,
-            'adds', 0,
-            'restaurant', 'Florentine Trattoria',
-            'dish', 'Spaghetti Bolognese',
-            'time', '2024-04-09T06:23:06.474070',
-            'caption', 'Could be better.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        'c7813582-d94d-4a5d-8b97-d11a4a06f69a'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'christopher.young@example.com'),
-        json_build_object(
-            'image', 'images/apple_pie/112378.jpg',
+            'image', 'images/apple_pie/80734.jpg',
             'rating', 5,
             'adds', 0,
-            'restaurant', 'Dish n Dash',
-            'dish', 'Beet Salad',
-            'time', '2024-02-13T05:44:21.333402',
+            'restaurant', 'The Gourmet Kitchen',
+            'dish', 'Grilled Salmon',
+            'time', '2023-12-17T13:36:36.757686',
             'caption', 'Yum!'
         );
 INSERT INTO post (id, user_id, data)
     SELECT
-        '1dbf48de-823e-44b8-b25d-8724bce00087'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'barbara.wilson@example.com'),
-        json_build_object(
-            'image', 'images/baklava/50627.jpg',
-            'rating', 3,
-            'adds', 0,
-            'restaurant', 'Zankou Chicken',
-            'dish', 'Spaghetti Bolognese',
-            'time', '2024-03-08T02:19:02.089233',
-            'caption', 'Delicious, compliments to the chef.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '36693ef2-0f14-463d-9930-bcdabfb002e0'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'elizabeth.thomas@example.com'),
-        json_build_object(
-            'image', 'images/baklava/21435.jpg',
-            'rating', 3,
-            'adds', 0,
-            'restaurant', 'Taste Buds Delight',
-            'dish', 'Beignets',
-            'time', '2024-08-02T05:46:27.962179',
-            'caption', 'A culinary masterpiece!'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '82e5dbeb-75b0-44d9-bb8f-8707f7b10c7c'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'william.anderson@example.com'),
-        json_build_object(
-            'image', 'images/baby_back_ribs/79780.jpg',
-            'rating', 3,
-            'adds', 0,
-            'restaurant', 'The Gourmet Kitchen',
-            'dish', 'Bibimbap',
-            'time', '2024-09-13T21:42:29.430782',
-            'caption', 'Couldnt recommend this more.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '092cd952-2073-4fc7-a901-8bbd60e208ce'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'barbara.wilson@example.com'),
+        'fce27e59-9544-4021-b2e0-b251926c7dbc'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'sarah.allen@example.com'),
         json_build_object(
             'image', 'images/apple_pie/80735.jpg',
             'rating', 1,
             'adds', 0,
-            'restaurant', 'Food Paradise',
-            'dish', 'Vegan Burger',
-            'time', '2024-08-12T01:05:18.182031',
-            'caption', 'Not my favorite, but decent.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '8e3f38f8-d54e-47e4-adb5-c3865c1b8b11'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'elizabeth.thomas@example.com'),
-        json_build_object(
-            'image', 'images/baby_back_ribs/78713.jpg',
-            'rating', 2,
-            'adds', 0,
-            'restaurant', 'Culinary Haven',
-            'dish', 'Baby Back Ribs',
-            'time', '2024-11-04T09:38:41.449283',
-            'caption', 'Would highly recommend.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '0f01e1e1-aa52-4543-8139-d5da91135606'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'karen.walker@example.com'),
-        json_build_object(
-            'image', 'images/baklava/788.jpg',
-            'rating', 3,
-            'adds', 0,
-            'restaurant', 'Florentine Trattoria',
-            'dish', 'Apple Pie',
-            'time', '2024-05-21T22:50:15.016635',
+            'restaurant', 'New Culinary World',
+            'dish', 'Beignets',
+            'time', '2024-09-26T04:56:55.638983',
             'caption', 'Couldnt recommend this more.'
         );
 INSERT INTO post (id, user_id, data)
     SELECT
-        'a224dff9-f449-4313-bf90-0663e8b9bcb8'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'christopher.young@example.com'),
+        '8eaa1d08-66a4-4b15-878c-d7a92c6be234'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'joseph.lewis@example.com'),
         json_build_object(
-            'image', 'images/beignets/26379.jpg',
+            'image', 'images/apple_pie/83981.jpg',
             'rating', 2,
             'adds', 0,
-            'restaurant', 'Taste Buds Delight',
-            'dish', 'Sushi Platter',
-            'time', '2024-07-16T11:39:56.122955',
+            'restaurant', 'Delicious Dishes',
+            'dish', 'Baklava',
+            'time', '2024-07-22T00:28:02.353993',
             'caption', 'Yum!'
         );
 INSERT INTO post (id, user_id, data)
     SELECT
-        '40bab484-a95f-4866-a945-39ee49ee53cb'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'mary.johnson@example.com'),
+        'd7341e60-042b-4852-8099-e624b9a3d1cc'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'michael.miller@example.com'),
         json_build_object(
-            'image', 'images/beet_salad/16364.jpg',
-            'rating', 1,
+            'image', 'images/apple_pie/85857.jpg',
+            'rating', 5,
             'adds', 0,
-            'restaurant', 'Taste Buds Delight',
+            'restaurant', 'Avanti',
             'dish', 'Steak Tartare',
-            'time', '2024-06-12T17:35:41.459801',
-            'caption', 'A culinary masterpiece!'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '0a629a3c-daf0-43b8-8bea-b7203486bdd2'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'kshawhan@ucsc.edu'),
-        json_build_object(
-            'image', 'images/bibimbap/23101.jpg',
-            'rating', 4,
-            'adds', 0,
-            'restaurant', 'Food Paradise',
-            'dish', 'Sushi Platter',
-            'time', '2023-12-11T15:08:27.155798',
-            'caption', 'Could be better.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '071bd9f9-08be-4ade-ada4-3b44d510deb2'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'john.jones@example.com'),
-        json_build_object(
-            'image', 'images/beignets/35253.jpg',
-            'rating', 3,
-            'adds', 0,
-            'restaurant', 'Americana Diner',
-            'dish', 'Grilled Salmon',
-            'time', '2023-12-20T07:22:03.904963',
+            'time', '2023-12-16T21:11:46.361030',
             'caption', 'Mid.'
         );
 INSERT INTO post (id, user_id, data)
     SELECT
-        '181cf0ba-dfc9-4c4e-81aa-10e6349bf71f'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'lschram@ucsc.edu'),
+        '32fc9f40-615e-4538-ad9e-1fddddfa9ad6'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'james.smith@example.com'),
         json_build_object(
-            'image', 'images/beignets/901.jpg',
-            'rating', 3,
+            'image', 'images/apple_pie/89035.jpg',
+            'rating', 2,
             'adds', 0,
-            'restaurant', 'Achilles Mediterranean',
-            'dish', 'Baklava',
-            'time', '2023-11-28T20:18:29.729854',
-            'caption', 'Ok, could use more seasoning.'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '85ba13ff-0a96-4478-9d31-947539d74f77'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'david.taylor@example.com'),
-        json_build_object(
-            'image', 'images/beet_salad/21925.jpg',
-            'rating', 4,
-            'adds', 0,
-            'restaurant', 'Taste Buds Delight',
-            'dish', 'Baby Back Ribs',
-            'time', '2024-01-22T15:30:18.463614',
-            'caption', 'Absolutely delicious!'
-        );
-INSERT INTO post (id, user_id, data)
-    SELECT
-        '3756792d-6fb4-4ff2-8671-7a27c5118c5e'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'john.jones@example.com'),
-        json_build_object(
-            'image', 'images/baby_back_ribs/53898.jpg',
-            'rating', 3,
-            'adds', 0,
-            'restaurant', 'Florentine Trattoria',
-            'dish', 'Vegan Burger',
-            'time', '2024-10-30T09:49:48.633432',
+            'restaurant', 'The Gourmet Kitchen',
+            'dish', 'Beef Carpaccio',
+            'time', '2024-01-09T10:54:50.597993',
             'caption', 'A culinary masterpiece!'
         );
 INSERT INTO post (id, user_id, data)
     SELECT
-        'b6c539f8-9bf9-43d1-861a-72f4ca4da820'::uuid,
-        (SELECT id FROM app_user WHERE data->>'email' = 'michael.miller@example.com'),
+        '0c31c701-2e0a-4a8f-a6ea-60807809a8c4'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'mary.johnson@example.com'),
         json_build_object(
-            'image', 'images/beignets/38080.jpg',
-            'rating', 2,
+            'image', 'images/apple_pie/98352.jpg',
+            'rating', 1,
             'adds', 0,
             'restaurant', 'Culinary Haven',
-            'dish', 'Baby Back Ribs',
-            'time', '2024-09-05T13:46:15.805769',
+            'dish', 'Baklava',
+            'time', '2024-06-21T04:27:26.172535',
             'caption', 'I am never coming here ever again.'
         );
 INSERT INTO post (id, user_id, data)
     SELECT
-        'fd90bf16-7daa-41f1-a821-c2be9d5e0469'::uuid,
+        'df2184b2-951e-4792-85da-554448f6d363'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'richard.lee@example.com'),
+        json_build_object(
+            'image', 'images/apple_pie/98449.jpg',
+            'rating', 4,
+            'adds', 0,
+            'restaurant', 'Delicious Dishes',
+            'dish', 'Spaghetti Bolognese',
+            'time', '2024-07-21T12:20:22.736988',
+            'caption', 'Amazing, would eat again.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        '9735561e-a770-4110-b6a5-55482b342f56'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'linda.davis@example.com'),
+        json_build_object(
+            'image', 'images/apple_pie/99556.jpg',
+            'rating', 3,
+            'adds', 0,
+            'restaurant', 'Culinary Haven',
+            'dish', 'Spaghetti Bolognese',
+            'time', '2024-04-02T12:31:55.042991',
+            'caption', 'Amazing, would eat again.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        'c9027330-c99d-47ef-bd85-2801d232f9b4'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'michael.miller@example.com'),
+        json_build_object(
+            'image', 'images/baby_back_ribs/16366.jpg',
+            'rating', 4,
+            'adds', 0,
+            'restaurant', 'Delicious Dishes',
+            'dish', 'Beet Salad',
+            'time', '2024-02-27T02:29:34.894728',
+            'caption', 'Would highly recommend.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        '17df7fc4-46fc-4f2e-a1b3-b1048c425241'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'barbara.wilson@example.com'),
+        json_build_object(
+            'image', 'images/baby_back_ribs/18596.jpg',
+            'rating', 2,
+            'adds', 0,
+            'restaurant', 'Food Paradise',
+            'dish', 'Beef Carpaccio',
+            'time', '2024-02-14T16:18:01.484328',
+            'caption', 'This was pretty bad.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        '8dd5030d-f33b-49f4-8aec-59f21ed5dc91'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'elizabeth.thomas@example.com'),
+        json_build_object(
+            'image', 'images/baby_back_ribs/19325.jpg',
+            'rating', 1,
+            'adds', 0,
+            'restaurant', 'Culinary Haven',
+            'dish', 'Grilled Salmon',
+            'time', '2024-10-09T05:07:52.053300',
+            'caption', 'Best food I have ever had.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        '207df4df-0231-4b60-ba1f-4b0ecc155248'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'christopher.young@example.com'),
+        json_build_object(
+            'image', 'images/baby_back_ribs/2432.jpg',
+            'rating', 3,
+            'adds', 0,
+            'restaurant', 'Food Paradise',
+            'dish', 'Apple Pie',
+            'time', '2024-09-29T00:23:29.514935',
+            'caption', 'Couldnt recommend this more.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        'fc004937-6086-46fe-b524-66efd5e0af8f'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'elizabeth.thomas@example.com'),
+        json_build_object(
+            'image', 'images/baby_back_ribs/24726.jpg',
+            'rating', 3,
+            'adds', 0,
+            'restaurant', 'Delicious Dishes',
+            'dish', 'Beet Salad',
+            'time', '2024-02-27T03:12:40.984537',
+            'caption', 'I am never coming here ever again.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        '041e2af9-8e30-414b-b52d-371dc937ce66'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'karen.walker@example.com'),
+        json_build_object(
+            'image', 'images/baby_back_ribs/26834.jpg',
+            'rating', 3,
+            'adds', 0,
+            'restaurant', 'Culinary Haven',
+            'dish', 'Grilled Salmon',
+            'time', '2024-09-27T07:24:41.053869',
+            'caption', 'Delicious, compliments to the chef.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        '4e177fa9-3ba9-4320-a0b4-d1002874f1b5'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'susan.clark@example.com'),
+        json_build_object(
+            'image', 'images/baby_back_ribs/35719.jpg',
+            'rating', 1,
+            'adds', 0,
+            'restaurant', 'Avanti',
+            'dish', 'Steak Tartare',
+            'time', '2024-08-15T01:38:25.064729',
+            'caption', 'Yum!'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        '4e33992d-bad5-4a11-9f43-5ac6eddfe94d'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'william.anderson@example.com'),
+        json_build_object(
+            'image', 'images/baby_back_ribs/37492.jpg',
+            'rating', 3,
+            'adds', 0,
+            'restaurant', 'Avanti',
+            'dish', 'Bibimbap',
+            'time', '2024-11-13T09:46:51.993993',
+            'caption', 'Best food I have ever had.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        '612150fa-4c61-4283-8c94-88de46b8ab4e'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'christopher.young@example.com'),
+        json_build_object(
+            'image', 'images/baby_back_ribs/41235.jpg',
+            'rating', 3,
+            'adds', 0,
+            'restaurant', 'Americana Diner',
+            'dish', 'Beet Salad',
+            'time', '2023-12-01T19:11:32.945590',
+            'caption', 'Absolutely delicious!'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        'd8be8a5d-0ee9-4684-8068-30b73ed99c5e'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'kshawhan@ucsc.edu'),
+        json_build_object(
+            'image', 'images/baby_back_ribs/42451.jpg',
+            'rating', 4,
+            'adds', 0,
+            'restaurant', 'Delicious Dishes',
+            'dish', 'Beignets',
+            'time', '2024-09-24T00:18:24.890217',
+            'caption', 'Could be better.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        'd733cadd-1a0e-4ea0-a980-c1f208f141f3'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'nancy.king@example.com'),
+        json_build_object(
+            'image', 'images/baby_back_ribs/53898.jpg',
+            'rating', 1,
+            'adds', 0,
+            'restaurant', 'The Gourmet Kitchen',
+            'dish', 'Spaghetti Bolognese',
+            'time', '2024-07-01T21:25:41.750321',
+            'caption', 'A culinary masterpiece!'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        '72652bfd-f332-4be0-bf5c-0e3ae5eb8716'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'william.anderson@example.com'),
+        json_build_object(
+            'image', 'images/baby_back_ribs/54203.jpg',
+            'rating', 4,
+            'adds', 0,
+            'restaurant', 'Dish n Dash',
+            'dish', 'Baby Back Ribs',
+            'time', '2024-07-21T03:06:34.340597',
+            'caption', 'Could be better.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        '2020d009-9fc3-41a0-acac-c8d8812ff187'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'nancy.king@example.com'),
+        json_build_object(
+            'image', 'images/baby_back_ribs/55326.jpg',
+            'rating', 1,
+            'adds', 0,
+            'restaurant', 'Avanti',
+            'dish', 'Apple Pie',
+            'time', '2024-04-01T07:11:43.486866',
+            'caption', 'Would highly recommend.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        'd9e98d03-7bd8-4388-bc04-568e391c4ea4'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'michael.miller@example.com'),
+        json_build_object(
+            'image', 'images/baby_back_ribs/5712.jpg',
+            'rating', 4,
+            'adds', 0,
+            'restaurant', 'Taste Buds Delight',
+            'dish', 'Baby Back Ribs',
+            'time', '2023-12-27T16:55:42.148446',
+            'caption', 'Could be better.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        'c9976f6b-d89b-40d9-921e-aa0c35d5c706'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'karen.walker@example.com'),
+        json_build_object(
+            'image', 'images/baby_back_ribs/57607.jpg',
+            'rating', 1,
+            'adds', 0,
+            'restaurant', 'Delicious Dishes',
+            'dish', 'Beet Salad',
+            'time', '2024-09-12T04:57:05.839217',
+            'caption', 'Not my favorite, but decent.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        'b5f4eb15-b4fc-4cb1-af7a-efc30dc6d470'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'patricia.brown@example.com'),
+        json_build_object(
+            'image', 'images/baby_back_ribs/65208.jpg',
+            'rating', 2,
+            'adds', 0,
+            'restaurant', 'Taste Buds Delight',
+            'dish', 'Beet Salad',
+            'time', '2024-01-07T01:00:34.060429',
+            'caption', 'This was pretty bad.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        'd0477975-d034-454a-aaf8-4b3c868ccc44'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'nancy.king@example.com'),
+        json_build_object(
+            'image', 'images/baby_back_ribs/65686.jpg',
+            'rating', 2,
+            'adds', 0,
+            'restaurant', 'Delicious Dishes',
+            'dish', 'Steak Tartare',
+            'time', '2024-05-21T14:57:36.079850',
+            'caption', 'Ok, could use more seasoning.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        'c2443756-c83b-4f0d-95b4-c00e419489d4'::uuid,
         (SELECT id FROM app_user WHERE data->>'email' = 'joseph.lewis@example.com'),
+        json_build_object(
+            'image', 'images/baby_back_ribs/68204.jpg',
+            'rating', 1,
+            'adds', 0,
+            'restaurant', 'Taste Buds Delight',
+            'dish', 'Bibimbap',
+            'time', '2024-07-09T00:15:41.956655',
+            'caption', 'Not my favorite, but decent.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        'b4faa73a-9db7-4608-9e79-3afed3d7e8c6'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'thomas.hall@example.com'),
         json_build_object(
             'image', 'images/baby_back_ribs/7557.jpg',
             'rating', 1,
             'adds', 0,
-            'restaurant', 'Achilles Mediterranean',
-            'dish', 'Beet Salad',
-            'time', '2024-02-12T17:30:24.175420',
+            'restaurant', 'Florentine Trattoria',
+            'dish', 'Baklava',
+            'time', '2024-10-22T01:27:13.989693',
+            'caption', 'Could be better.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        '9f4502c3-bb69-4568-96c5-de3c4c979294'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'william.anderson@example.com'),
+        json_build_object(
+            'image', 'images/baby_back_ribs/78713.jpg',
+            'rating', 1,
+            'adds', 0,
+            'restaurant', 'Food Paradise',
+            'dish', 'Beef Carpaccio',
+            'time', '2024-01-24T07:53:46.581055',
+            'caption', 'Delicious, compliments to the chef.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        '6f329b93-33cf-4265-a239-88300f82a308'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'william.anderson@example.com'),
+        json_build_object(
+            'image', 'images/baby_back_ribs/79780.jpg',
+            'rating', 4,
+            'adds', 0,
+            'restaurant', 'New Culinary World',
+            'dish', 'Baklava',
+            'time', '2024-09-29T03:16:56.096607',
+            'caption', 'Couldnt recommend this more.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        'd037afc8-6299-4900-a40b-a2ef7d29c34b'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'richard.lee@example.com'),
+        json_build_object(
+            'image', 'images/baklava/1784.jpg',
+            'rating', 5,
+            'adds', 0,
+            'restaurant', 'The Gourmet Kitchen',
+            'dish', 'Beignets',
+            'time', '2024-07-15T09:39:58.797968',
+            'caption', 'Amazing, would eat again.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        'c209f5b6-9ed0-4cfa-84ae-65e471c1fad9'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'nancy.king@example.com'),
+        json_build_object(
+            'image', 'images/baklava/21435.jpg',
+            'rating', 2,
+            'adds', 0,
+            'restaurant', 'Avanti',
+            'dish', 'Apple Pie',
+            'time', '2024-05-03T06:55:08.383912',
+            'caption', 'Would highly recommend.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        '963334e3-b20a-4e8f-845e-fbed6eaedd06'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'linda.davis@example.com'),
+        json_build_object(
+            'image', 'images/baklava/25496.jpg',
+            'rating', 5,
+            'adds', 0,
+            'restaurant', 'Zankou Chicken',
+            'dish', 'Vegan Burger',
+            'time', '2024-07-15T23:18:06.602090',
             'caption', 'Ok, could use more seasoning.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        'a0a4cee1-3df9-431f-af4d-a00ad0f5f119'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'william.anderson@example.com'),
+        json_build_object(
+            'image', 'images/baklava/28613.jpg',
+            'rating', 5,
+            'adds', 0,
+            'restaurant', 'Delicious Dishes',
+            'dish', 'Beef Carpaccio',
+            'time', '2024-06-06T07:22:51.280457',
+            'caption', 'Best food I have ever had.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        'b61923c5-2f48-484d-af1c-caaa00bae349'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'sarah.allen@example.com'),
+        json_build_object(
+            'image', 'images/baklava/29744.jpg',
+            'rating', 4,
+            'adds', 0,
+            'restaurant', 'Culinary Haven',
+            'dish', 'Beef Carpaccio',
+            'time', '2024-05-10T15:49:11.289023',
+            'caption', 'Amazing, would eat again.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        '0d271bd9-c423-4fec-b12e-84cbdbbb2de0'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'john.jones@example.com'),
+        json_build_object(
+            'image', 'images/baklava/49917.jpg',
+            'rating', 1,
+            'adds', 0,
+            'restaurant', 'Food Paradise',
+            'dish', 'Sushi Platter',
+            'time', '2024-05-24T10:57:08.982978',
+            'caption', 'Best food I have ever had.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        '7cebb91f-5871-41c2-97a5-d1cd9471d67f'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'james.smith@example.com'),
+        json_build_object(
+            'image', 'images/baklava/50627.jpg',
+            'rating', 3,
+            'adds', 0,
+            'restaurant', 'Florentine Trattoria',
+            'dish', 'Sushi Platter',
+            'time', '2024-04-26T07:49:29.930340',
+            'caption', 'Would highly recommend.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        'f6c003bf-e1e8-44d3-8866-7fca811e14e4'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'james.smith@example.com'),
+        json_build_object(
+            'image', 'images/baklava/52736.jpg',
+            'rating', 4,
+            'adds', 0,
+            'restaurant', 'Food Paradise',
+            'dish', 'Chicken Alfredo',
+            'time', '2024-07-10T07:49:02.740409',
+            'caption', 'Ok, could use more seasoning.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        '2b4481a7-1f77-4559-90e2-2d7265367f30'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'joseph.lewis@example.com'),
+        json_build_object(
+            'image', 'images/baklava/60576.jpg',
+            'rating', 5,
+            'adds', 0,
+            'restaurant', 'Food Paradise',
+            'dish', 'Baby Back Ribs',
+            'time', '2024-03-28T15:57:11.601587',
+            'caption', 'Could be better.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        '3c6e24e0-8647-4011-9141-e932e14ec925'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'lschram@ucsc.edu'),
+        json_build_object(
+            'image', 'images/baklava/65017.jpg',
+            'rating', 5,
+            'adds', 0,
+            'restaurant', 'New Culinary World',
+            'dish', 'Vegan Burger',
+            'time', '2024-01-18T03:56:30.278543',
+            'caption', 'Best food I have ever had.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        'f48b91d9-461a-4140-a769-ef34717c40c3'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'nancy.king@example.com'),
+        json_build_object(
+            'image', 'images/baklava/65891.jpg',
+            'rating', 3,
+            'adds', 0,
+            'restaurant', 'Culinary Haven',
+            'dish', 'Beet Salad',
+            'time', '2024-11-15T19:05:01.940977',
+            'caption', 'Couldnt recommend this more.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        '89c548cd-1794-4095-aaf9-1f09e705ee20'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'william.anderson@example.com'),
+        json_build_object(
+            'image', 'images/baklava/66916.jpg',
+            'rating', 1,
+            'adds', 0,
+            'restaurant', 'Avanti',
+            'dish', 'Vegan Burger',
+            'time', '2024-07-09T09:04:42.565788',
+            'caption', 'A culinary masterpiece!'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        '5aa67ba8-f0ea-42c0-96dc-9e658f2d1038'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'susan.clark@example.com'),
+        json_build_object(
+            'image', 'images/baklava/67320.jpg',
+            'rating', 1,
+            'adds', 0,
+            'restaurant', 'Florentine Trattoria',
+            'dish', 'Beef Carpaccio',
+            'time', '2023-12-18T08:12:31.992103',
+            'caption', 'Yum!'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        'fc77f813-ee4b-4eb4-9a1e-7fdc2e3a9110'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'michael.miller@example.com'),
+        json_build_object(
+            'image', 'images/baklava/6789.jpg',
+            'rating', 5,
+            'adds', 0,
+            'restaurant', 'Dish n Dash',
+            'dish', 'Beef Carpaccio',
+            'time', '2024-02-23T15:54:46.300914',
+            'caption', 'Yum!'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        '62d3946b-4dfa-42fa-9386-0ba56ff279db'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'patricia.brown@example.com'),
+        json_build_object(
+            'image', 'images/baklava/72326.jpg',
+            'rating', 4,
+            'adds', 0,
+            'restaurant', 'The Gourmet Kitchen',
+            'dish', 'Apple Pie',
+            'time', '2024-07-10T08:36:02.036367',
+            'caption', 'Could be better.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        '9b0c7903-fea9-419a-a922-f51ea71b67ef'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'robert.williams@example.com'),
+        json_build_object(
+            'image', 'images/baklava/788.jpg',
+            'rating', 3,
+            'adds', 0,
+            'restaurant', 'New Culinary World',
+            'dish', 'Bibimbap',
+            'time', '2024-03-27T22:44:40.888728',
+            'caption', 'This was pretty bad.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        'eca0597c-5e34-4bd8-ad68-5b1bf704b7b2'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'jennifer.moore@example.com'),
+        json_build_object(
+            'image', 'images/beef_carpaccio/11466.jpg',
+            'rating', 3,
+            'adds', 0,
+            'restaurant', 'Dish n Dash',
+            'dish', 'Bibimbap',
+            'time', '2024-04-14T03:59:58.087626',
+            'caption', 'Couldnt recommend this more.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        'a92f9a30-c52c-42c9-abcf-7ec972ee4958'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'william.anderson@example.com'),
+        json_build_object(
+            'image', 'images/beef_carpaccio/11483.jpg',
+            'rating', 3,
+            'adds', 0,
+            'restaurant', 'Florentine Trattoria',
+            'dish', 'Baklava',
+            'time', '2024-06-17T12:22:23.389840',
+            'caption', 'Not my favorite, but decent.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        '7965c641-03e3-48e4-a1bc-966303d07611'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'nancy.king@example.com'),
+        json_build_object(
+            'image', 'images/beef_carpaccio/19705.jpg',
+            'rating', 3,
+            'adds', 0,
+            'restaurant', 'The Gourmet Kitchen',
+            'dish', 'Baby Back Ribs',
+            'time', '2024-01-16T20:19:34.655897',
+            'caption', 'This was pretty bad.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        '86a3dcce-5530-4545-a055-026b55b0ca0e'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'barbara.wilson@example.com'),
+        json_build_object(
+            'image', 'images/beef_carpaccio/27321.jpg',
+            'rating', 4,
+            'adds', 0,
+            'restaurant', 'Culinary Haven',
+            'dish', 'Grilled Salmon',
+            'time', '2024-09-30T23:05:18.287163',
+            'caption', 'Yum!'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        '0eb578f2-e62b-4f94-b63a-0bb2cc288e7e'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'patricia.brown@example.com'),
+        json_build_object(
+            'image', 'images/beef_carpaccio/30086.jpg',
+            'rating', 2,
+            'adds', 0,
+            'restaurant', 'Food Paradise',
+            'dish', 'Beef Carpaccio',
+            'time', '2024-01-07T08:46:50.936109',
+            'caption', 'Delicious, compliments to the chef.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        'db091ee8-a307-4556-80ff-c9731967e654'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'john.jones@example.com'),
+        json_build_object(
+            'image', 'images/beef_carpaccio/3400.jpg',
+            'rating', 3,
+            'adds', 0,
+            'restaurant', 'Food Paradise',
+            'dish', 'Baklava',
+            'time', '2024-01-15T12:54:25.734184',
+            'caption', 'Not my favorite, but decent.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        'c32a784e-92bb-434a-8be8-76a6eec1bf39'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'richard.lee@example.com'),
+        json_build_object(
+            'image', 'images/beef_carpaccio/37010.jpg',
+            'rating', 1,
+            'adds', 0,
+            'restaurant', 'Americana Diner',
+            'dish', 'Beet Salad',
+            'time', '2024-04-17T16:41:45.699039',
+            'caption', 'This was pretty bad.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        'd6089b3a-2367-490c-be7e-3559188438d3'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'william.anderson@example.com'),
+        json_build_object(
+            'image', 'images/beef_carpaccio/40761.jpg',
+            'rating', 3,
+            'adds', 0,
+            'restaurant', 'Culinary Haven',
+            'dish', 'Beet Salad',
+            'time', '2024-04-06T12:07:22.317751',
+            'caption', 'Yum!'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        '6a70b5ae-82ba-473c-9dd4-9e9dd6ccc612'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'william.anderson@example.com'),
+        json_build_object(
+            'image', 'images/beef_carpaccio/45788.jpg',
+            'rating', 3,
+            'adds', 0,
+            'restaurant', 'Delicious Dishes',
+            'dish', 'Baklava',
+            'time', '2024-02-03T10:06:32.212149',
+            'caption', 'A culinary masterpiece!'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        '912d6b15-9bf3-4068-94ad-bcd7050d5f84'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'thomas.hall@example.com'),
+        json_build_object(
+            'image', 'images/beef_carpaccio/57481.jpg',
+            'rating', 5,
+            'adds', 0,
+            'restaurant', 'Food Paradise',
+            'dish', 'Spaghetti Bolognese',
+            'time', '2024-08-04T14:44:21.776105',
+            'caption', 'Best food I have ever had.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        'efff9114-2c22-4e05-9b7a-5b7ba48afbd5'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'mary.johnson@example.com'),
+        json_build_object(
+            'image', 'images/beef_carpaccio/60660.jpg',
+            'rating', 1,
+            'adds', 0,
+            'restaurant', 'Achilles Mediterranean',
+            'dish', 'Vegan Burger',
+            'time', '2024-01-11T20:26:12.791520',
+            'caption', 'Would highly recommend.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        'be258d90-ab89-430d-ac05-71053620a543'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'william.anderson@example.com'),
+        json_build_object(
+            'image', 'images/beef_carpaccio/6765.jpg',
+            'rating', 4,
+            'adds', 0,
+            'restaurant', 'New Culinary World',
+            'dish', 'Bibimbap',
+            'time', '2024-02-07T08:46:33.647502',
+            'caption', 'Best food I have ever had.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        'ec81a55d-f775-4d78-a0d5-7aa8851b5c3b'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'james.smith@example.com'),
+        json_build_object(
+            'image', 'images/beef_carpaccio/95999.jpg',
+            'rating', 5,
+            'adds', 0,
+            'restaurant', 'New Culinary World',
+            'dish', 'Beignets',
+            'time', '2024-03-30T06:55:31.514449',
+            'caption', 'A culinary masterpiece!'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        'c75404aa-33f2-4a28-b963-72fe9bf55d4b'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'christopher.young@example.com'),
+        json_build_object(
+            'image', 'images/beef_tartare/20972.jpg',
+            'rating', 2,
+            'adds', 0,
+            'restaurant', 'Achilles Mediterranean',
+            'dish', 'Vegan Burger',
+            'time', '2024-10-11T13:44:42.738020',
+            'caption', 'Absolutely delicious!'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        '876f6ead-79cd-467e-a62a-88c91521c9c8'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'thomas.hall@example.com'),
+        json_build_object(
+            'image', 'images/beef_tartare/2896.jpg',
+            'rating', 3,
+            'adds', 0,
+            'restaurant', 'Culinary Haven',
+            'dish', 'Baklava',
+            'time', '2024-11-09T13:02:05.283274',
+            'caption', 'Ok, could use more seasoning.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        '8bb7eae3-091a-4016-a73c-02b7affadff3'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'thomas.hall@example.com'),
+        json_build_object(
+            'image', 'images/beef_tartare/33502.jpg',
+            'rating', 5,
+            'adds', 0,
+            'restaurant', 'New Culinary World',
+            'dish', 'Baby Back Ribs',
+            'time', '2024-06-07T17:18:28.041568',
+            'caption', 'This was pretty bad.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        '50220c09-5424-456e-a7da-c05a6677e04f'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'lschram@ucsc.edu'),
+        json_build_object(
+            'image', 'images/beef_tartare/35446.jpg',
+            'rating', 4,
+            'adds', 0,
+            'restaurant', 'Food Paradise',
+            'dish', 'Chicken Alfredo',
+            'time', '2024-08-28T16:26:11.847347',
+            'caption', 'Ok, could use more seasoning.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        '5aa1f4d9-ecc0-4e7b-99eb-4967fb58d310'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'nancy.king@example.com'),
+        json_build_object(
+            'image', 'images/beef_tartare/39168.jpg',
+            'rating', 2,
+            'adds', 0,
+            'restaurant', 'Zankou Chicken',
+            'dish', 'Bibimbap',
+            'time', '2024-11-14T11:56:16.117758',
+            'caption', 'Could be better.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        '235cf570-d003-426b-81e8-4f1329eaa63b'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'barbara.wilson@example.com'),
+        json_build_object(
+            'image', 'images/beef_tartare/39858.jpg',
+            'rating', 3,
+            'adds', 0,
+            'restaurant', 'Zankou Chicken',
+            'dish', 'Baby Back Ribs',
+            'time', '2024-03-13T20:31:58.264309',
+            'caption', 'Couldnt recommend this more.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        'a8e4a813-246b-4f37-b585-a641f2386d7d'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'joseph.lewis@example.com'),
+        json_build_object(
+            'image', 'images/beef_tartare/50022.jpg',
+            'rating', 4,
+            'adds', 0,
+            'restaurant', 'Florentine Trattoria',
+            'dish', 'Chicken Alfredo',
+            'time', '2024-08-07T15:41:13.232572',
+            'caption', 'Not my favorite, but decent.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        '251cce2e-0918-4abf-94e1-d9cd266abc0d'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'nancy.king@example.com'),
+        json_build_object(
+            'image', 'images/beef_tartare/5681.jpg',
+            'rating', 4,
+            'adds', 0,
+            'restaurant', 'The Gourmet Kitchen',
+            'dish', 'Apple Pie',
+            'time', '2024-06-30T00:44:37.321140',
+            'caption', 'I am never coming here ever again.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        'd34fc3f1-be93-47cc-89af-05bb8702d168'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'jennifer.moore@example.com'),
+        json_build_object(
+            'image', 'images/beef_tartare/6149.jpg',
+            'rating', 4,
+            'adds', 0,
+            'restaurant', 'Dish n Dash',
+            'dish', 'Baklava',
+            'time', '2024-07-06T19:31:45.932068',
+            'caption', 'Yum!'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        'd630cf98-1795-46ed-a591-b33076822b72'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'jennifer.moore@example.com'),
+        json_build_object(
+            'image', 'images/beef_tartare/7307.jpg',
+            'rating', 2,
+            'adds', 0,
+            'restaurant', 'Dish n Dash',
+            'dish', 'Beet Salad',
+            'time', '2024-01-06T05:25:54.660876',
+            'caption', 'Delicious, compliments to the chef.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        'c099ed24-9136-4e6c-9b75-8e07ab9554c6'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'jennifer.moore@example.com'),
+        json_build_object(
+            'image', 'images/beef_tartare/8587.jpg',
+            'rating', 1,
+            'adds', 0,
+            'restaurant', 'Dish n Dash',
+            'dish', 'Baklava',
+            'time', '2024-08-05T13:29:03.405990',
+            'caption', 'Best food I have ever had.'
+        );
+INSERT INTO post (id, user_id, data)
+    SELECT
+        '22e801ae-e7cd-4f30-a6dd-223b5cf62876'::uuid,
+        (SELECT id FROM app_user WHERE data->>'email' = 'nancy.king@example.com'),
+        json_build_object(
+            'image', 'images/beet_salad/12969.jpg',
+            'rating', 1,
+            'adds', 0,
+            'restaurant', 'Food Paradise',
+            'dish', 'Vegan Burger',
+            'time', '2024-07-02T08:30:59.200363',
+            'caption', 'Not my favorite, but decent.'
         );
 
 -- followers
