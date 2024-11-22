@@ -10,7 +10,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function signup () {
   const loginContext = useContext(LoginContext);
-  const [user, setUser] = useState({ username: "", password: "", phoneNumber: "", firstname: "", lastname: "", email: "" });
+  const [user, setUser] = useState({ username: "", password: "", phoneNumber: "", firstname: "", lastname: "", email: "", location: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [badSignup, setBadSignup] = useState(false);
   const navigation = useNavigation<StackNavigationProp<RootTabParamList>>(); // Use the correct type here
@@ -70,7 +70,7 @@ export default function signup () {
         loginContext.setUserName(json.username);
         AsyncStorage.setItem("accessToken", json.accessToken);
         loginContext.setIsAuthenticated(true);
-        setUser({ username: "", password: "", phoneNumber: "", firstname: "", lastname: "", email: "" });
+        setUser({ username: "", password: "", phoneNumber: "", firstname: "", lastname: "", email: "", location: ""});
         navigation.navigate('index');
       })
       .catch((err) => {
@@ -134,6 +134,16 @@ export default function signup () {
         onChangeText={(value) => handleInputChange('email', value)}
         autoCapitalize="none"
         keyboardType="email-address"
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Location"
+        value={user.location}
+        onChangeText={(value) => {
+          const formattedValue = value.replace(/[^a-zA-Z0-9_ ]/g, '');
+          handleInputChange('location', formattedValue);
+        }}
+        autoCapitalize="none"
       />
       
       <View style={styles.nameContainer}>

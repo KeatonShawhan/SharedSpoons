@@ -89,10 +89,10 @@ export class AuthService {
     if (phoneRows.length === 1) return undefined;
   
     const insert = `INSERT INTO app_user(data) 
-                    VALUES (jsonb_build_object('username', $1::text, 'firstname', $2::text, 'pwhash', '', 'salt', gen_salt('bf'), 'status', 'undefined', 'email', $3::text, 'lastname', $4::text, 'phoneNumber', $5::text))`;
+                    VALUES (jsonb_build_object('username', $1::text, 'firstname', $2::text, 'pwhash', '', 'salt', gen_salt('bf'), 'status', 'undefined', 'email', $3::text, 'lastname', $4::text, 'phoneNumber', $5::text, 'location', $6::text))`;
     const query2 = {
       text: insert,
-      values: [info.username, info.firstname, info.email, info.lastname, info.phoneNumber],
+      values: [info.username, info.firstname, info.email, info.lastname, info.phoneNumber, info.location],
     };
     await pool.query(query2);
   
