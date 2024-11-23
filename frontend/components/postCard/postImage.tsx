@@ -10,9 +10,9 @@ interface postImageProps {
 export function postImage({ image }: postImageProps): React.JSX.Element {
   return (
     <ThemedView>
-      <View style={{ position: 'relative', width: '100%', height: 350, paddingHorizontal: 0, paddingVertical: 0 }}>
+      <View style={{ position: 'relative', width: '100%', height: 375, paddingHorizontal: 0, paddingVertical: 0 }}>
         <Image
-          style={{ width: '100%', height: 350, borderRadius: 20 }}
+          style={{ width: '100%', height: 375, borderRadius: 20 }}
           source={{ uri: image }}
         />
       </View>

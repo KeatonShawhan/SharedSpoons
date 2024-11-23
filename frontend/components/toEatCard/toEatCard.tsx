@@ -31,7 +31,7 @@ export function ToEatCard({
           style={[
             styles.card,
             {
-              borderColor: ORANGE_COLOR,
+              borderColor: "black",
               backgroundColor: themeColors.background,
             },
           ]}
@@ -67,7 +67,7 @@ export function ToEatCard({
             </Text>
           </View>
           <View style={styles.iconContainer}>
-            <MaterialIcons name="arrow-forward-ios" size={24} color={themeColors.tint} />
+            <MaterialIcons name="arrow-forward-ios" size={24} color={ORANGE_COLOR} />
           </View>
         </View>
       </View>

@@ -110,9 +110,9 @@ export function PostCard({
 
   return (
     <View style={{ justifyContent: 'center', alignItems: 'center', paddingBottom: 30 }}>
-      <View style={{ width: '95%', borderRadius: 0, borderColor: 'none' }}>
+      <View style={{ width: '98%', borderRadius: 0, borderColor: 'none' }}>
         <TouchableOpacity onPress={handleNavigateToProfile}>
-          <View style={{ paddingBottom: 10, paddingLeft: 0 }}>
+          <View style={{ paddingBottom: 15, paddingLeft: 0 }}>
             {postHeader({ username, place, user_id, onNavigateToProfile: handleNavigateToProfile, pfp })}
           </View>
         </TouchableOpacity>
@@ -138,7 +138,7 @@ export function PostCard({
           </View>
         </TouchableOpacity>
 
-        <View style={{ paddingTop: 15, paddingLeft: 0 }}>
+        <View style={{ paddingTop: 15, paddingHorizontal:5 }}>
           <PostCaption
             dish={dish}
             rating={rating}
