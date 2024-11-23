@@ -52,11 +52,14 @@ export function PostCaption({
     try {
       if (liked) {
         await unlikePost(postId, loginContext.accessToken);
+        console.log("unlike");
       } else {
+        console.log("like");
+
         await likePost(postId, loginContext.accessToken);
       }
       setIsLiked(newLikedState);
-      loginContext.setLiked(newLikedState);
+      loginContext.setLiked(!loginContext.liked);
     } catch (err) {
       console.error('Error liking post:', err);
     }
@@ -103,6 +106,8 @@ export function PostCaption({
     const fetchData = async () => {
       const countLikes = await likeCount(postId, loginContext.accessToken);
       setLikeCount(countLikes);
+      console.log("herr")
+      console.log(countLikes)
       const getLiked = (await fetchPostData(postId, loginContext.accessToken)).isLiked;
       setIsLiked(getLiked);
     };
