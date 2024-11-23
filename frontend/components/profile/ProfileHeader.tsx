@@ -1,5 +1,3 @@
-// ProfileHeader.tsx
-
 import React from 'react';
 import { View, Text, StyleSheet, Image, Dimensions, TouchableOpacity } from 'react-native';
 import { Colors } from '@/constants/Colors';
@@ -37,31 +35,41 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
 }) => {
   const navigation = useNavigation();
 
+  // Determine font size based on username length
+  const getDynamicFontSize = (text: string) => {
+    if (text.length > 15) return width * 0.06; // Smaller font size for longer usernames
+    if (text.length > 10) return width * 0.07; // Medium font size for mid-length usernames
+    return width * 0.08; // Default font size
+  };
+
+  const usernameFontSize = getDynamicFontSize(username);
+
   return (
     <View style={[styles.headerSection, { backgroundColor: Colors[colorScheme].background }]}>
-      {/* Conditionally render the back button */}
       {showBackButton && (
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color={Colors[colorScheme].text} />
         </TouchableOpacity>
       )}
       <View style={styles.nameSection}>
-        {/* Conditionally apply padding to only the rank section */}
         <View style={[styles.rankContainer, showBackButton && { marginLeft: 40 }]}>
           <Text style={styles.rankText}>{rank}</Text>
         </View>
-        <Text style={[styles.username, { color: Colors[colorScheme].text }]}>{username}</Text>
+        {/* Username with dynamic font size */}
+        <Text
+          style={[styles.username, { fontSize: usernameFontSize, color: Colors[colorScheme].text }]}
+        >
+          {username}
+        </Text>
         <Text style={[styles.name, { color: Colors[colorScheme].text }]}>{firstname + ' ' + lastname}</Text>
         <Text style={[styles.bio, { color: Colors[colorScheme].text }]}>{bio}</Text>
       </View>
       <View style={styles.profileImageContainer}>
         <Image
           style={[styles.profileImage, { borderColor: Colors[colorScheme].text }]}
-          /* eslint-disable */
+          // eslint-disable-next-line @typescript-eslint/no-require-imports
           source={pfp ? { uri: pfp } : require('../../assets/images/default.jpeg')}
-          /* eslint-enable */
         />
-        {/* Conditionally render the follow/unfollow button */}
         {!isOwnProfile && (
           <TouchableOpacity
             style={[styles.followButton, { backgroundColor: Colors[colorScheme].background }]}
@@ -142,10 +150,10 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
   username: {
-    fontSize: width * 0.08,
     fontWeight: '700',
     fontFamily: 'Inter_400Regular',
-    marginBottom: 10,
+    marginBottom: 3,
+    //textAlign: 'center', // Optional: to center-align username
   },
   bio: {
     fontSize: width * 0.038,
@@ -153,9 +161,9 @@ const styles = StyleSheet.create({
     marginBottom: 0.1,
   },
   name: {
-    fontSize: width * 0.05,
+    fontSize: width * 0.04,
     lineHeight: width * 0.05,
-    marginBottom: 0.1,
+    marginBottom: 2,
     fontWeight: '500',
   },
 });
