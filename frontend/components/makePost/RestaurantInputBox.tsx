@@ -23,6 +23,8 @@ export function RestaurantInputBox({ restaurant, setRestaurant }: RestaurantInpu
       placeholderTextColor={isDarkMode ? '#ccc' : '#888'}
       value={restaurant}
       onChangeText={setRestaurant}
+      multiline={true} 
+      textAlignVertical="top"
     />
   );
 }
@@ -35,5 +37,6 @@ const styles = StyleSheet.create({
     padding: 12,
     marginTop: 16,
     fontSize: 16,
+    textAlignVertical: 'top',
   },
 });

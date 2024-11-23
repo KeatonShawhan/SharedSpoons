@@ -23,6 +23,8 @@ export function CaptionBox({ caption, setCaption }: CaptionBoxProps) {
       placeholderTextColor={isDarkMode ? '#ccc' : '#888'}
       value={caption}
       onChangeText={setCaption}
+      multiline={true} 
+      textAlignVertical="top"
     />
   );
 }
@@ -30,10 +32,11 @@ export function CaptionBox({ caption, setCaption }: CaptionBoxProps) {
 const styles = StyleSheet.create({
   input: {
     width: '100%',
-    minHeight: 40,
+    minHeight: 80, 
     borderRadius: 8,
     padding: 12,
     marginTop: 16,
     fontSize: 16,
+    textAlignVertical: 'top',
   },
 });
