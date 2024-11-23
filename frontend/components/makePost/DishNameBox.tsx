@@ -6,14 +6,14 @@ import { Colors } from '@/constants/Colors';
 
 const ORANGE_COLOR = '#FF9F45';
 
-type CaptionInputBoxProps = {
-  caption: string;
-  setCaption: (text: string) => void;
+type DishNameBoxProps = {
+  dishName: string;
+  setDishName: (text: string) => void;
   onFocus?: () => void;
   onBlur?: () => void;
 };
 
-export function CaptionInputBox({ caption, setCaption, onFocus, onBlur }: CaptionInputBoxProps) {
+export function DishNameBox({ dishName, setDishName, onFocus, onBlur }: DishNameBoxProps) {
   const colorScheme = useColorScheme();
   const themeColors = Colors[colorScheme || 'light'];
 
@@ -27,10 +27,10 @@ export function CaptionInputBox({ caption, setCaption, onFocus, onBlur }: Captio
           color: themeColors.text,
         },
       ]}
-      placeholder="Write a caption..."
-      placeholderTextColor={themeColors.icon} // Adjust for dark mode readability
-      value={caption}
-      onChangeText={setCaption}
+      placeholder="Enter Dish Name"
+      placeholderTextColor={themeColors.icon} 
+      value={dishName}
+      onChangeText={setDishName}
       multiline
       onFocus={onFocus}
       onBlur={onBlur}

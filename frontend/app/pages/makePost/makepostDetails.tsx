@@ -19,7 +19,7 @@ import { Colors } from '@/constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
 import { StarRating } from '@/components/makePost/StarRating';
 import { RestaurantInputBox } from '@/components/makePost/RestaurantInputBox';
-import { DishNameInputBox } from '@/components/makePost/DishNameInputBox';
+import { CaptionBox } from '@/components/makePost/CaptionBox';
 // Import LoginContext
 import { StackNavigationProp } from '@react-navigation/stack';
 import LoginContext from '@/contexts/loginContext';
@@ -46,20 +46,20 @@ export default function MakePostDetails({route, navigation}: Props) {
 
   const colorScheme = useColorScheme();
   const themeColors = Colors[colorScheme || 'light'];
-  const { selectedImage, caption } = route.params; // Destructure caption from route.params
+  const { selectedImage, dishname } = route.params; // Destructure dishname from route.params
   const [rating, setRating] = useState(0);
   const [restaurant, setRestaurant] = useState('');
-  const [dishName, setDishName] = useState('');
+  const [captionNew, setCaptionNew] = useState('');
 
   // Import accessToken and userId from LoginContext
   const { accessToken } = useContext(LoginContext);
 
-  const [showCaptionBox, setShowCaptionBox] = useState(false);
-  const captionAnim = useRef(new Animated.Value(0)).current;
+  const [showDishNameBox, setShowDishNameBox] = useState(false);
+  const dishNameAnim = useRef(new Animated.Value(0)).current;
   const loginContext = useContext(LoginContext)
   const handlePlusPress = () => {
-    setShowCaptionBox(true);
-    Animated.timing(captionAnim, {
+    setShowDishNameBox(true);
+    Animated.timing(dishNameAnim, {
       toValue: 1,
       duration: 300,
       useNativeDriver: true,
@@ -67,17 +67,17 @@ export default function MakePostDetails({route, navigation}: Props) {
   };
 
   const handleOutsideClick = () => {
-    Animated.timing(captionAnim, {
+    Animated.timing(dishNameAnim, {
       toValue: 0,
       duration: 300,
       useNativeDriver: true,
     }).start(() => {
-      setShowCaptionBox(false);
+      setShowDishNameBox(false);
     });
   };
 
   const handleSubmit = async () => {
-    if (!rating || !restaurant.trim() || !dishName.trim()) {
+    if (!rating || !restaurant.trim() || !captionNew.trim()) {
       Alert.alert('Incomplete Information', 'Please provide all required information.');
       return;
     }
@@ -85,8 +85,8 @@ export default function MakePostDetails({route, navigation}: Props) {
     const postData = {
       rating: rating,
       restaurant: restaurant.trim(),
-      dish: dishName.trim(),
-      caption: caption,
+      caption: captionNew.trim(),
+      dish: dishname,
     };
 
     const formData = new FormData();
@@ -142,7 +142,7 @@ export default function MakePostDetails({route, navigation}: Props) {
 
   return (
     <View style={[styles.container, { backgroundColor: themeColors.background }]}>
-      <View style={[styles.headerContainer, { zIndex: showCaptionBox ? 0 : 1 }]}>
+      <View style={[styles.headerContainer, { zIndex: showDishNameBox ? 0 : 1 }]}>
         <MakePostHeader />
       </View>
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
@@ -164,7 +164,7 @@ export default function MakePostDetails({route, navigation}: Props) {
 
         {/* Form Fields */}
         <RestaurantInputBox restaurant={restaurant} setRestaurant={setRestaurant} />
-        <DishNameInputBox dishName={dishName} setDishName={setDishName} />
+        <CaptionBox caption={captionNew} setCaption={setCaptionNew} />
         {/* Submit Button */}
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={styles.button} onPress={handleSubmit}>
@@ -174,26 +174,26 @@ export default function MakePostDetails({route, navigation}: Props) {
       </ScrollView>
 
       {/* Caption Box (if you're still using it) */}
-      {showCaptionBox && (
+      {showDishNameBox && (
         <TouchableWithoutFeedback onPress={handleOutsideClick}>
           <View style={StyleSheet.absoluteFill}>
             {/* Replace BlurView with a simple View if not using expo-blur */}
             {<BlurView intensity={40} tint="dark" style={StyleSheet.absoluteFill} /> }
             <Animated.View
               style={[
-                styles.captionInputContainer,
+                styles.dishNameInputContainer,
                 {
-                  opacity: captionAnim,
-                  transform: [{ scale: captionAnim }],
+                  opacity: dishNameAnim,
+                  transform: [{ scale: dishNameAnim }],
                   backgroundColor: themeColors.background,
                 },
               ]}
             >
               <Text
-                style={[styles.captionText, { color: themeColors.text }]}
+                style={[styles.dishNameText, { color: themeColors.text }]}
                 numberOfLines={4} // Adjust as needed
               >
-                {caption}
+                {dishname}
               </Text>
             </Animated.View>
           </View>
@@ -252,7 +252,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 8,
   },
-  captionInputContainer: {
+  dishNameInputContainer: {
     position: 'absolute',
     padding: 10,
     borderRadius: 30,
@@ -261,7 +261,7 @@ const styles = StyleSheet.create({
     top: '19%',
     left: '25%',
   },
-  captionText: {
+  dishNameText: {
     fontSize: 16,
     lineHeight: 20,
     textAlign: 'center',

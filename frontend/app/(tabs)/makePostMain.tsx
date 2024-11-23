@@ -8,7 +8,7 @@ export type MakePostScreenStackParamList = {
   Main: undefined;
   Details: {
     selectedImage: string;
-    caption: string;
+    dishname: string;
   };
 };
 

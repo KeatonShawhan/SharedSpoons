@@ -17,7 +17,7 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/constants/Colors';
 import { ImagePickerBox } from '@/components/makePost/ImagePickerBox';
-import { CaptionInputBox } from '@/components/makePost/CaptionInputBox';
+import { DishNameBox } from '@/components/makePost/DishNameBox';
 import { MakePostScreenStackParamList } from '@/app/(tabs)/makePostMain';
 
 const HEADER_HEIGHT = 60; // Adjust if needed
@@ -27,27 +27,27 @@ type MakePostNavigationProp = NativeStackNavigationProp<MakePostScreenStackParam
 export default function MakePost() {
   const colorScheme = useColorScheme();
   const navigation = useNavigation<MakePostNavigationProp>();
-  const [caption, setCaption] = useState('');
+  const [dishName, setDishName] = useState('');
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
-  const isFormComplete = selectedImage && caption.trim().length > 0;
+  const isFormComplete = selectedImage && dishName.trim().length > 0;
 
-  const [isCaptionFocused, setIsCaptionFocused] = useState(false);
+  const [isDishNameFocused, setIsDishNameFocused] = useState(false);
 
   // Animations
-  const captionPosition = useRef(new Animated.Value(0)).current; // 0: original position, 1: moved position
+  const dishNamePosition = useRef(new Animated.Value(0)).current; // 0: original position, 1: moved position
   const contentOpacity = useRef(new Animated.Value(1)).current;
 
   const handleNext = () => {
     if (!isFormComplete) {
-      Alert.alert('Incomplete Information', 'Please select an image and enter a caption.');
+      Alert.alert('Incomplete Information', 'Please select an image and the dish name.');
       return;
     }
 
     // Navigate to 'Details' screen, passing selectedImage and caption
     navigation.navigate('Details', {
       selectedImage,
-      caption: caption.trim(),
+      dishname: dishName.trim(),
     });
   };
 
@@ -65,12 +65,10 @@ export default function MakePost() {
           text: 'Discard',
           style: 'destructive',
           onPress: () => {
-            // Dismiss the keyboard to ensure the caption is not focused
             Keyboard.dismiss();
 
-            // Clear the form data and navigate back
             setSelectedImage(null);
-            setCaption('');
+            setDishName('');
             navigation.goBack();
           },
         },
@@ -82,11 +80,11 @@ export default function MakePost() {
   useEffect(() => {
 
     const keyboardWillShowSub: EmitterSubscription = Keyboard.addListener('keyboardWillShow', () => {
-      animateCaption(true);
+      animateDishName(true);
     });
   
     const keyboardWillHideSub: EmitterSubscription = Keyboard.addListener('keyboardWillHide', () => {
-      animateCaption(false);
+      animateDishName(false);
     });
   
 
@@ -96,11 +94,11 @@ export default function MakePost() {
     };
   }, []);
 
-  const animateCaption = (focus: boolean) => {
-    setIsCaptionFocused(focus);
+  const animateDishName = (focus: boolean) => {
+    setIsDishNameFocused(focus);
 
     Animated.parallel([
-      Animated.timing(captionPosition, {
+      Animated.timing(dishNamePosition, {
         toValue: focus ? 1 : 0,
         duration: 300,
         useNativeDriver: true,
@@ -113,10 +111,9 @@ export default function MakePost() {
     ]).start();
   };
 
-  // Interpolate the caption position
-  const translateY = captionPosition.interpolate({
+  const translateY = dishNamePosition.interpolate({
     inputRange: [0, 1],
-    outputRange: [0, -200], // Adjust -200 to move the caption higher or lower
+    outputRange: [0, -200], 
   });
 
   return (
@@ -140,36 +137,34 @@ export default function MakePost() {
 
       {/* Main Content */}
       <View style={styles.contentContainer}>
-        {/* Content that gets dimmed */}
         <Animated.View style={[styles.content, { opacity: contentOpacity }]}>
           <ImagePickerBox
             selectedImage={selectedImage}
             setSelectedImage={setSelectedImage}
-            isDisabled={isCaptionFocused} // Pass isDisabled prop based on caption focus
+            isDisabled={isDishNameFocused} 
           />
         </Animated.View>
 
-        {/* Overlay to detect taps outside the caption box */}
-        {isCaptionFocused && (
+        {isDishNameFocused && (
           <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.overlay} />
           </TouchableWithoutFeedback>
         )}
 
-        {/* Caption Input */}
+        {/* DishName Input */}
         <Animated.View
           style={[
-            styles.captionContainer,
+            styles.dishNameContainer,
             {
               transform: [{ translateY }],
             },
           ]}
         >
-          <CaptionInputBox
-            caption={caption}
-            setCaption={setCaption}
-            onFocus={() => animateCaption(true)}
-            onBlur={() => animateCaption(false)}
+          <DishNameBox
+            dishName={dishName}
+            setDishName={setDishName}
+            onFocus={() => animateDishName(true)}
+            onBlur={() => animateDishName(false)}
           />
         </Animated.View>
       </View>
@@ -223,15 +218,15 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
   },
-  captionContainer: {
-    position: 'absolute', // Position absolute to overlay on top
-    bottom: 0, // Align at the bottom
+  dishNameContainer: {
+    position: 'absolute',
+    bottom: 0,
     width: '100%',
     paddingHorizontal: 16,
-    zIndex: 2, // Ensure the caption is above other content
+    zIndex: 2,
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    zIndex: 1, // Place the overlay below the caption input
+    zIndex: 1,
   },
 });

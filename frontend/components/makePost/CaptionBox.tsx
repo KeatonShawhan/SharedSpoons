@@ -1,12 +1,12 @@
 import React from 'react';
 import { TextInput, StyleSheet, useColorScheme } from 'react-native';
 
-type DishNameInputBoxProps = {
-  dishName: string;
-  setDishName: (text: string) => void;
+type CaptionBoxProps = {
+  caption: string;
+  setCaption: (text: string) => void;
 };
 
-export function DishNameInputBox({ dishName, setDishName }: DishNameInputBoxProps) {
+export function CaptionBox({ caption, setCaption }: CaptionBoxProps) {
   const colorScheme = useColorScheme();
   const isDarkMode = colorScheme === 'dark';
 
@@ -19,10 +19,10 @@ export function DishNameInputBox({ dishName, setDishName }: DishNameInputBoxProp
           color: isDarkMode ? '#fff' : '#000',
         },
       ]}
-      placeholder="Dish Name"
+      placeholder="Caption and Details"
       placeholderTextColor={isDarkMode ? '#ccc' : '#888'}
-      value={dishName}
-      onChangeText={setDishName}
+      value={caption}
+      onChangeText={setCaption}
     />
   );
 }
