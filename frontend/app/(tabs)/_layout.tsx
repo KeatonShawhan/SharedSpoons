@@ -84,8 +84,8 @@ export default function TabLayout() {
         name="exploreMain"
         options={{
           title: '',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'search' : 'code-slash-outline'} color={color} />
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name={'search'} color={color} />
           ),
         }}
       />
