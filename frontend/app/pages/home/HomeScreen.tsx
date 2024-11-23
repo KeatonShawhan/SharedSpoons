@@ -152,31 +152,35 @@ export default function HomeScreen() {
         <Header colorScheme={colorScheme} />
       </Animated.View>
 
-      <Animated.ScrollView 
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-        onScroll={handleScroll}
-        scrollEventThrottle={16}
-      >
-        {homePosts.map(post => (
-          <PostCard 
-            key={post.id}  
-            id={post.id}
-            isSaved={post.data.is_saved}
-            user_id={post.user}
-            username={post.data.username}
-            caption={post.data.caption}
-            dish={post.data.dish}
-            rating={post.data.rating}
-            place={post.data.restaurant}
-            image={post.data.image}
-            parentTab="HomeTab"
-            pfp={post.data.pfp}
-          />
-        ))}
-        
-        {loading && <LoadingIndicator message="Loading more posts..." />}
-      </Animated.ScrollView>
+      {homePosts.length === 0 && !loading ? (
+        renderEmptyState()
+      ) : (
+        <Animated.ScrollView
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
+        >
+          {homePosts.map((post) => (
+            <PostCard
+              key={post.id}
+              id={post.id}
+              isSaved={post.data.is_saved}
+              user_id={post.user}
+              username={post.data.username}
+              caption={post.data.caption}
+              dish={post.data.dish}
+              rating={post.data.rating}
+              place={post.data.restaurant}
+              image={post.data.image}
+              parentTab="HomeTab"
+              pfp={post.data.pfp}
+            />
+          ))}
+
+          {loading && <LoadingIndicator message="Loading more posts..." />}
+        </Animated.ScrollView>
+      )}
     </SafeAreaView>
   );
 }
