@@ -101,13 +101,19 @@ export class postService{
                     CASE 
                         WHEN toEat.post_id IS NOT NULL THEN TRUE 
                         ELSE FALSE 
-                    END AS is_saved
+                    END AS is_saved,
+                    CASE
+                        WHEN likes.post_id IS NOT NULL THEN TRUE
+                        ELSE FALSE
+                    END AS is_liked
                 FROM 
                     post
                 LEFT JOIN 
                     app_user ON app_user.id = post.user_id
                 LEFT JOIN 
                     toEat ON toEat.post_id = post.id AND toEat.user_id = $2
+                LEFT JOIN 
+                    likes ON likes.post_id = post.id AND likes.user_id = $2
                 WHERE 
                     post.id = $1;
             `;
@@ -139,6 +145,7 @@ export class postService{
                     pfp: row.pfp || '',
                     is_saved: row.is_saved,
                     username: row.username || '',
+                    is_liked:row.is_liked
                 },
             };
     
@@ -192,7 +199,8 @@ export class postService{
                     caption: row.data.caption,
                     pfp: row.pfp || '',
                     username: row.username || '',
-                    is_saved:row.is_saved
+                    is_saved:row.is_saved,
+                    is_liked:row.is_liked
                 },
             }));
     
@@ -221,38 +229,45 @@ export class postService{
             }
     
             let selectQuery = `
-                SELECT 
-                    post.*,
-                    app_user.data->>'username' AS username,
-                    app_user.data->>'pfp' AS pfp,
-                    CASE 
-                        WHEN toEat.post_id IS NOT NULL THEN TRUE 
-                        ELSE FALSE 
-                    END AS is_saved
-                FROM 
-                    post
-                INNER JOIN 
-                    follow ON post.user_id = follow.receiver
-                LEFT JOIN 
-                    app_user ON app_user.id = post.user_id
-                LEFT JOIN 
-                    toEat ON toEat.post_id = post.id AND toEat.user_id = $1
-                WHERE 
-                    follow.sender = $1
-            `;
+            SELECT 
+                post.*, 
+                app_user.data->>'username' AS username,
+                app_user.data->>'pfp' AS pfp,
+                CASE 
+                    WHEN toEat.post_id IS NOT NULL THEN TRUE 
+                    ELSE FALSE 
+                END AS is_saved,
+                CASE
+                    WHEN likes.post_id IS NOT NULL THEN TRUE
+                    ELSE FALSE
+                END AS is_liked
+            FROM 
+                post
+            INNER JOIN 
+                follow ON post.user_id = follow.receiver
+            LEFT JOIN 
+                app_user ON app_user.id = post.user_id
+            LEFT JOIN 
+                toEat ON toEat.post_id = post.id AND toEat.user_id = $1
+            LEFT JOIN 
+                likes ON likes.post_id = post.id AND likes.user_id = $1
+            WHERE 
+                follow.sender = $1
+        `;
     
             const queryParams = [userID];
     
             if (lastPostTime) {
-                selectQuery += ` AND post.data->>'time' < $2 `;
+                selectQuery += ` AND post.data->>'time' < $3 `;
                 queryParams.push(lastPostTime);
             }
     
             selectQuery += `
-                ORDER BY post.data->>'time' DESC
-                LIMIT $${queryParams.length + 1};
-            `;
-            queryParams.push(limit.toString());
+            ORDER BY post.data->>'time' DESC
+            LIMIT $${queryParams.length + 1};
+        `;
+        queryParams.push(limit.toString());
+        console.log(queryParams);
     
             const query = {
                 text: selectQuery,
@@ -278,7 +293,8 @@ export class postService{
                     caption: row.data.caption,
                     pfp: row.pfp || '',
                     username: row.username || '',
-                    is_saved: row.is_saved
+                    is_saved: row.is_saved,
+                    is_liked: row.is_liked
                 },
             }));
     

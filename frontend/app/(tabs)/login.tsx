@@ -59,7 +59,6 @@ export default function login() {
         return out;
       })
       .then((json) => {
-        console.log(json);
         // Faulty JWT test lines
         //loginContext.setAccessToken('FAULTY_TOKEN');
         //AsyncStorage.setItem("accessToken", 'FAULTY_TOKEN');

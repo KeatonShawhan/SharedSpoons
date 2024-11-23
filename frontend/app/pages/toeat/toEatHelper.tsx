@@ -38,7 +38,7 @@ export const addToEat = async (postId, accessToken) => {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
 
-    const json = await response.json();
+    const json = await response.ok;
     return json;
   } catch (err) {
     console.log("Error adding To Eat:", err);
@@ -74,7 +74,6 @@ export const deleteToEat = async (postId, accessToken) => {
 
 
 export const fetchPostData = async (postId, accessToken) => {
-  console.log('postid: ' + postId)
   try {
       const response = await fetch(`${API_URL}post/postID/${postId}`, {
           method: 'GET',
@@ -87,10 +86,12 @@ export const fetchPostData = async (postId, accessToken) => {
           throw new Error('Failed to fetch post');
       }
 
-      const apiData = await response.json();            
+
+      const apiData = await response.json();  
             // Transform API data to match PostCard props
             const transformedData: PostCardProps = {
                 isSaved: apiData.data.is_saved,
+                isLiked:apiData.data.is_liked,
                 id: apiData.id,
                 user_id: apiData.user,
                 username: apiData.data.username,
@@ -146,7 +147,7 @@ export const unlikePost = async (postId, accessToken) => {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
 
-    const json = await response.json();
+    const json = await response.ok;
     return json;
   } catch (err) {
     console.log("Error unliking", err);

@@ -18,12 +18,10 @@ export default function ToEatPage() {
 
 
   useEffect(() => {
-    console.log('herrrrreeeeee')
     const fetchData = async () => {
       try {
         const toEatList = await fetchToEat(loginContext.accessToken);
         setList(toEatList);
-        console.log(toEatList.length)
       } catch (error) {
         console.error("Error fetching To-Eat data:", error);
       }

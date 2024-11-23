@@ -10,6 +10,7 @@ export interface PostJSON{
   pfp: string;
   username: string;
   is_saved: string;
+  is_liked: string;
 }
 
 export interface PostContent {

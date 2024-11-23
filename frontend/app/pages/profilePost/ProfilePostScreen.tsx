@@ -25,6 +25,7 @@ interface PostApiResponse {
     pfp: string;
     username: string;
     is_saved:boolean;
+    is_liked:boolean;
   };
 }
 
@@ -64,6 +65,7 @@ export default function PostPage() {
             
             // Transform API data to match PostCard props
             const transformedData: PostCardProps = {
+                isLiked:apiData.data.is_liked,
                 isSaved: apiData.data.is_saved,
                 id: apiData.id,
                 user_id: apiData.user,

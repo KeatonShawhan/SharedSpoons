@@ -10,7 +10,7 @@ import { ProfileScreenNavigationProp } from '@/app/pages/profile/profileNavigati
 import type { ToEatScreenNavigationProp } from '@/app/(tabs)/toeat'; 
 import { getCommentCount } from './screens/commentHelper';
 import LoginContext from '@/contexts/loginContext';
-import { addToEat, deleteToEat, likeCount, likePost, unlikePost } from '@/app/pages/toeat/toEatHelper';
+import { addToEat, deleteToEat, fetchPostData, likeCount, likePost, unlikePost } from '@/app/pages/toeat/toEatHelper';
 
 const ORANGE_COLOR = '#FF9F45';
 
@@ -25,6 +25,7 @@ interface PostCaptionProps {
   postId: string;
   navigation: CombinedNavigationProp;
   isSaved: boolean;
+  isLiked: boolean;
   userId: string;
   parentTab: 'HomeTab' | 'ProfileTab' | 'ToEatTab' | 'ExploreTab';
 }
@@ -37,8 +38,9 @@ export function PostCaption({
   parentTab,
   isSaved,
   userId,
+  isLiked
 }: PostCaptionProps) {
-  const [isLiked, setIsLiked] = useState(false);
+  const [liked, setIsLiked] = useState(isLiked);
   const [saved, setSaved] = useState(isSaved);
   const [likesCount, setLikeCount] = useState(0);
   const [commentCount, setCommentCount] = useState(0);
@@ -46,15 +48,15 @@ export function PostCaption({
 
   const handleLike = async () => {
     if (!loginContext) return;
-
+    const newLikedState = !liked; 
     try {
-      if (isLiked) {
+      if (liked) {
         await unlikePost(postId, loginContext.accessToken);
       } else {
         await likePost(postId, loginContext.accessToken);
       }
-      setIsLiked(!isLiked);
-      loginContext.setLiked(!loginContext.liked); // Trigger re-fetch for likes
+      setIsLiked(newLikedState);
+      loginContext.setLiked(newLikedState);
     } catch (err) {
       console.error('Error liking post:', err);
     }
@@ -64,17 +66,15 @@ export function PostCaption({
     if (!loginContext) return;
   
     try {
-      const newSavedState = !saved; // Calculate new saved state
+      const newSavedState = !saved; 
       if (saved) {
-        console.log('Unsaving post:', postId);
         await deleteToEat(postId, loginContext.accessToken);
       } else {
-        console.log('Saving post:', postId);
         await addToEat(postId, loginContext.accessToken);
       }
   
       setSaved(newSavedState); // Update saved state
-      loginContext.triggerToEatRefresh(postId, newSavedState); // Notify LoginContext of the change
+      loginContext.triggerToEatRefresh(postId, newSavedState);
     } catch (err) {
       console.error('Error saving post:', err);
     }
@@ -103,14 +103,22 @@ export function PostCaption({
     const fetchData = async () => {
       const countLikes = await likeCount(postId, loginContext.accessToken);
       setLikeCount(countLikes);
+      const getLiked = (await fetchPostData(postId, loginContext.accessToken)).isLiked;
+      setIsLiked(getLiked);
     };
+
     fetchData();
   }, [postId, loginContext.liked]);
+
 
   // Sync `saved` state with `isSaved` prop updates
   useEffect(() => {
     setSaved(isSaved);
   }, [isSaved]);
+
+  useEffect(() => {
+    setIsLiked(isLiked);
+  }, [isLiked]);
 
   return (
     <ThemedView>
@@ -134,9 +142,9 @@ export function PostCaption({
           <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 10 }}>
             <TouchableOpacity onPress={handleLike}>
               <Ionicons
-                name={isLiked ? 'heart' : 'heart-outline'}
+                name={liked ? 'heart' : 'heart-outline'}
                 size={24}
-                color={isLiked ? ORANGE_COLOR : 'gray'}
+                color={liked ? ORANGE_COLOR : 'gray'}
               />
             </TouchableOpacity>
             {likesCount > 0 && (

@@ -68,6 +68,7 @@ export const LoginProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     null
   );
 
+
   useEffect(() => {
     const initialize = async () => {
       await decodeToken();

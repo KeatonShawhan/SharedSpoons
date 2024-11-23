@@ -63,7 +63,6 @@ export default function signup () {
         return res.json();
       })
       .then((json) => {
-        console.log(json);
         loginContext.setAccessToken(json.accessToken);
         loginContext.setUserId(json.id);
         loginContext.setFirstName(json.firstname);

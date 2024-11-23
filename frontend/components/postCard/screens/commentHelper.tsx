@@ -47,9 +47,7 @@ export const getCommentCount = async (postId, accessToken) => {
       },
     });
     if (!response.ok) throw new Error(`Error following user: ${response.status}`);
-    //console.log(response)
     const json = await response.json();
-    console.log(json)
     return json;
 
   } catch (err) {

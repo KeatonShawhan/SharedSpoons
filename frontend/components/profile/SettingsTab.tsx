@@ -85,7 +85,6 @@ const SettingsTab: React.FC<SettingsTabProps> = ({ pfp, setUsername, setBio, set
         Alert.alert('Success', responseData.message || 'Account updated successfully.');
         
         // Use the updated data for the UI
-        console.log(responseData);
         setUsername(responseData.updatedRequest.username);
         setBio(responseData.updatedRequest.bio || 'No bio available');
         setPfp(responseData.updatedRequest.profilePicture || require('../../assets/images/default.jpeg'));  // Use the updated profile picture
