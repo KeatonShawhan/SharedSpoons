@@ -25,8 +25,10 @@ export function postHeader({ username, place, onNavigateToProfile, pfp }: postHe
         <TouchableOpacity onPress={onNavigateToProfile}>
           <Image 
             style={[styles.profileImage, { borderColor: Colors[colorScheme].icon }]}
-            source={{ uri: pfp || 'https://via.placeholder.com/150' }}
-          />
+            /* eslint-disable */
+            source={pfp ? { uri: pfp } : require('../../assets/images/default.jpeg')}
+            /* eslint-enable */
+            />
         </TouchableOpacity>
         <View>
           <TouchableOpacity onPress={onNavigateToProfile}>

@@ -36,7 +36,6 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   pfp,
 }) => {
   const navigation = useNavigation();
-  //console.log("pfp: ",pfp);
 
   return (
     <View style={[styles.headerSection, { backgroundColor: Colors[colorScheme].background }]}>
@@ -57,8 +56,10 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
       </View>
       <View style={styles.profileImageContainer}>
         <Image
-          style={[styles.profileImage, { borderColor: Colors[colorScheme].icon }]}
-          source={{ uri: pfp || 'https://via.placeholder.com/150' }}
+          style={[styles.profileImage, { borderColor: Colors[colorScheme].text }]}
+          /* eslint-disable */
+          source={pfp ? { uri: pfp } : require('../../assets/images/default.jpeg')}
+          /* eslint-enable */
         />
         {/* Conditionally render the follow/unfollow button */}
         {!isOwnProfile && (
@@ -103,7 +104,7 @@ const styles = StyleSheet.create({
     width: width * 0.25,
     height: width * 0.25,
     borderRadius: width * 0.125,
-    borderColor: Colors.light.icon,
+    borderColor: 'black',
   },
   followButton: {
     position: 'absolute',

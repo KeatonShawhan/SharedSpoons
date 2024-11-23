@@ -139,17 +139,23 @@ export class PostController extends Controller {
                             const imageLink = await this.s3Service.getFileLink(post.data.image);
                             if (imageLink === undefined) {
                                 this.setStatus(400);
-                                console.error('Could not get image link');
+                                console.error('Could not get image link for post:' + post.id);
                                 return undefined;
                             }
                             post.data.image = imageLink;
-                            const pfpLink = await this.s3Service.getFileLink(post.data.pfp);
-                            if (pfpLink === undefined) {
-                                this.setStatus(400);
-                                console.error('Could not get pfp link for post:' + post.id);
-                                return undefined;
+    
+                            const pfpKey = post.data.pfp;
+                            if (!pfpKey || pfpKey.trim() === '') {
+                                post.data.pfp = '';
+                            } else {
+                                const pfpLink = await this.s3Service.getFileLink(pfpKey);
+                                if (pfpLink === undefined) {
+                                    console.warn('Could not get pfp link for post:' + post.id);
+                                    post.data.pfp = '';
+                                } else {
+                                    post.data.pfp = pfpLink;
+                                }
                             }
-                            post.data.pfp = pfpLink;
                             this.setStatus(200);
                             return post;
                         }
@@ -166,48 +172,56 @@ export class PostController extends Controller {
         @Request() request: express.Request,
         @Path() userID: string
     ): Promise<PostTotal[] | undefined> {
+        console.log("userid: ", request.user);
         if (!request.user) {
             this.setStatus(401);
             console.error('Unauthorized user');
             return undefined;
         }
-        try{
+        try {
             return new postService()
-        .getAllPosts(userID)
-        .then(
-            async (posts: PostTotal[] | undefined): 
-            Promise<PostTotal[]| undefined> => {
-            console.log(posts);
-            if (!posts) {
-                this.setStatus(400);
-                console.error('Could not get posts');
-                return undefined;
-            }
-            for (let i = 0; i < posts.length; i++) {
-                const imageLink = await this.s3Service.getFileLink(posts[i].data.image);
-                if (imageLink === undefined) {
-                    this.setStatus(400);
-                    console.error('Could not get image link for post:' + posts[i].id);
-                    return undefined;
-                }
-                posts[i].data.image = imageLink;
-                const pfpLink = await this.s3Service.getFileLink(posts[i].data.pfp);
-                if (pfpLink === undefined) {
-                    this.setStatus(400);
-                    console.error('Could not get pfp link for post:' + posts[i].id);
-                    return undefined;
-                }
-                posts[i].data.pfp = pfpLink;
-            }
-            this.setStatus(200);
-            return posts;
-          });
+                .getAllPosts(userID)
+                .then(
+                    async (posts: PostTotal[] | undefined): Promise<PostTotal[] | undefined> => {
+                        console.log(posts);
+                        if (!posts) {
+                            this.setStatus(400);
+                            console.error('Could not get posts');
+                            return undefined;
+                        }
+                        for (let i = 0; i < posts.length; i++) {
+                            const imageLink = await this.s3Service.getFileLink(posts[i].data.image);
+                            if (imageLink === undefined) {
+                                this.setStatus(400);
+                                console.error('Could not get image link for post:' + posts[i].id);
+                                return undefined;
+                            }
+                            posts[i].data.image = imageLink;
+    
+                            const pfpKey = posts[i].data.pfp;
+                            if (!pfpKey || pfpKey.trim() === '') {
+                                posts[i].data.pfp = '';
+                            } else {
+                                const pfpLink = await this.s3Service.getFileLink(pfpKey);
+                                if (pfpLink === undefined) {
+                                    console.warn('Could not get pfp link for post:' + posts[i].id);
+                                    posts[i].data.pfp = '';
+                                } else {
+                                    posts[i].data.pfp = pfpLink;
+                                }
+                            }
+                        }
+                        this.setStatus(200);
+                        return posts;
+                    }
+                );
         } catch (error) {
             this.setStatus(500);
             console.error('Error in post /post/all route:', error);
             return undefined;
         }
     }
+    
 
     @Get('/all/friendsPosts/{userID}')
 public async getFriendPosts(
@@ -232,20 +246,28 @@ public async getFriendPosts(
             return undefined;
         }
 
-        for (const post of posts) {
-            const imageLink = await this.s3Service.getFileLink(post.data.image);
-            const pfpLink = await this.s3Service.getFileLink(post.data.pfp);
-
-            if (!imageLink || !pfpLink) {
+        for (let i = 0; i < posts.length; i++) {
+            const imageLink = await this.s3Service.getFileLink(posts[i].data.image);
+            if (imageLink === undefined) {
                 this.setStatus(400);
-                console.error(`Could not get links for post: ${post.id}`);
+                console.error('Could not get image link for post:' + posts[i].id);
                 return undefined;
             }
+            posts[i].data.image = imageLink;
 
-            post.data.image = imageLink;
-            post.data.pfp = pfpLink;
+            const pfpKey = posts[i].data.pfp;
+            if (!pfpKey || pfpKey.trim() === '') {
+                posts[i].data.pfp = '';
+            } else {
+                const pfpLink = await this.s3Service.getFileLink(pfpKey);
+                if (pfpLink === undefined) {
+                    console.warn('Could not get pfp link for post:' + posts[i].id);
+                    posts[i].data.pfp = '';
+                } else {
+                    posts[i].data.pfp = pfpLink;
+                }
+            }
         }
-
         this.setStatus(200);
         return posts;
     } catch (error) {

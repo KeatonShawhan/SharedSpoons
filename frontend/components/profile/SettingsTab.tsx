@@ -88,7 +88,7 @@ const SettingsTab: React.FC<SettingsTabProps> = ({ pfp, setUsername, setBio, set
         console.log(responseData);
         setUsername(responseData.updatedRequest.username);
         setBio(responseData.updatedRequest.bio || 'No bio available');
-        setPfp(responseData.updatedRequest.profilePicture || 'https://via.placeholder.com/150');  // Use the updated profile picture
+        setPfp(responseData.updatedRequest.profilePicture || require('../../assets/images/default.jpeg'));  // Use the updated profile picture
         setLocation(responseData.updatedRequest.location);
       } else {
         const errorData = await response.json();

@@ -102,7 +102,7 @@ export default function HomeScreen() {
         Search for friends and users on the Explore page to see their posts here.
       </Text>
       <TouchableOpacity
-        style={[styles.exploreButton, { backgroundColor: Colors[colorScheme].tint }]}
+        style={[styles.exploreButton, { backgroundColor: Colors.light.primaryColor }]}
         onPress={() => navigation.navigate('exploreMain')}
       >
         <Text style={styles.exploreButtonText}>Go to Explore</Text>
