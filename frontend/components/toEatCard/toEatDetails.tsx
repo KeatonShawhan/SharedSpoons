@@ -3,7 +3,6 @@ import React from 'react';
 import { View } from 'react-native';
 import { PostCard, PostCardProps } from '../postCard/postCard';
 import { postEatButton } from './postEatButton';
-import { removeEatButton } from './removeEatButton';
 
 // Extend PostCardProps to include onProfilePress
 /* eslint-disable */
