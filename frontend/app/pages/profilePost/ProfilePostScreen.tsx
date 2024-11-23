@@ -24,8 +24,8 @@ interface PostApiResponse {
     caption: string;
     pfp: string;
     username: string;
+    is_saved:boolean;
   };
-  is_saved:boolean;
 }
 
 export default function PostPage() {
@@ -60,11 +60,11 @@ export default function PostPage() {
             }
 
             const apiData: PostApiResponse = await response.json();
-            console.log("apiData: ", apiData);
+            // console.log("apiData: ", apiData.data.is_saved);
             
             // Transform API data to match PostCard props
             const transformedData: PostCardProps = {
-                isSaved: apiData.is_saved,
+                isSaved: apiData.data.is_saved,
                 id: apiData.id,
                 user_id: apiData.user,
                 username: apiData.data.username,

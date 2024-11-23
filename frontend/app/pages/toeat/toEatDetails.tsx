@@ -41,6 +41,7 @@ export default function ToEatDetails() {
     const fetchData = async () => {
       try {
         const postData = await fetchPostData(id, loginContext.accessToken);
+        // console.log(postData);
         setPost(postData);
       } catch (error) {
         console.error("Error fetching profile data:", error);

@@ -1,3 +1,4 @@
+// toEathelper.tsx
 import API_URL from "@/config";
 import { PostCardProps } from "@/components/postCard/postCard";
 
@@ -59,13 +60,18 @@ export const deleteToEat = async (postId, accessToken) => {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
 
-    const json = await response.json();
-    return json;
+    // Check if response body exists before parsing
+    const text = await response.text();
+    if (text) {
+      return JSON.parse(text); // Parse only if response body is non-empty
+    }
+    return null; // No response body
   } catch (err) {
     console.log("Error deleting To Eat:", err);
     return [];
   }
 };
+
 
 export const fetchPostData = async (postId, accessToken) => {
   console.log('postid: ' + postId)
@@ -84,10 +90,10 @@ export const fetchPostData = async (postId, accessToken) => {
       const apiData = await response.json();            
             // Transform API data to match PostCard props
             const transformedData: PostCardProps = {
-                isSaved: apiData.is_saved,
+                isSaved: apiData.data.is_saved,
                 id: apiData.id,
                 user_id: apiData.user,
-                username: apiData.data.username, // You might want to fetch this separately or get from context
+                username: apiData.data.username,
                 caption: apiData.data.caption,
                 dish: apiData.data.dish,
                 rating: apiData.data.rating,
@@ -95,7 +101,7 @@ export const fetchPostData = async (postId, accessToken) => {
                 image: apiData.data.image,
                 pfp: apiData.data.pfp,
 
-                parentTab: 'ProfileTab' 
+                parentTab: 'ToEatTab' 
             };
             return transformedData;
 

@@ -5,11 +5,7 @@ import { PostTotal } from '../post';
 export class toEatService{
 
     public async getToEatList(userId:string): Promise < PostTotal[] | undefined > {
-        const client = await pool.connect();
-
         try{
-            await client.query('BEGIN');
-
             const verifyQuery = {
                 text: `SELECT * FROM app_user WHERE id = $1`,
                 values: [userId],
@@ -37,20 +33,13 @@ export class toEatService{
             return rows;
             
         }catch (error) {
-            await client.query('ROLLBACK');
             console.error('Error getting to eat list:', error);
             return undefined;
-        } finally {
-            client.release();
         }
     }
 
     public async postToEatList(userId:string, postId: string): Promise < {id:string} | undefined > {
-        const client = await pool.connect();
-
         try{
-            await client.query('BEGIN');
-
             const insertQuery = `
                 INSERT INTO toEat (post_id, user_id)
                 VALUES ($1, $2)
@@ -64,17 +53,12 @@ export class toEatService{
 
             const { rows } = await pool.query(query);
 
-            await client.query('COMMIT');
-
             return rows[0];
             
         }catch (error) {
-            await client.query('ROLLBACK');
             console.error('Error getting to eat list:', error);
             console.log('ID: ' + postId + ' User: ' + userId); 
             return undefined;
-        } finally {
-            client.release();
         }
     }
 

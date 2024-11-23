@@ -1,3 +1,4 @@
+// HomeScreen.tsx
 import React, { useContext, useRef, useState, useEffect } from 'react';
 import {
   Animated,
@@ -36,6 +37,7 @@ export default function HomeScreen() {
 
   const getPosts = async () => {
     if (!loginContext.isInitialized || !loginContext.accessToken) return;
+    console.log('Fetching posts...');
     setLoading(true);
 
     const posts = await fetchPosts(
@@ -49,11 +51,13 @@ export default function HomeScreen() {
     if (posts && posts.length > 0) {
       setHomePosts((prevPosts) => [...prevPosts, ...posts]);
       setLastPostTime(posts[posts.length - 1].data.time);
+      console.log('Posts fetched and added:', posts);
     }
 
     setLoading(false);
   };
 
+  // Initial fetch of posts
   useEffect(() => {
     getPosts();
   }, [
@@ -61,8 +65,22 @@ export default function HomeScreen() {
     loginContext.accessToken,
     loginContext.isAuthenticated,
     loginContext.followed,
-    loginContext.addedEat,
   ]);
+
+
+  useEffect(() => {  
+    if (!loginContext.savedPostData) return;
+
+    const { postId, isSaved } = loginContext.savedPostData;
+    console.log("Updating saved status for post:", postId, "to", isSaved);
+    setHomePosts((prevPosts) =>
+      prevPosts.map((post) =>
+        post.id === postId ? { ...post, data: { ...post.data, is_saved: isSaved } } : post
+      )
+    );    
+  }, [loginContext.savedPostData]);
+
+  
 
   const headerTranslateY = scrollYRef.interpolate({
     inputRange: [0, SCROLL_THRESHOLD],
@@ -134,35 +152,31 @@ export default function HomeScreen() {
         <Header colorScheme={colorScheme} />
       </Animated.View>
 
-      {homePosts.length === 0 && !loading ? (
-        renderEmptyState()
-      ) : (
-        <Animated.ScrollView
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-          onScroll={handleScroll}
-          scrollEventThrottle={16}
-        >
-          {homePosts.map((post) => (
-            <PostCard
-              key={post.id}
-              id={post.id}
-              isSaved={post.data.is_saved}
-              user_id={post.user}
-              username={post.data.username}
-              caption={post.data.caption}
-              dish={post.data.dish}
-              rating={post.data.rating}
-              place={post.data.restaurant}
-              image={post.data.image}
-              parentTab="HomeTab"
-              pfp={post.data.pfp}
-            />
-          ))}
-
-          {loading && <LoadingIndicator message="Loading more posts..." />}
-        </Animated.ScrollView>
-      )}
+      <Animated.ScrollView 
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+      >
+        {homePosts.map(post => (
+          <PostCard 
+            key={post.id}  
+            id={post.id}
+            isSaved={post.data.is_saved}
+            user_id={post.user}
+            username={post.data.username}
+            caption={post.data.caption}
+            dish={post.data.dish}
+            rating={post.data.rating}
+            place={post.data.restaurant}
+            image={post.data.image}
+            parentTab="HomeTab"
+            pfp={post.data.pfp}
+          />
+        ))}
+        
+        {loading && <LoadingIndicator message="Loading more posts..." />}
+      </Animated.ScrollView>
     </SafeAreaView>
   );
 }

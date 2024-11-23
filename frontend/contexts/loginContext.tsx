@@ -1,9 +1,10 @@
+// loginContext.tsx
 import React, { createContext, useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from "expo-router";
+import { useNavigation } from 'expo-router';
 import { RootTabParamList } from '@/app/(tabs)/_layout';
-import { StackNavigationProp } from "@react-navigation/stack";
-import { jwtDecode } from 'jwt-decode'; 
+import { StackNavigationProp } from '@react-navigation/stack';
+import { jwtDecode } from 'jwt-decode';
 
 interface DecodedToken {
   id: string;
@@ -25,9 +26,9 @@ interface LoginContextType {
   setIsAuthenticated: (isAuthenticated: boolean) => void;
   followed: boolean;
   setFollowed: (followed: boolean) => void;
-  addedEat: number; 
+  addedEat: number;
   setAddedEat: (addedEat: number) => void;
-  triggerToEatRefresh: () => void; 
+  triggerToEatRefresh: (postId: string, isSaved: boolean) => void;
   commented: boolean;
   setCommented: (commented: boolean) => void;
   liked: boolean;
@@ -40,6 +41,7 @@ interface LoginContextType {
   decodeToken: () => void;
   isInitialized: boolean;
   setIsInitialized: (isInitialized: boolean) => void;
+  savedPostData: { postId: string; isSaved: boolean } | null; // New state for saved post info
 }
 
 const LoginContext = createContext<LoginContextType | undefined>(undefined);
@@ -52,11 +54,16 @@ export const LoginProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [followed, setFollowed] = useState<boolean>(true);
   const [commented, setCommented] = useState<boolean>(true);
   const [liked, setLiked] = useState<boolean>(true);
-  const [addedEat, setAddedEat] = useState<number>(0); 
+  const [addedEat, setAddedEat] = useState<number>(0);
   const [madePost, setMadePost] = useState<boolean>(true);
   const [firstName, setFirstName] = useState<string>('');
   const navigation = useNavigation<StackNavigationProp<RootTabParamList>>();
   const [isInitialized, setIsInitialized] = useState<boolean>(false);
+
+  // New state to store specific post save status updates
+  const [savedPostData, setSavedPostData] = useState<{ postId: string; isSaved: boolean } | null>(
+    null
+  );
 
   useEffect(() => {
     const initialize = async () => {
@@ -78,20 +85,24 @@ export const LoginProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       setUserId(decoded.id);
       setUserName(decoded.username);
       setFirstName(decoded.firstname);
-      console.log("Decoded token:", decoded);
+      console.log('Decoded token:', decoded);
       setAccessToken(token);
     } catch (error) {
-      console.error("Failed to decode token:", error);
+      console.error('Failed to decode token:', error);
       handleLogout(); // Logout if token is invalid
     }
   };
 
-  const triggerToEatRefresh = () => {
-    setAddedEat((prev) => prev + 1); // Increment counter for updates
+
+  const triggerToEatRefresh = (postId: string, isSaved: boolean) => {
+    console.log('triggerToEatRefresh called for postId:', postId, 'isSaved:', isSaved);
+    setAddedEat((prev) => prev + 1); // This can remain for other uses
+    setSavedPostData({ postId, isSaved }); // Store the updated post info
   };
 
+
   const handleLogout = async () => {
-    await AsyncStorage.removeItem("accessToken");
+    await AsyncStorage.removeItem('accessToken');
     setAccessToken('');
     navigation.navigate('login'); // Redirect to login page
     setIsAuthenticated(false);
@@ -100,31 +111,32 @@ export const LoginProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   return (
     <LoginContext.Provider
       value={{
-        madePost,
-        setMadePost,
-        commented,
-        setCommented,
-        addedEat,
-        setAddedEat,
-        triggerToEatRefresh,
-        followed,
-        setFollowed,
-        userName,
-        setUserName,
         accessToken,
         setAccessToken,
         userId,
         setUserId,
+        userName,
+        setUserName,
         isAuthenticated,
         setIsAuthenticated,
+        followed,
+        setFollowed,
+        addedEat,
+        setAddedEat,
+        triggerToEatRefresh, // Updated to include postId and isSaved
+        commented,
+        setCommented,
+        liked,
+        setLiked,
+        madePost,
+        setMadePost,
         firstName,
         setFirstName,
         handleLogout,
         decodeToken,
         isInitialized,
         setIsInitialized,
-        liked,
-        setLiked
+        savedPostData, // Provide savedPostData in context
       }}
     >
       {children}

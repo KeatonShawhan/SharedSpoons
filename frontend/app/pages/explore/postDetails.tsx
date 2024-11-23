@@ -81,6 +81,7 @@ export default function PostDetails({ route }: Props) {
         place: apiData.data.restaurant || '',
         image: apiData.data.image || '',
         pfp: apiData.data.pfp,
+        isSaved: apiData.data.is_saved,
         likes: apiData.likes || 0,
         commentsCount: apiData.commentsCount || 0,
         parentTab: 'ExploreTab',

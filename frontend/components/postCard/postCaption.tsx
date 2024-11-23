@@ -8,9 +8,10 @@ import { CompositeNavigationProp } from '@react-navigation/native';
 import type { HomeScreenNavigationProp } from '@/app/(tabs)';
 import { ProfileScreenNavigationProp } from '@/app/pages/profile/profileNavigation';
 import type { ToEatScreenNavigationProp } from '@/app/(tabs)/toeat'; 
-import {getCommentCount} from './screens/commentHelper';
+import { getCommentCount } from './screens/commentHelper';
 import LoginContext from '@/contexts/loginContext';
 import { addToEat, deleteToEat, likeCount, likePost, unlikePost } from '@/app/pages/toeat/toEatHelper';
+
 const ORANGE_COLOR = '#FF9F45';
 
 type CombinedNavigationProp = CompositeNavigationProp<
@@ -23,7 +24,7 @@ interface PostCaptionProps {
   rating: number;
   postId: string;
   navigation: CombinedNavigationProp;
-  isSaved:boolean;
+  isSaved: boolean;
   userId: string;
   parentTab: 'HomeTab' | 'ProfileTab' | 'ToEatTab' | 'ExploreTab';
 }
@@ -34,29 +35,28 @@ export function PostCaption({
   postId,
   navigation,
   parentTab,
-  isSaved, 
-  userId
+  isSaved,
+  userId,
 }: PostCaptionProps) {
   const [isLiked, setIsLiked] = useState(false);
   const [saved, setSaved] = useState(isSaved);
   const [likesCount, setLikeCount] = useState(0);
   const [commentCount, setCommentCount] = useState(0);
-  const loginContext = useContext(LoginContext)
+  const loginContext = useContext(LoginContext);
+
   const handleLike = async () => {
     if (!loginContext) return;
-  
+
     try {
       if (isLiked) {
         await unlikePost(postId, loginContext.accessToken);
-        loginContext.triggerToEatRefresh();
       } else {
         await likePost(postId, loginContext.accessToken);
-        loginContext.triggerToEatRefresh(); 
       }
       setIsLiked(!isLiked);
-      loginContext.setLiked(!loginContext.liked)
+      loginContext.setLiked(!loginContext.liked); // Trigger re-fetch for likes
     } catch (err) {
-      console.error('Error updating To-Eat:', err);
+      console.error('Error liking post:', err);
     }
   };
 
@@ -64,21 +64,23 @@ export function PostCaption({
     if (!loginContext) return;
   
     try {
+      const newSavedState = !saved; // Calculate new saved state
       if (saved) {
+        console.log('Unsaving post:', postId);
         await deleteToEat(postId, loginContext.accessToken);
-        loginContext.triggerToEatRefresh(); 
       } else {
+        console.log('Saving post:', postId);
         await addToEat(postId, loginContext.accessToken);
-        loginContext.triggerToEatRefresh(); 
       }
-      loginContext.setAddedEat(loginContext.addedEat += 1)
-      setSaved(!saved);
+  
+      setSaved(newSavedState); // Update saved state
+      loginContext.triggerToEatRefresh(postId, newSavedState); // Notify LoginContext of the change
     } catch (err) {
-      console.error('Error updating To-Eat:', err);
+      console.error('Error saving post:', err);
     }
   };
   
-  
+
 
   const handleComment = () => {
     navigation.navigate('PostStack', {
@@ -87,21 +89,28 @@ export function PostCaption({
     });
   };
 
-  useEffect( ()=>{
+  // Fetch comment count
+  useEffect(() => {
     const fetchData = async () => {
-      const commentList = await getCommentCount(postId, loginContext.accessToken)
-      setCommentCount(commentList)
-    }
+      const commentList = await getCommentCount(postId, loginContext.accessToken);
+      setCommentCount(commentList);
+    };
     fetchData();
-  }, [postId, loginContext.commented])
+  }, [postId, loginContext.commented]);
 
-  useEffect( ()=>{
+  // Fetch like count
+  useEffect(() => {
     const fetchData = async () => {
-      const countlikes = await likeCount(postId, loginContext.accessToken)
-      setLikeCount(countlikes)
-    }
+      const countLikes = await likeCount(postId, loginContext.accessToken);
+      setLikeCount(countLikes);
+    };
     fetchData();
-  }, [postId, loginContext.liked])
+  }, [postId, loginContext.liked]);
+
+  // Sync `saved` state with `isSaved` prop updates
+  useEffect(() => {
+    setSaved(isSaved);
+  }, [isSaved]);
 
   return (
     <ThemedView>
@@ -118,37 +127,45 @@ export function PostCaption({
             }}
             numberOfLines={1}
             ellipsizeMode="tail"
-          >
-          </Text>
+          />
         </View>
 
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 10 }}>
             <TouchableOpacity onPress={handleLike}>
-              <Ionicons name={isLiked ? 'heart' : 'heart-outline'} size={24} color={isLiked ? ORANGE_COLOR : 'gray'} />
+              <Ionicons
+                name={isLiked ? 'heart' : 'heart-outline'}
+                size={24}
+                color={isLiked ? ORANGE_COLOR : 'gray'}
+              />
             </TouchableOpacity>
-            {likesCount > 0 && <Text style={{ fontSize: 14, color: 'gray', marginLeft: 4 }}>{likesCount}</Text>}
+            {likesCount > 0 && (
+              <Text style={{ fontSize: 14, color: 'gray', marginLeft: 4 }}>{likesCount}</Text>
+            )}
           </View>
 
           <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 10 }}>
             <TouchableOpacity onPress={handleComment}>
               <Ionicons name="chatbubble-outline" size={22} color="gray" />
             </TouchableOpacity>
-            {commentCount > 0 && <Text style={{ fontSize: 14, color: 'gray', marginLeft: 4 }}>{commentCount}</Text>}
+            {commentCount > 0 && (
+              <Text style={{ fontSize: 14, color: 'gray', marginLeft: 4 }}>{commentCount}</Text>
+            )}
           </View>
-            { loginContext.userId != userId &&
-              (
-              <TouchableOpacity onPress={handleSave}>
-              <Ionicons name={saved ? 'bookmark' : 'bookmark-outline'} size={22} color={saved ? ORANGE_COLOR : 'gray'} />
-              </TouchableOpacity>
-              )
-            }
+
+          {loginContext.userId !== userId && (
+            <TouchableOpacity onPress={handleSave}>
+              <Ionicons
+                name={saved ? 'bookmark' : 'bookmark-outline'}
+                size={22}
+                color={saved ? ORANGE_COLOR : 'gray'}
+              />
+            </TouchableOpacity>
+          )}
         </View>
       </View>
       <View>
-        <Text style={{paddingTop: 10, fontSize: 16, fontWeight:"bold"}}>
-          {dish}
-        </Text>
+        <Text style={{ paddingTop: 10, fontSize: 16, fontWeight: 'bold' }}>{dish}</Text>
       </View>
     </ThemedView>
   );

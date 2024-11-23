@@ -18,11 +18,11 @@ export function ToEatDetailsInfo({ onProfilePress, ...postProps }: ToEatDetailsI
       <View style={{ width: '95%', borderRadius: 0, borderColor: 'none' }}>
         <PostCard 
           {...postProps}
+          isSaved
           parentTab="ToEatTab"
         />
         <View>
           {postEatButton()}
-          {removeEatButton()}
         </View>
       </View>
     </View>
