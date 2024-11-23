@@ -42,6 +42,8 @@ interface LoginContextType {
   isInitialized: boolean;
   setIsInitialized: (isInitialized: boolean) => void;
   savedPostData: { postId: string; isSaved: boolean } | null; // New state for saved post info
+  lastUser: string;
+  setLastUser: (userId: string) => void;
 }
 
 const LoginContext = createContext<LoginContextType | undefined>(undefined);
@@ -59,6 +61,7 @@ export const LoginProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [firstName, setFirstName] = useState<string>('');
   const navigation = useNavigation<StackNavigationProp<RootTabParamList>>();
   const [isInitialized, setIsInitialized] = useState<boolean>(false);
+  const [lastUser, setLastUser] = useState<string>('');
 
   // New state to store specific post save status updates
   const [savedPostData, setSavedPostData] = useState<{ postId: string; isSaved: boolean } | null>(
@@ -93,19 +96,18 @@ export const LoginProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   };
 
-
   const triggerToEatRefresh = (postId: string, isSaved: boolean) => {
     console.log('triggerToEatRefresh called for postId:', postId, 'isSaved:', isSaved);
     setAddedEat((prev) => prev + 1); // This can remain for other uses
     setSavedPostData({ postId, isSaved }); // Store the updated post info
   };
 
-
   const handleLogout = async () => {
     await AsyncStorage.removeItem('accessToken');
     setAccessToken('');
-    navigation.navigate('login'); // Redirect to login page
+    navigation.navigate('login');
     setIsAuthenticated(false);
+    setLastUser(userId);
   };
 
   return (
@@ -123,7 +125,7 @@ export const LoginProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         setFollowed,
         addedEat,
         setAddedEat,
-        triggerToEatRefresh, // Updated to include postId and isSaved
+        triggerToEatRefresh,
         commented,
         setCommented,
         liked,
@@ -136,7 +138,9 @@ export const LoginProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         decodeToken,
         isInitialized,
         setIsInitialized,
-        savedPostData, // Provide savedPostData in context
+        savedPostData,
+        lastUser,
+        setLastUser
       }}
     >
       {children}

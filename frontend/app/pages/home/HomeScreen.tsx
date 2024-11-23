@@ -39,6 +39,7 @@ export default function HomeScreen() {
     if (!loginContext.isInitialized || !loginContext.accessToken) return;
     console.log('Fetching posts...');
     setLoading(true);
+    console.log(loginContext.userId, loginContext.lastUser);
 
     const posts = await fetchPosts(
       loginContext.userId,
@@ -47,7 +48,7 @@ export default function HomeScreen() {
       10,
       lastPostTime
     );
-
+    console.log("posts: ", posts)
     if (posts && posts.length > 0) {
       setHomePosts((prevPosts) => [...prevPosts, ...posts]);
       setLastPostTime(posts[posts.length - 1].data.time);
@@ -66,6 +67,24 @@ export default function HomeScreen() {
     loginContext.isAuthenticated,
     loginContext.followed,
   ]);
+
+  useEffect(() => {
+    if (loginContext.userId !== loginContext.lastUser) {
+      setHomePosts([]);
+      setLastPostTime('');
+      getPosts();
+    };
+  }, [
+    loginContext.isAuthenticated,
+  ])
+
+  useEffect(() => {
+    setHomePosts([]);
+    setLastPostTime('');
+    getPosts();
+  }, [
+    loginContext.followed,
+  ])
 
 
   useEffect(() => {  
