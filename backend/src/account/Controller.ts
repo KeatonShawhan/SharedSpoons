@@ -52,7 +52,7 @@ public async updateAccount(
         let updatedAccount: UpdateAccountRequest | null;
 
         if (file) {
-            const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+            const allowedMimeTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'image/heic', 'image/heif'];
             if (!allowedMimeTypes.includes(file.mimetype)) {
                 this.setStatus(400);
                 console.error('Invalid file type');
