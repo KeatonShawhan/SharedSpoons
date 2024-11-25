@@ -15,14 +15,6 @@ import type { ProfileStackParamList, ProfileScreenNavigationProp } from './profi
 import { fetchFollowersInfo, fetchFollowingInfo, fetchUserInfo } from './profileHelpers'; 
 import LoginContext from '@/contexts/loginContext';
 
-const SUGGESTED_USERS = [
-  { id: 's1', name: 'Emily Davis', username: '@emilyd' },
-  { id: 's2', name: 'Tom Wilson', username: '@tomw' },
-  { id: 's3', name: 'Lisa Anderson', username: '@lisaa' },
-  { id: 's4', name: 'Mark Thompson', username: '@markt' },
-  { id: 's5', name: 'Amy Chen', username: '@amyc' },
-];
-
 type FriendsScreenRouteProp = RouteProp<ProfileStackParamList, 'Friends'>;
 
 export default function FriendsScreen() {
@@ -38,7 +30,6 @@ export default function FriendsScreen() {
   const [searchQuery, setSearchQuery] = useState('');
   const [followers, setFollowers] = useState([]);
   const [following, setFollowing] = useState([]);
-  const [suggested_users] = useState(SUGGESTED_USERS);
   const [firstName, setFirstName] = useState(loginContext.firstName);
 
   useEffect(() => {
@@ -60,7 +51,15 @@ export default function FriendsScreen() {
     fetchData();
   }, [profileId]);
 
-  // Combine the two lists (activeTab data + suggestions) into a single FlatList
+  const filteredData = (activeTab === 'followers' ? followers : following).filter((user) =>
+  (user.name?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+   user.username?.toLowerCase().includes(searchQuery.toLowerCase()))
+);
+
+  const listData = [
+    ...(filteredData.map((user) => ({ type: 'user', data: user })) || []),
+  ];
+
   const renderItem = ({ item }: { item }) => {
     if (item.type === 'user') {
       return (
@@ -94,12 +93,6 @@ export default function FriendsScreen() {
     }
     return null;
   };
-
-  const listData = [
-    ...((activeTab === 'followers' ? followers : following).map((user) => ({ type: 'user', data: user })) || []),
-    { type: 'suggested_header' },
-    { type: 'suggested_user', data: suggested_users },
-  ];
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: Colors[colorScheme].background }]}>

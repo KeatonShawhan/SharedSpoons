@@ -19,11 +19,11 @@ export class AccountController extends Controller {
   
   private s3Service = new S3Service();
   @Put('/update')
-public async updateAccount(
+  public async updateAccount(
     @FormField() updateRequest: string,
     @UploadedFile() file: Express.Multer.File,
     @Request() request: express.Request
-): Promise<{ message: string, updatedRequest?: UpdateAccountRequest }> {
+  ): Promise<{ message: string, updatedRequest?: UpdateAccountRequest }> {
     try {
         if (!request.user) {
             this.setStatus(401);
@@ -94,5 +94,7 @@ public async updateAccount(
         console.error('Error in account update route:', error);
         return { message: 'Failed to update account' };
     }
-}
+  }
+
+  
 }
