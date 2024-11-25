@@ -10,6 +10,7 @@ import {
   Dimensions,
   TouchableOpacity,
   TouchableWithoutFeedback,
+  RefreshControl, // Import RefreshControl
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { BlurView } from 'expo-blur';
@@ -48,8 +49,11 @@ export default function Explore() {
   // New state for search input
   const [searchInput, setSearchInput] = useState('');
 
-  // Function to fetch posts
-  const fetchPosts = async () => {
+  // New state for refreshing
+  const [refreshing, setRefreshing] = useState(false);
+
+  // Function to fetch posts with optional refresh parameter
+  const fetchPosts = async (isRefresh = false) => {
     if (!loginContext?.accessToken) {
       setError('User not logged in');
       setLoading(false);
@@ -57,14 +61,19 @@ export default function Explore() {
     }
 
     try {
-      setLoading(true);
+      if (isRefresh) {
+        setRefreshing(true);
+        setOffset(0); // Reset offset for refresh
+      } else {
+        setLoading(true);
+      }
       setError(null);
 
       const fetchedPosts = await fetchExplorePosts(
         loginContext.handleLogout,
         loginContext.accessToken,
         36,
-        offset * 36
+        isRefresh ? 0 : offset * 36
       );
 
       if (!Array.isArray(fetchedPosts)) {
@@ -82,25 +91,38 @@ export default function Explore() {
       }));
 
       setPosts((prevPosts) => {
-        // Combine new posts with existing ones, removing duplicates
-        const allPosts = [...prevPosts, ...mappedPosts];
-        const uniquePosts = allPosts.filter(
-          (post, index, self) => index === self.findIndex((p) => p.id === post.id)
-        );
-        return uniquePosts;
+        if (isRefresh) {
+          // Replace posts on refresh
+          return mappedPosts;
+        } else {
+          // Append posts for infinite scroll
+          const allPosts = [...prevPosts, ...mappedPosts];
+          const uniquePosts = allPosts.filter(
+            (post, index, self) => index === self.findIndex((p) => p.id === post.id)
+          );
+          return uniquePosts;
+        }
       });
 
-      setOffset((prevOffset) => prevOffset + 1);
+      if (isRefresh) {
+        setOffset(1); // Reset offset after refresh
+      } else {
+        setOffset((prevOffset) => prevOffset + 1);
+      }
     } catch (error) {
       console.error('Error fetching posts:', error);
       setError('Failed to fetch posts');
     } finally {
-      setLoading(false);
+      if (isRefresh) {
+        setRefreshing(false);
+      } else {
+        setLoading(false);
+      }
     }
   };
 
   useEffect(() => {
-    fetchPosts();
+    fetchPosts(); // Initial fetch without refreshing
   }, []);
 
   // Function to split posts into columns for masonry layout
@@ -155,7 +177,7 @@ export default function Explore() {
         const scrollOffset = event.nativeEvent.contentOffset.y;
         const layoutHeight = event.nativeEvent.layoutMeasurement.height;
 
-        if (contentHeight - scrollOffset <= layoutHeight + 50 && !loading) {
+        if (contentHeight - scrollOffset <= layoutHeight + 50 && !loading && !isSearchActive) {
           fetchPosts();
         }
       },
@@ -189,6 +211,11 @@ export default function Explore() {
     } else {
       openSearchBar();
     }
+  };
+
+  // Handle the pull-to-refresh action
+  const onRefresh = () => {
+    fetchPosts(true); // Pass 'true' to indicate a refresh action
   };
 
   // Render loading indicator if posts are loading and none are displayed yet
@@ -263,6 +290,16 @@ export default function Explore() {
           showsVerticalScrollIndicator={false}
           onScroll={handleScroll}
           scrollEventThrottle={16}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              colors={[themeColors.tint]} // For Android
+              tintColor={themeColors.tint} // For iOS
+              title="Refreshing..."
+              titleColor={themeColors.text}
+            />
+          }
         >
           <View style={styles.columnsContainer}>
             <View style={styles.column}>{renderColumn(leftColumn)}</View>
