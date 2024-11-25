@@ -15,6 +15,23 @@ beforeAll(async () => {
   await db.reset();
 });
 
+beforeEach(async () => {
+  jest.clearAllMocks();
+  jest.spyOn(S3Service.prototype, 'uploadFile').mockImplementation(async () => {
+    // Return a mock S3 key
+    return 'mock-s3-key.jpg';
+  });
+
+  jest.spyOn(S3Service.prototype, 'getFileLink').mockImplementation(async (s3Key) => {
+    // Return a mock URL for the given S3 key
+    if (s3Key === 'mock-s3-key.jpg') {
+      return 'https://mock-s3-url.com/mock-s3-key.jpg';
+    } else {
+      return undefined; // Simulate failure for other keys
+    }
+  });
+});
+
 afterEach(async () => {
   await db.reset();
 });
