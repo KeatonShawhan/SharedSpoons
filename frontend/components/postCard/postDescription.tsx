@@ -26,7 +26,7 @@ export function postDescription({ caption, dish }: postDescriptionProps): React.
         <View style={{
           position: 'relative',
           width: '100%',
-          height: '100%',
+          height: '107%',
           borderWidth: 2,
           borderColor: ORANGE_COLOR,  
           borderRadius: 20,

@@ -1,11 +1,9 @@
-// ExploreSearchbar.tsx
-
 import React, { useState, useEffect, useContext } from 'react';
 import { View, TextInput, FlatList, StyleSheet } from 'react-native';
 import { useColorScheme } from 'react-native';
-import { Colors } from '@/constants/Colors'; // Import your Colors definition
+import { Colors } from '@/constants/Colors';
 import API_URL from '../../config';
-import LoginContext from "@/contexts/loginContext";
+import LoginContext from '@/contexts/loginContext';
 import UserItem from '@/components/friends/UserItem';
 
 interface Suggestion {
@@ -14,57 +12,62 @@ interface Suggestion {
   firstname: string;
   lastname: string;
 }
-/* eslint-disable */
-interface ExploreSearchBarProps {
-  navigation: any;
-}
-/* eslint-enable */
 
-export const ExploreSearchBar: React.FC<ExploreSearchBarProps> = ({ navigation }) => {
+interface ExploreSearchBarProps {
+  /* eslint-disable */
+  navigation: any;
+  /* eslint-enable */
+  onSearchInputChange: (input: string) => void; // Added callback prop
+}
+
+export const ExploreSearchBar: React.FC<ExploreSearchBarProps> = ({ navigation, onSearchInputChange }) => {
   const [searchInput, setSearchInput] = useState('');
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const loginContext = useContext(LoginContext);
   const colorScheme = useColorScheme();
 
+  // Fetch user suggestions from the backend
   const fetchSuggestions = async (input: string) => {
     try {
       const response = await fetch(
-        `${API_URL}/explore/search/suggestion?input=${encodeURIComponent(input)}&currentUsername=${encodeURIComponent(loginContext.userName)}`,
+        `${API_URL}/explore/search/suggestion?input=${encodeURIComponent(input)}&currentUsername=${encodeURIComponent(
+          loginContext.userName
+        )}`,
         {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${loginContext.accessToken}`,
+            Authorization: `Bearer ${loginContext.accessToken}`,
           },
         }
       );
-  
+
       if (!response.ok) {
         throw new Error(await response.text());
       }
-  
+
       const result = await response.json();
-      console.log(result);
-      // console.log('Fetched suggestions:', result); // Log the response for debugging
-  
+
       // Map and ensure all fields are available before setting suggestions
       /* eslint-disable */
       const mappedSuggestions = result.map((user: any) => ({
+      /* eslint-enable */
         id: user.id,
         firstname: user.firstname || 'N/A', // Default value if undefined
-        lastname: user.lastname || 'N/A',   // Default value if undefined
+        lastname: user.lastname || 'N/A', // Default value if undefined
         username: user.username,
       }));
-      /* eslint-enable */
-  
+
       setSuggestions(mappedSuggestions);
     } catch (err) {
       console.error('Error fetching suggestions:', err);
     }
   };
-  
 
+  // Fetch suggestions whenever searchInput changes
   useEffect(() => {
+    onSearchInputChange(searchInput); // Notify parent of the input change
+
     if (searchInput) {
       fetchSuggestions(searchInput);
     } else {
@@ -74,6 +77,7 @@ export const ExploreSearchBar: React.FC<ExploreSearchBarProps> = ({ navigation }
 
   return (
     <View style={styles.container}>
+      {/* Search Input */}
       <TextInput
         style={[
           styles.searchInput,
@@ -86,9 +90,10 @@ export const ExploreSearchBar: React.FC<ExploreSearchBarProps> = ({ navigation }
         placeholder="Search for usernames"
         placeholderTextColor={Colors[colorScheme].icon}
         value={searchInput}
-        onChangeText={setSearchInput}
+        onChangeText={(text) => setSearchInput(text)}
         autoCapitalize="none"
       />
+      {/* Search Suggestions */}
       {suggestions.length > 0 && (
         <FlatList
           data={suggestions}
@@ -103,9 +108,9 @@ export const ExploreSearchBar: React.FC<ExploreSearchBarProps> = ({ navigation }
               }}
               colorScheme={colorScheme}
               onPress={(userId) => {
-                navigation.push('ProfileRoot', { 
-                  screen: 'Main', 
-                  params: { userId, isFromExploreTab: true } // Set `isFromExploreTab` to true
+                navigation.push('ProfileRoot', {
+                  screen: 'Main',
+                  params: { userId, isFromExploreTab: true }, // Pass additional params
                 });
               }}
             />
@@ -122,19 +127,18 @@ export const ExploreSearchBar: React.FC<ExploreSearchBarProps> = ({ navigation }
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 10,
-    width: '90%',
+    marginTop: 0,
+    width: '100%',
     alignSelf: 'center',
   },
   searchInput: {
-    height: 40,
-    borderWidth: 1,
-    borderRadius: 5,
+    height: 50,
+    borderRadius: 15,
     paddingHorizontal: 10,
   },
   suggestionsList: {
     maxHeight: 200,
-    borderRadius: 5,
+    borderRadius: 15,
     marginTop: 5,
   },
 });

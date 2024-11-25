@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     height: 120,
     width: '95%',
     borderRadius: 20,
-    borderWidth: 3,
+    borderWidth: 1.5,
     flexDirection: 'row',
     position: 'relative',
   },
