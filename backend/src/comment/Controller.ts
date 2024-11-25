@@ -4,6 +4,7 @@ import { CommentJSON, CommentReturn } from '.';
 import { commentService } from './service'; // Comment service for handling comment creation
 import { UUID } from '../types';
 import { commentSchema } from './validator';
+import { S3Service } from '../s3/service';
 
 interface Comment {
     data: {
@@ -20,6 +21,8 @@ interface Comment {
 @Security('jwt')
 @Route('comment')
 export class CommentController extends Controller{
+    private s3Service = new S3Service();
+    
     @Post('/create')
     public async createComment(
         @Request() request: express.Request,
@@ -104,17 +107,31 @@ export class CommentController extends Controller{
             console.error('Unauthorized user in getComments');
             return undefined;
         }
-      return new commentService()
-        .getComments(postId)
-        .then((comment) => {
-            if (comment === undefined) {
+
+        try {
+            const list = await new commentService().getComments(postId);
+            if (!list) {
                 this.setStatus(400);
                 console.error('Could not get list of comments');
                 return undefined;
             }
-            this.setStatus(200);
-            return comment;
-        })
+
+            for (const comment of list) {
+                const imageLink = await this.s3Service.getFileLink(comment.pfp);
+                if (!imageLink) {
+                    this.setStatus(400);
+                    console.error('Could not get image link for image:', comment.pfp);
+                    return undefined;
+                }
+                comment.pfp = imageLink;
+            }
+
+            return list;
+        } catch (error) {
+            console.error('Error fetching comments:', error);
+            this.setStatus(500);
+            return undefined;
+        }
     }
 
     @Get("/getCommentCount")
