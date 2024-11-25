@@ -1,6 +1,5 @@
-// app/pages/toEatDetails.tsx
 import React, { useContext, useEffect, useState } from 'react';
-import { SafeAreaView, ScrollView, View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { SafeAreaView, ScrollView, View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { ThemedView } from '@/components/ThemedView';
 import { ToEatDetailsInfo } from '@/components/toEatCard/toEatDetails';
 import { useRoute, useNavigation } from '@react-navigation/native';
@@ -18,7 +17,6 @@ import { fetchPostData } from './toEatHelper';
 
 type ToEatDetailsRouteProp = RouteProp<{ ToEatDetails: { id: string } }, 'ToEatDetails'>;
 
-// Update navigation prop to include ProfileStackParamList
 type ToEatDetailsNavigationProp = CompositeNavigationProp<
   NativeStackNavigationProp<ToEatStackParamList>,
   CompositeNavigationProp<
@@ -31,26 +29,31 @@ export default function ToEatDetails() {
   const route = useRoute<ToEatDetailsRouteProp>();
   const navigation = useNavigation<ToEatDetailsNavigationProp>();
   const colorScheme = useColorScheme();
-  const { id } = route.params;
+  const { id } = route.params || {}; // Default to empty object to avoid crashes
   const loginContext = useContext(LoginContext);
   const [post, setPost] = useState<PostCardProps>();
+  const [isLoading, setIsLoading] = useState(true);
 
   const themeColors = Colors[colorScheme];
 
   useEffect(() => {
     const fetchData = async () => {
+      if (!id) return; // Skip if id is undefined
+      setIsLoading(true);
+
       try {
         const postData = await fetchPostData(id, loginContext.accessToken);
-        // console.log(postData);
         setPost(postData);
       } catch (error) {
-        console.error("Error fetching profile data:", error);
+        console.error("Error fetching post data:", error);
+      } finally {
+        setIsLoading(false); // End loading
       }
     };
-    fetchData();
-  }, []);
 
-  // Add handler for profile navigation
+    fetchData();
+  }, [id]);
+
   const handleProfileNavigation = (userId: string) => {
     navigation.navigate('ProfileRoot', {
       screen: 'Main',
@@ -58,14 +61,22 @@ export default function ToEatDetails() {
         userId,
         isFromProfileTab: false,
         isFromHomeTab: false,
-        isFromExploreTab: false
-      }
+        isFromExploreTab: false,
+      },
     });
   };
-  
+
+  if (isLoading) {
+    return (
+      <SafeAreaView style={[styles.loadingContainer, { backgroundColor: themeColors.background }]}>
+        <ActivityIndicator size="large" color={themeColors.text} />
+        <Text style={[styles.loadingText, { color: themeColors.text }]}>Loading...</Text>
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: themeColors.background }}>
-      {/* Header */}
       <View style={[styles.header, { borderBottomColor: themeColors.icon }]}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color={themeColors.text} />
@@ -74,10 +85,9 @@ export default function ToEatDetails() {
         <View style={styles.headerRight} />
       </View>
 
-      {/* Scrollable Content */}
       <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
         <ThemedView style={{ paddingTop: 20 }}>
-          <ToEatDetailsInfo 
+          <ToEatDetailsInfo
             {...post}
             onProfilePress={post?.user_id ? () => handleProfileNavigation(post.user_id) : undefined}
           />
@@ -105,6 +115,15 @@ const styles = StyleSheet.create({
     marginLeft: -8,
   },
   headerRight: {
-    width: 40, // For balance with back button
+    width: 40,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    marginTop: 10,
+    fontSize: 16,
   },
 });

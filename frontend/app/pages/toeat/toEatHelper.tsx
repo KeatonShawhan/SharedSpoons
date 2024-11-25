@@ -104,6 +104,7 @@ export const fetchPostData = async (postId, accessToken) => {
 
                 parentTab: 'ToEatTab' 
             };
+            //console.log("apiData: ", apiData);
             return transformedData;
 
   } catch (err) {

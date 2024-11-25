@@ -37,7 +37,6 @@ export const getComment = async (postId, accessToken) => {
 };
 
 export const getCommentCount = async (postId, accessToken) => {
-
   try {
     const response = await fetch(`${API_URL}comment/getCommentCount?postId=${postId}`, {
       method: 'GET',

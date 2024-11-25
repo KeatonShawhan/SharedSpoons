@@ -49,7 +49,6 @@ export function PostCard({
   const [isFlipped, setIsFlipped] = useState(false);
   const fadeAnim = useState(new Animated.Value(1))[0];
 
-
   const handlePress = () => {
     setIsFlipped(!isFlipped);
     Animated.timing(fadeAnim, {

@@ -1,6 +1,6 @@
 // components/post/postCaption.tsx
 import React, { useState, useEffect, useContext } from 'react';
-import { Text, View, TouchableOpacity } from 'react-native';
+import { Text, View, TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { starDisplay } from './starDisplay';
 import { ThemedView } from '@/components/ThemedView';
@@ -45,6 +45,7 @@ export function PostCaption({
   const [likesCount, setLikeCount] = useState(0);
   const [commentCount, setCommentCount] = useState(0);
   const loginContext = useContext(LoginContext);
+  const [isLoading, setIsLoading] = useState(true);
 
   const handleLike = async () => {
     if (!loginContext) return;
@@ -76,14 +77,12 @@ export function PostCaption({
         await addToEat(postId, loginContext.accessToken);
       }
   
-      setSaved(newSavedState); // Update saved state
+      setSaved(newSavedState);
       loginContext.triggerToEatRefresh(postId, newSavedState);
     } catch (err) {
       console.error('Error saving post:', err);
     }
   };
-  
-
 
   const handleComment = () => {
     navigation.navigate('PostStack', {
@@ -92,22 +91,28 @@ export function PostCaption({
     });
   };
 
-  // Fetch comment count
   useEffect(() => {
     const fetchData = async () => {
-      const commentList = await getCommentCount(postId, loginContext.accessToken);
-      setCommentCount(commentList);
+      if (!postId) return;
+      setIsLoading(true);
+
+      try {
+        const commentList = await getCommentCount(postId, loginContext.accessToken);
+        setCommentCount(commentList);
+      } catch (error) {
+        console.error("Error fetching comment count:", error);
+      } finally {
+        setIsLoading(false);
+      }
     };
+
     fetchData();
   }, [postId, loginContext.commented]);
 
-  // Fetch like count
   useEffect(() => {
     const fetchData = async () => {
       const countLikes = await likeCount(postId, loginContext.accessToken);
       setLikeCount(countLikes);
-      console.log("herr")
-      console.log(countLikes)
       const getLiked = (await fetchPostData(postId, loginContext.accessToken)).isLiked;
       setIsLiked(getLiked);
     };
@@ -115,8 +120,6 @@ export function PostCaption({
     fetchData();
   }, [postId, loginContext.liked]);
 
-
-  // Sync `saved` state with `isSaved` prop updates
   useEffect(() => {
     setSaved(isSaved);
   }, [isSaved]);
@@ -124,6 +127,15 @@ export function PostCaption({
   useEffect(() => {
     setIsLiked(isLiked);
   }, [isLiked]);
+
+  if (isLoading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0000ff" />
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
 
   return (
     <ThemedView>
@@ -183,3 +195,11 @@ export function PostCaption({
     </ThemedView>
   );
 }
+
+const styles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
