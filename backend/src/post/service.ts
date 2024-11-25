@@ -250,7 +250,7 @@ export class postService{
             `;
     
             const queryParams: (string | number)[] = [userID];
-    
+            console.log("lastPostTime: ", lastPostTime);
             // Add condition for `lastPostTime` if provided
             if (lastPostTime) {
                 selectQuery += ` AND post.data->>'time' < $2 `;
@@ -268,10 +268,12 @@ export class postService{
                 text: selectQuery,
                 values: queryParams,
             };
+
+            console.log("selectquery: ", query);
     
             // Execute the query
             const { rows } = await pool.query(query);
-    
+            console.log("rows: ", rows);
             if (!rows || rows.length === 0) {
                 console.log('No posts found for user: ' + userID);
                 return [];

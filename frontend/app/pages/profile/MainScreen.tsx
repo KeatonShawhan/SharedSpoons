@@ -121,24 +121,22 @@ export default function MainScreen() {
   }, []);
 
   const handleFollowPress = async () => {
-    if (isFollowing) {
-      // Unfollow the user
-      const success = await removeFollowRequest(profileId, loginContext.accessToken, loginContext.handleLogout);
-      if (success) {
-        setIsFollowing(false);
-        setFollowerCount((prevCount) => prevCount - 1);
-        loginContext.setFollowed(!loginContext.followed);
-      }
-    } else {
-      // Follow the user
-      const success = await sendFollowRequest(profileId, loginContext.accessToken, loginContext.handleLogout);
-      if (success) {
-        setIsFollowing(true);
-        setFollowerCount((prevCount) => prevCount + 1);
-        loginContext.setFollowed(!loginContext.followed);
-      }
+    setIsFollowing((prev) => !prev);
+    setFollowerCount((prev) => prev + (isFollowing ? -1 : 1));
+    loginContext.setFollowed(!loginContext.followed);
+  
+    const success = isFollowing
+      ? await removeFollowRequest(profileId, loginContext.accessToken, loginContext.handleLogout)
+      : await sendFollowRequest(profileId, loginContext.accessToken, loginContext.handleLogout);
+  
+    if (!success) {
+      // Revert changes on failure
+      setIsFollowing((prev) => !prev);
+      setFollowerCount((prev) => prev + (isFollowing ? 1 : -1));
+      loginContext.setFollowed(!loginContext.followed);
     }
   };
+  
 
   useEffect(() => {
     fetchData();

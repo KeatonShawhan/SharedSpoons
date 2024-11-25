@@ -35,24 +35,31 @@ export default function HomeScreen() {
   const scrollYRef = useRef(new Animated.Value(0)).current;
   
 
-  const getPosts = async () => {
+  const getPosts = async (reset = false) => {
     if (!loginContext.isInitialized || !loginContext.accessToken) return;
     setLoading(true);
-
+  
+    if (reset) {
+      setHomePosts([]);
+      setLastPostTime('');
+    }
+  
     const posts = await fetchPosts(
       loginContext.userId,
       loginContext.accessToken,
       loginContext.handleLogout,
       10,
-      lastPostTime
+      reset ? undefined : lastPostTime
     );
+  
     if (posts && posts.length > 0) {
-      setHomePosts((prevPosts) => [...prevPosts, ...posts]);
+      setHomePosts((prevPosts) => [...(reset ? [] : prevPosts), ...posts]);
       setLastPostTime(posts[posts.length - 1].data.time);
     }
-
+  
     setLoading(false);
   };
+  
 
   // Initial fetch of posts
   useEffect(() => {
@@ -61,7 +68,6 @@ export default function HomeScreen() {
     loginContext.isInitialized,
     loginContext.accessToken,
     loginContext.isAuthenticated,
-    loginContext.followed,
   ]);
 
   useEffect(() => {
@@ -77,7 +83,7 @@ export default function HomeScreen() {
   useEffect(() => {
     setHomePosts([]);
     setLastPostTime('');
-    getPosts();
+    getPosts(true);
   }, [
     loginContext.followed,
   ])
