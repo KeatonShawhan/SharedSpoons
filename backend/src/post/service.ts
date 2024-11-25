@@ -223,51 +223,53 @@ export class postService{
             }
     
             let selectQuery = `
-            SELECT 
-                post.*, 
-                app_user.data->>'username' AS username,
-                app_user.data->>'pfp' AS pfp,
-                CASE 
-                    WHEN toEat.post_id IS NOT NULL THEN TRUE 
-                    ELSE FALSE 
-                END AS is_saved,
-                CASE
-                    WHEN likes.post_id IS NOT NULL THEN TRUE
-                    ELSE FALSE
-                END AS is_liked
-            FROM 
-                post
-            INNER JOIN 
-                follow ON post.user_id = follow.receiver
-            LEFT JOIN 
-                app_user ON app_user.id = post.user_id
-            LEFT JOIN 
-                toEat ON toEat.post_id = post.id AND toEat.user_id = $1
-            LEFT JOIN 
-                likes ON likes.post_id = post.id AND likes.user_id = $1
-            WHERE 
-                follow.sender = $1
-        `;
+                SELECT 
+                    post.*, 
+                    app_user.data->>'username' AS username,
+                    app_user.data->>'pfp' AS pfp,
+                    CASE 
+                        WHEN toEat.post_id IS NOT NULL THEN TRUE 
+                        ELSE FALSE 
+                    END AS is_saved,
+                    CASE
+                        WHEN likes.post_id IS NOT NULL THEN TRUE
+                        ELSE FALSE
+                    END AS is_liked
+                FROM 
+                    post
+                INNER JOIN 
+                    follow ON post.user_id = follow.receiver
+                LEFT JOIN 
+                    app_user ON app_user.id = post.user_id
+                LEFT JOIN 
+                    toEat ON toEat.post_id = post.id AND toEat.user_id = $1
+                LEFT JOIN 
+                    likes ON likes.post_id = post.id AND likes.user_id = $1
+                WHERE 
+                    follow.sender = $1
+            `;
     
-            const queryParams = [userID];
+            const queryParams: (string | number)[] = [userID];
     
+            // Add condition for `lastPostTime` if provided
             if (lastPostTime) {
-                selectQuery += ` AND post.data->>'time' < $3 `;
+                selectQuery += ` AND post.data->>'time' < $2 `;
                 queryParams.push(lastPostTime);
             }
     
+            // Append ordering and limit
             selectQuery += `
-            ORDER BY post.data->>'time' DESC
-            LIMIT $${queryParams.length + 1};
-        `;
-        queryParams.push(limit.toString());
-        console.log(queryParams);
+                ORDER BY post.data->>'time' DESC
+                LIMIT $${queryParams.length + 1};
+            `;
+            queryParams.push(limit);
     
             const query = {
                 text: selectQuery,
                 values: queryParams,
             };
     
+            // Execute the query
             const { rows } = await pool.query(query);
     
             if (!rows || rows.length === 0) {
@@ -275,6 +277,7 @@ export class postService{
                 return [];
             }
     
+            // Map the result rows to `PostTotal` objects
             const posts: PostTotal[] = rows.map((row) => ({
                 id: row.id,
                 user: row.user_id,
@@ -288,7 +291,7 @@ export class postService{
                     pfp: row.pfp || '',
                     username: row.username || '',
                     is_saved: row.is_saved,
-                    is_liked: row.is_liked
+                    is_liked: row.is_liked,
                 },
             }));
     
@@ -297,7 +300,8 @@ export class postService{
             console.error('Error getting all friends posts:', error);
             return undefined;
         }
-    }    
+    }
+      
     
     public async editPost(postID: UUID, rating: number, caption: string): Promise < string | undefined > {
         const client = await pool.connect();

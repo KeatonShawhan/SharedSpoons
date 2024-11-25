@@ -191,6 +191,7 @@ export default function HomeScreen() {
               image={post.data.image}
               parentTab="HomeTab"
               pfp={post.data.pfp}
+              isOwnProfile={false}
             />
           ))}
 
