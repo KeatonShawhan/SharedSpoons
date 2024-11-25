@@ -42,16 +42,14 @@ export class postService{
     }
 
     public async deletePost(postID: UUID, userID: UUID): Promise < boolean | undefined > {
-        const client = await pool.connect();
 
         try {
-            await client.query('BEGIN');
 
             const selectQuery = `
             SELECT user_id FROM post
             WHERE id = $1
             `;
-            const selectRes = await client.query(selectQuery, [postID]);
+            const selectRes = await pool.query(selectQuery, [postID]);
             if (selectRes.rowCount === 0) {
                 console.error('Post not found with the specified postID');
                 return undefined;
@@ -71,8 +69,7 @@ export class postService{
                 text: deleteText,
                 values: [postID]
             }
-            const res = await client.query(query.text, query.values);
-            await client.query('COMMIT');
+            const res = await pool.query(query.text, query.values);
             if(res.rowCount === 0) {
                 console.error('Database deletion of post failed');
                 return undefined;
@@ -81,11 +78,8 @@ export class postService{
             return true;
 
         } catch (error) {
-            await client.query('ROLLBACK');
             console.error('Error deleting post:', error);
             return undefined;
-        } finally {
-            client.release();
         }
     }
 

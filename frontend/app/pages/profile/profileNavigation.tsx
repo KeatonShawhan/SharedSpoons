@@ -16,7 +16,7 @@ export type ProfileStackParamList = {
     isFromComments?: boolean;
   };
   Friends: { initialTab: 'followers' | 'following'; userId?: UUID };
-  PostPage: { postId: UUID };
+  PostPage: { postId: UUID, isOwnProfile: boolean };
   PostStack: NavigatorScreenParams<PostStackParamList>;
 };
 

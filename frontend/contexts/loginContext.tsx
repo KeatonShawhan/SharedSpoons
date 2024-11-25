@@ -44,6 +44,9 @@ interface LoginContextType {
   savedPostData: { postId: string; isSaved: boolean } | null; // New state for saved post info
   lastUser: string;
   setLastUser: (userId: string) => void;
+  deletedPost: number;
+  setDeletedPost: (postId: number) => void;
+  triggerProfilePageRefresh: () => void;
 }
 
 const LoginContext = createContext<LoginContextType | undefined>(undefined);
@@ -62,6 +65,7 @@ export const LoginProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const navigation = useNavigation<StackNavigationProp<RootTabParamList>>();
   const [isInitialized, setIsInitialized] = useState<boolean>(false);
   const [lastUser, setLastUser] = useState<string>('');
+  const [deletedPost, setDeletedPost] = useState<number>(0);
 
   // New state to store specific post save status updates
   const [savedPostData, setSavedPostData] = useState<{ postId: string; isSaved: boolean } | null>(
@@ -103,6 +107,10 @@ export const LoginProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setSavedPostData({ postId, isSaved }); // Store the updated post info
   };
 
+  const triggerProfilePageRefresh = () => {
+    setDeletedPost((prev) => prev + 1);
+  }
+
   const handleLogout = async () => {
     await AsyncStorage.removeItem('accessToken');
     setAccessToken('');
@@ -141,7 +149,10 @@ export const LoginProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         setIsInitialized,
         savedPostData,
         lastUser,
-        setLastUser
+        setLastUser,
+        deletedPost,
+        setDeletedPost,
+        triggerProfilePageRefresh
       }}
     >
       {children}

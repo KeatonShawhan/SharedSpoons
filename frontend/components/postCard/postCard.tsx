@@ -1,7 +1,7 @@
-// components/post/postCard.tsx
-import React, { useState } from 'react';
-import { Animated, TouchableOpacity, View } from 'react-native';
+import React, { useState, useContext } from 'react';
+import { Animated, TouchableOpacity, View, StyleSheet, Alert } from 'react-native';
 import { useNavigation, CompositeNavigationProp } from '@react-navigation/native';
+import Icon from 'react-native-vector-icons/Ionicons'; // Assuming react-native-vector-icons is installed
 import { postHeader } from './postHeader';
 import { postImage } from './postImage';
 import { PostCaption } from './postCaption';
@@ -9,8 +9,11 @@ import { postDescription } from './postDescription';
 import type { HomeScreenNavigationProp } from '@/app/(tabs)';
 import { ProfileScreenNavigationProp } from '@/app/pages/profile/profileNavigation';
 import type { ToEatScreenNavigationProp } from '@/app/(tabs)/toeat';
+import API_URL from '@/config';
+import LoginContext from '@/contexts/loginContext';
+import {fetchAllPosts} from '../../app/pages/profile/profileHelpers'
 
-export interface PostCardProps {  
+export interface PostCardProps {
   id: string;
   username: string;
   caption: string;
@@ -20,9 +23,10 @@ export interface PostCardProps {
   place: string;
   image: string;
   isSaved: boolean;
-  isLiked:boolean;
+  isLiked: boolean;
   pfp: string;
   parentTab: 'HomeTab' | 'ProfileTab' | 'ToEatTab' | 'ExploreTab';
+  isOwnProfile: boolean;
 }
 
 // Combine navigation props to include Home, Profile, and ToEat tabs
@@ -43,11 +47,13 @@ export function PostCard({
   parentTab,
   isSaved,
   pfp,
-  isLiked
+  isLiked,
+  isOwnProfile,
 }: PostCardProps) {
   const navigation = useNavigation<CombinedNavigationProp>();
   const [isFlipped, setIsFlipped] = useState(false);
   const fadeAnim = useState(new Animated.Value(1))[0];
+  const loginContext = useContext(LoginContext);
 
   const handlePress = () => {
     setIsFlipped(!isFlipped);
@@ -56,6 +62,49 @@ export function PostCard({
       duration: 100,
       useNativeDriver: true,
     }).start();
+  };
+
+  const handleDelete = async () => {
+    try {
+      const response = await fetch(`${API_URL}post/delete?postID=${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${loginContext.accessToken}`,
+        },
+      });
+
+      console.log(response);
+      if (!response.ok) {
+        throw new Error('Failed to delete post');
+      }
+
+      Alert.alert('Success', 'Post deleted successfully', [
+        {
+          text: 'OK',
+          onPress: () => {
+            navigation.navigate('ProfileRoot', { screen: 'Main' });
+            fetchAllPosts(id, loginContext.accessToken, loginContext.handleLogout);
+          },
+        },
+      ]);
+      loginContext.triggerProfilePageRefresh();
+    } catch (error) {
+      console.error('Error deleting post:', error);
+      Alert.alert('Error', 'Could not delete the post. Please try again later.');
+    }
+  };
+
+  const confirmDelete = () => {
+    Alert.alert(
+      'Delete Post',
+      'Are you sure you want to delete this post?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Delete', style: 'destructive', onPress: handleDelete },
+      ],
+      { cancelable: true }
+    );
   };
 
   const handleNavigateToProfile = () => {
@@ -75,7 +124,6 @@ export function PostCard({
         break;
 
       case 'ProfileTab':
-        // Instead of pushing directly to Main, use the full navigation path
         navigation.push('ProfileRoot', {
           screen: 'Main',
           params: {
@@ -108,20 +156,21 @@ export function PostCard({
   };
 
   return (
-    <View style={{ justifyContent: 'center', alignItems: 'center', paddingBottom: 30 }}>
-      <View style={{ width: '98%', borderRadius: 0, borderColor: 'none' }}>
+    <View style={styles.cardContainer}>
+      {isOwnProfile && (
+        <TouchableOpacity style={styles.trashIcon} onPress={confirmDelete}>
+          <Icon name="trash-outline" size={24} color="red" />
+        </TouchableOpacity>
+      )}
+      <View style={styles.contentContainer}>
         <TouchableOpacity onPress={handleNavigateToProfile}>
-          <View style={{ paddingBottom: 15, paddingLeft: 0 }}>
+          <View style={styles.headerContainer}>
             {postHeader({ username, place, user_id, onNavigateToProfile: handleNavigateToProfile, pfp })}
           </View>
         </TouchableOpacity>
-
         <TouchableOpacity onPress={handlePress}>
           <View style={{ position: 'relative' }}>
-            <Animated.View style={{ opacity: fadeAnim }}>
-              {postImage({ image })}
-            </Animated.View>
-
+            <Animated.View style={{ opacity: fadeAnim }}>{postImage({ image })}</Animated.View>
             <Animated.View
               style={{
                 opacity: isFlipped ? 1 : 0,
@@ -136,8 +185,7 @@ export function PostCard({
             </Animated.View>
           </View>
         </TouchableOpacity>
-
-        <View style={{ paddingTop: 15, paddingHorizontal:5 }}>
+        <View style={styles.captionContainer}>
           <PostCaption
             dish={dish}
             rating={rating}
@@ -153,3 +201,30 @@ export function PostCard({
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  cardContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingBottom: 30,
+  },
+  contentContainer: {
+    width: '98%',
+    borderRadius: 0,
+    borderColor: 'none',
+  },
+  headerContainer: {
+    paddingBottom: 15,
+    paddingLeft: 0,
+  },
+  captionContainer: {
+    paddingTop: 15,
+    paddingHorizontal: 5,
+  },
+  trashIcon: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    zIndex: 1,
+  },
+});

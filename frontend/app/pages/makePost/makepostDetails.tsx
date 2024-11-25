@@ -105,7 +105,6 @@ export default function MakePostDetails({route, navigation}: Props) {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${accessToken}`,
-          // Do not set 'Content-Type' when sending FormData
         },
         body: formData,
       });

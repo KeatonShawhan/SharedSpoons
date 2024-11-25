@@ -9,8 +9,13 @@ import { ProfileStackParamList } from '../profile/profileNavigation';
 import LoginContext from '@/contexts/loginContext';
 import API_URL from '@/config';
 
-type PostPageRouteProp = RouteProp<ProfileStackParamList, 'PostPage'>;
-
+type PostPageRouteProp = RouteProp<ProfileStackParamList, 'PostPage'> & {
+    params: {
+      postId: string;
+      isOwnProfile: boolean;
+    };
+  };
+  
 // Match the API response type to your backend
 interface PostApiResponse {
   id: string;
@@ -34,6 +39,7 @@ export default function PostPage() {
     const route = useRoute<PostPageRouteProp>();
     const colorScheme = useColorScheme();
     const loginContext = useContext(LoginContext);
+    const { isOwnProfile } = route.params;
 
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -65,7 +71,7 @@ export default function PostPage() {
             
             // Transform API data to match PostCard props
             const transformedData: PostCardProps = {
-                isLiked:apiData.data.is_liked,
+                isLiked: apiData.data.is_liked,
                 isSaved: apiData.data.is_saved,
                 id: apiData.id,
                 user_id: apiData.user,
@@ -76,8 +82,10 @@ export default function PostPage() {
                 place: apiData.data.restaurant,
                 image: apiData.data.image,
                 parentTab: 'ProfileTab',
-                pfp: apiData.data.pfp
+                pfp: apiData.data.pfp,
+                isOwnProfile,
             };
+            
             
             setPostData(transformedData);
 

@@ -101,7 +101,7 @@ export const fetchPostData = async (postId, accessToken) => {
                 place: apiData.data.restaurant,
                 image: apiData.data.image,
                 pfp: apiData.data.pfp,
-
+                isOwnProfile: false,
                 parentTab: 'ToEatTab' 
             };
             //console.log("apiData: ", apiData);

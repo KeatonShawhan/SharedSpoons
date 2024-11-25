@@ -64,46 +64,46 @@ export default function MainScreen() {
   const [isFollowing, setIsFollowing] = useState(false);
   const [pfp, setPfp] = useState('');
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Fetch user info
-        const userData = await fetchUserInfo(profileId, loginContext.accessToken, loginContext.handleLogout);
-        setPfp(userData.pfp);
-        setFirstName(`${userData.firstname}`);
-        setLastName(`${userData.lastname}`);
-        setUsername(`${userData.username}`);
-        setBio(userData.bio || 'No bio available');
-        setRank(isOwnProfile ? 'Food Connoisseur' : 'Food Enthusiast');
+  const fetchData = async () => {
+    try {
+      // Fetch user info
+      const userData = await fetchUserInfo(profileId, loginContext.accessToken, loginContext.handleLogout);
+      setPfp(userData.pfp);
+      setFirstName(`${userData.firstname}`);
+      setLastName(`${userData.lastname}`);
+      setUsername(`${userData.username}`);
+      setBio(userData.bio || 'No bio available');
+      setRank(isOwnProfile ? 'Food Connoisseur' : 'Food Enthusiast');
 
-        // Fetch followers and following data
-        const followersData = await fetchFollowerCount(profileId, loginContext.accessToken, loginContext.handleLogout);
-        setFollowerCount(followersData);
+      // Fetch followers and following data
+      const followersData = await fetchFollowerCount(profileId, loginContext.accessToken, loginContext.handleLogout);
+      setFollowerCount(followersData);
 
-        const followingData = await fetchFollowingCount(profileId, loginContext.accessToken, loginContext.handleLogout);
-        setFollowingCount(followingData);
+      const followingData = await fetchFollowingCount(profileId, loginContext.accessToken, loginContext.handleLogout);
+      setFollowingCount(followingData);
 
-        // Fetch all posts
-        const allPostsData = await fetchAllPosts(profileId, loginContext.accessToken, loginContext.handleLogout);
-        // console.log(allPostsData);
-        setPostCount(allPostsData.length);
-        setPosts(allPostsData);
+      // Fetch all posts
+      const allPostsData = await fetchAllPosts(profileId, loginContext.accessToken, loginContext.handleLogout);
+      // console.log(allPostsData);
+      setPostCount(allPostsData.length);
+      setPosts(allPostsData);
 
-        // Check if current user is following the profile user
-        if (!isOwnProfile) {
-          const isFollowingStatus = await checkIfFollowing(
-            loginContext.userId,
-            profileId,
-            loginContext.accessToken,
-            loginContext.handleLogout
-          );
-          setIsFollowing(isFollowingStatus);
-        }
-      } catch (error) {
-        console.error('Error fetching profile data:', error);
+      // Check if current user is following the profile user
+      if (!isOwnProfile) {
+        const isFollowingStatus = await checkIfFollowing(
+          loginContext.userId,
+          profileId,
+          loginContext.accessToken,
+          loginContext.handleLogout
+        );
+        setIsFollowing(isFollowingStatus);
       }
-    };
+    } catch (error) {
+      console.error('Error fetching profile data:', error);
+    }
+  };
 
+  useEffect(() => {
     fetchData();
   }, [profileId, loginContext.followed, loginContext.madePost]);
 
@@ -139,6 +139,12 @@ export default function MainScreen() {
       }
     }
   };
+
+  useEffect(() => {
+    fetchData();
+  }, [
+    loginContext.deletedPost
+  ])
 
   const tabs = ['posts', 'achievements'];
   if (isOwnProfile) {
@@ -255,7 +261,7 @@ export default function MainScreen() {
                 renderItem={({ item }) => (
                   <ProfilePostSquare
                     imageUrl={item.data.image}
-                    onPress={() => navigation.navigate('PostPage', { postId: item.id })}
+                    onPress={() => navigation.navigate('PostPage', { postId: item.id, isOwnProfile })}
                   />
                 )}
                 keyExtractor={(item) => item.id}
