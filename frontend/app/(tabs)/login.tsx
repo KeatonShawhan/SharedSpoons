@@ -1,19 +1,29 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  StyleSheet,
+  Alert,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import Icon from 'react-native-vector-icons/Ionicons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoginContext from "@/contexts/loginContext";
 import API_URL from '../../config'
-import { useNavigation } from "expo-router";
+import { useNavigation } from "@react-navigation/native";
 import { RootTabParamList } from './_layout';
 import { StackNavigationProp } from "@react-navigation/stack";
 
-export default function login() {
+export default function Login() {
   const loginContext = useContext(LoginContext);
   const [user, setUser] = useState({ username: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [badLogin, setBadLogin] = useState(false);
-  const navigation = useNavigation<StackNavigationProp<RootTabParamList>>(); // Use the correct type here
+  const [loading, setLoading] = useState(false);
+  const navigation = useNavigation<StackNavigationProp<RootTabParamList>>();
 
   const handleInputChange = (name: string, value: string) => {
     setUser((prevUser) => ({
@@ -29,6 +39,7 @@ export default function login() {
         if (storedToken) {
           loginContext.setAccessToken(storedToken);
           loginContext.setIsAuthenticated(true);
+          navigation.navigate('index'); // Navigate if token exists
         }
       } catch (error) {
         console.log("Error loading token from AsyncStorage", error);
@@ -43,38 +54,43 @@ export default function login() {
       return;
     }
 
-    fetch(API_URL + 'auth/login', {
-      method: 'POST',
-      body: JSON.stringify(user),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((res) => {
-        const out = res.json();
-        if (!res.ok) {
-          setBadLogin(true);
-          return res.text();
-        }
-        return out;
-      })
-      .then((json) => {
-        // Faulty JWT test lines
-        //loginContext.setAccessToken('FAULTY_TOKEN');
-        //AsyncStorage.setItem("accessToken", 'FAULTY_TOKEN');
-        loginContext.setAccessToken(json.accessToken);
-        AsyncStorage.setItem("accessToken", json.accessToken);
-        loginContext.setUserId(json.id);
-        loginContext.setUserName(json.username);
-        loginContext.setFirstName(json.firstname);
-        loginContext.setIsAuthenticated(true);
-        setUser({username: "", password: ""});
-        navigation.navigate('index');
-      })
-      .catch((err) => {
-        setBadLogin(true);
-        console.log(err);
+    setLoading(true);
+    setBadLogin(false);
+
+    try {
+      const response = await fetch(API_URL + 'auth/login', {
+        method: 'POST',
+        body: JSON.stringify(user),
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
+
+      const json = await response.json();
+
+      if (!response.ok) {
+        setBadLogin(true);
+        Alert.alert("Login Failed", json.message || "Incorrect username or password.");
+        setLoading(false);
+        return;
+      }
+
+      // Save token and update context
+      await AsyncStorage.setItem("accessToken", json.accessToken);
+      loginContext.setAccessToken(json.accessToken);
+      loginContext.setUserId(json.id);
+      loginContext.setUserName(json.username);
+      loginContext.setFirstName(json.firstname);
+      loginContext.setIsAuthenticated(true);
+      setUser({ username: "", password: "" });
+      setLoading(false);
+      navigation.navigate('index');
+    } catch (err) {
+      setBadLogin(true);
+      setLoading(false);
+      console.log(err);
+      Alert.alert("Error", "Something went wrong. Please try again later.");
+    }
   };
 
   const toggleAuthPage = () => {
@@ -83,78 +99,148 @@ export default function login() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Log In</Text>
-      {badLogin && <Text style={styles.badLogin}>Incorrect username or password</Text>}
-      <TextInput
-        style={styles.input}
-        placeholder="Username"
-        value={user.username}
-        onChangeText={(value) => {
-          const formattedValue = value.replace(/[^a-zA-Z0-9_]/g, '');
-          handleInputChange('username', formattedValue);
-        }}
-        autoCapitalize="none"
-        keyboardType="email-address"
+      {/* App Logo */}
+      <FontAwesome
+        name="cutlery"
+        size={60}
+        color="#FF9900"
+        style={styles.logo}
       />
-      <View style={styles.passwordContainer}>
-        <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.iconContainer}>
-          <Icon name={showPassword ? 'eye-off' : 'eye'} size={20} />
-        </TouchableOpacity>
+      {/* App Name */}
+      <Text style={styles.appName}>Shared Spoons</Text>
+
+      {/* Login Form */}
+      <View style={styles.formContainer}>
         <TextInput
-          style={styles.passwordInput}
-          placeholder="Password"
-          value={user.password}
-          onChangeText={(value) => handleInputChange('password', value)}
-          secureTextEntry={!showPassword}
+          style={styles.input}
+          placeholder="Username"
+          value={user.username}
+          onChangeText={(value) => {
+            const formattedValue = value.replace(/[^a-zA-Z0-9_]/g, '');
+            handleInputChange('username', formattedValue);
+          }}
           autoCapitalize="none"
+          keyboardType="email-address"
+          placeholderTextColor="#999"
         />
+        <View style={styles.passwordContainer}>
+          <TextInput
+            style={styles.passwordInput}
+            placeholder="Password"
+            value={user.password}
+            onChangeText={(value) => handleInputChange('password', value)}
+            secureTextEntry={!showPassword}
+            autoCapitalize="none"
+            placeholderTextColor="#999"
+          />
+          <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.iconContainer}>
+            <Icon name={showPassword ? 'eye-off' : 'eye'} size={20} color="#999" />
+          </TouchableOpacity>
+        </View>
+        {badLogin && <Text style={styles.badLogin}>Incorrect username or password</Text>}
+
+        {/* Continue Button */}
+        <TouchableOpacity style={styles.button} onPress={sendLoginRequest} disabled={loading}>
+          {loading ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={styles.buttonText}>Continue</Text>
+          )}
+        </TouchableOpacity>
+
+        {/* Sign Up Button */}
+        <TouchableOpacity style={[styles.button, styles.signUpButton]} onPress={toggleAuthPage}>
+          <Text style={styles.signUpText}>Sign Up</Text>
+        </TouchableOpacity>
       </View>
-      <Button title="Continue" onPress={sendLoginRequest} color="#FF9900" />
-      <Button title="Sign Up" onPress={toggleAuthPage} />
     </View>
   );
 };
 
-
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    title: {
-      fontSize: 24,
-      marginBottom: 10,
-    },
-    badLogin: {
-      fontSize: 14,
-      marginBottom: 10,
-      color: "red"
-    },
-    input: {
-      width: '90%',
-      padding: 10,
-      borderWidth: 1,
-      borderColor: '#ccc',
-      borderRadius: 5,
-      marginBottom: 10,
-    },
-    passwordContainer: {
-      position: 'relative',
-      width: '90%',
-    },
-    passwordInput: {
-        padding: 10,
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 5,
-        paddingRight: 40,
-      },
-      iconContainer: {
-        position: 'absolute',
-        right: 10,
-        transform: [{ translateY: 10 }],
-        zIndex: 1,
-      },
-  });
-  
+  container: {
+    flex: 1,
+    backgroundColor: '#ffffff',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 30,
+  },
+  logo: {
+    marginBottom: 10,
+  },
+  appName: {
+    fontSize: 28,
+    fontWeight: '600',
+    color: '#FF9900',
+    marginBottom: 25,
+  },
+  formContainer: {
+    width: '100%',
+  },
+  input: {
+    width: '100%',
+    height: 45,
+    paddingHorizontal: 15,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 25,
+    backgroundColor: '#f9f9f9',
+    marginBottom: 15,
+    fontSize: 16,
+    color: '#333',
+  },
+  passwordContainer: {
+    width: '100%',
+    position: 'relative',
+    marginBottom: 15,
+  },
+  passwordInput: {
+    width: '100%',
+    height: 45,
+    paddingHorizontal: 15,
+    paddingRight: 45, // Space for the icon
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 25,
+    backgroundColor: '#f9f9f9',
+    fontSize: 16,
+    color: '#333',
+  },
+  iconContainer: {
+    position: 'absolute',
+    right: 15,
+    top: '50%',
+    transform: [{ translateY: -10 }],
+  },
+  badLogin: {
+    width: '100%',
+    textAlign: 'left',
+    color: '#e74c3c',
+    marginBottom: 10,
+    paddingLeft: 15,
+    fontSize: 14,
+  },
+  button: {
+    width: '100%',
+    backgroundColor: '#FF9900',
+    paddingVertical: 12,
+    borderRadius: 25,
+    alignItems: 'center',
+    marginVertical: 8,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  signUpButton: {
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#FF9900',
+  },
+  signUpText: {
+    color: '#FF9900',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+});
