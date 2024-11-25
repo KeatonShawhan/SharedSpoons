@@ -1,4 +1,3 @@
-// HomeScreen.tsx
 import React, { useContext, useRef, useState, useEffect } from 'react';
 import {
   Animated,
@@ -21,87 +20,114 @@ import { useNavigation } from "expo-router";
 import { RootTabParamList } from '../../(tabs)/_layout';
 import { StackNavigationProp } from "@react-navigation/stack";
 
-
 const HEADER_HEIGHT = 80;
 const SCROLL_THRESHOLD = 50;
 
 export default function HomeScreen() {
   const colorScheme = useColorScheme();
   const loginContext = useContext(LoginContext)!;
-  const navigation = useNavigation<StackNavigationProp<RootTabParamList>>(); // Use the correct type here
+  const navigation = useNavigation<StackNavigationProp<RootTabParamList>>();
   const [homePosts, setHomePosts] = useState([]);
   const [lastPostTime, setLastPostTime] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(false);
   const scrollYRef = useRef(new Animated.Value(0)).current;
-  
+  const [isResetting, setIsResetting] = useState(false);
+
+  const resetPostsState = () => {
+    console.log('Resetting posts state');
+    setHomePosts([]);
+    setLastPostTime(undefined);
+    setIsResetting(true);
+  };
 
   const getPosts = async (reset = false) => {
-    if (!loginContext.isInitialized || !loginContext.accessToken) return;
-    setLoading(true);
-  
-    if (reset) {
-      setHomePosts([]);
-      setLastPostTime('');
+    if (!loginContext.isInitialized || !loginContext.accessToken) {
+      console.log('Not initialized or no access token, skipping fetch');
+      return;
     }
-  
-    const posts = await fetchPosts(
-      loginContext.userId,
-      loginContext.accessToken,
-      loginContext.handleLogout,
-      10,
-      reset ? undefined : lastPostTime
-    );
-  
-    if (posts && posts.length > 0) {
-      setHomePosts((prevPosts) => [...(reset ? [] : prevPosts), ...posts]);
-      setLastPostTime(posts[posts.length - 1].data.time);
-    }
-  
-    setLoading(false);
-  };
-  
 
-  // Initial fetch of posts
+    if (loading && !reset) {
+      console.log('Already loading, skipping fetch');
+      return;
+    }
+
+    setLoading(true);
+    console.log('Fetching posts. Reset:', reset, 'Last post time:', lastPostTime);
+
+    try {
+      if (reset) {
+        resetPostsState();
+      }
+
+      const posts = await fetchPosts(
+        loginContext.userId,
+        loginContext.accessToken,
+        loginContext.handleLogout,
+        10,
+        reset ? undefined : lastPostTime
+      );
+
+      if (posts && posts.length > 0) {
+        setHomePosts((prevPosts) => [...(reset ? [] : prevPosts), ...posts]);
+        setLastPostTime(posts[posts.length - 1].data.time);
+        console.log('Successfully loaded posts. Count:', posts.length);
+      } else {
+        console.log('No posts returned from fetch');
+      }
+    } catch (error) {
+      console.error('Error in getPosts:', error);
+    } finally {
+      setLoading(false);
+      setIsResetting(false);
+    }
+  };
+
+  // Handle user session changes
   useEffect(() => {
-    getPosts();
+    if (!loginContext.isInitialized) return;
+
+    const hasUserChanged = loginContext.userId !== loginContext.lastUser;
+    const isNewSession = loginContext.userId && !loginContext.lastUser;
+    
+    console.log('User session check:', {
+      currentUser: loginContext.userId,
+      lastUser: loginContext.lastUser,
+      hasUserChanged,
+      isNewSession,
+      isAuthenticated: loginContext.isAuthenticated
+    });
+
+    if (hasUserChanged || isNewSession) {
+      console.log('User changed or new session detected, resetting posts');
+      getPosts(true);
+    }
   }, [
+    loginContext.userId,
+    loginContext.lastUser,
     loginContext.isInitialized,
-    loginContext.accessToken,
-    loginContext.isAuthenticated,
+    loginContext.isAuthenticated
   ]);
 
+  // Handle follow status changes
   useEffect(() => {
-    if (loginContext.userId !== loginContext.lastUser) {
-      setHomePosts([]);
-      setLastPostTime('');
-      getPosts();
-    };
-  }, [
-    loginContext.isAuthenticated,
-  ])
-
-  useEffect(() => {
-    setHomePosts([]);
-    setLastPostTime('');
+    if (!loginContext.isInitialized) return;
+    console.log('Follow status changed, refreshing posts');
     getPosts(true);
-  }, [
-    loginContext.followed,
-  ])
+  }, [loginContext.followed]);
 
-
-  useEffect(() => {  
+  // Update saved post status
+  useEffect(() => {
     if (!loginContext.savedPostData) return;
 
     const { postId, isSaved } = loginContext.savedPostData;
     console.log("Updating saved status for post:", postId, "to", isSaved);
+    
     setHomePosts((prevPosts) =>
       prevPosts.map((post) =>
         post.id === postId ? { ...post, data: { ...post.data, is_saved: isSaved } } : post
       )
-    );    
+    );
   }, [loginContext.savedPostData]);
-
-  
 
   const headerTranslateY = scrollYRef.interpolate({
     inputRange: [0, SCROLL_THRESHOLD],
@@ -120,11 +146,12 @@ export default function HomeScreen() {
     {
       useNativeDriver: true,
       listener: (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+        if (isResetting) return;
+
         const contentHeight = event.nativeEvent.contentSize.height;
         const scrollOffset = event.nativeEvent.contentOffset.y;
         const layoutHeight = event.nativeEvent.layoutMeasurement.height;
 
-        // Check if near the bottom for infinite scroll
         if (contentHeight - scrollOffset <= layoutHeight + 20 && !loading) {
           getPosts();
         }

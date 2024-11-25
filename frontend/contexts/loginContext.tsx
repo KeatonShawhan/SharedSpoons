@@ -112,11 +112,18 @@ export const LoginProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   }
 
   const handleLogout = async () => {
-    await AsyncStorage.removeItem('accessToken');
-    setAccessToken('');
-    navigation.navigate('login');
-    setIsAuthenticated(false);
+    // Set lastUser before clearing other state
     setLastUser(userId);
+    
+    // Clear token from storage
+    await AsyncStorage.removeItem('accessToken');
+    
+    // Clear all state
+    setAccessToken('');
+    setIsAuthenticated(false);
+    
+    // Navigate after state updates
+    navigation.navigate('login');
   };
 
   return (
