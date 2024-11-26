@@ -3,14 +3,15 @@ import React from 'react';
 import { View } from 'react-native';
 import { PostCard, PostCardProps } from '../postCard/postCard';
 import { postEatButton } from './postEatButton';
+import { ToEatScreenNavigationProp } from '@/app/(tabs)/toeat';
 
 // Extend PostCardProps to include onProfilePress
 /* eslint-disable */
 interface ToEatDetailsInfoProps extends PostCardProps {
-  onProfilePress?: () => void;
+  navigation: ToEatScreenNavigationProp
 }
 
-export function ToEatDetailsInfo({ onProfilePress, ...postProps }: ToEatDetailsInfoProps) {
+export function ToEatDetailsInfo({navigation, ...postProps}: ToEatDetailsInfoProps) {
 
   return (
     <View style={{ justifyContent: 'center', alignItems: 'center', paddingBottom: 30 }}>
@@ -21,7 +22,7 @@ export function ToEatDetailsInfo({ onProfilePress, ...postProps }: ToEatDetailsI
           parentTab="ToEatTab"
         />
         <View>
-          {postEatButton()}
+          {postEatButton(navigation)}
         </View>
       </View>
     </View>

@@ -2,10 +2,14 @@ import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 
 
-export function postEatButton() {
+export function postEatButton(navigation:any) {
+
+  const postEat = () =>  {
+    navigation.navigate("MakePostRoot")
+  }
   return (
     <TouchableOpacity
-      onPress={() => {}} 
+      onPress={postEat} 
     >
       <View style={{ justifyContent: 'center', alignItems: 'center', paddingBottom: 20}}>
         <View style={{borderRadius: 5, width: '90%', backgroundColor:'orange',  justifyContent: 'center', alignItems: 'center', }}>

@@ -5,13 +5,16 @@ import ToEatDetails from '@/app/pages/toeat/toEatDetails';
 import { PostStackNavigator, PostStackParamList } from '../navigation/PostStackNavigator';
 import { NavigatorScreenParams } from '@react-navigation/native';
 import ProfileNavigation, { ProfileStackParamList } from '@/app/pages/profile/profileNavigation';
+import MakePostMain, { MakePostScreenStackParamList } from './makePostMain';
+import MakePost from '../pages/makePost/makepost';
 
 // Update ToEatStackParamList to include ProfileRoot
 export type ToEatStackParamList = {
   ToEatList: undefined;
   ToEatDetails: { id: string };
   PostStack: NavigatorScreenParams<PostStackParamList>;
-  ProfileRoot: NavigatorScreenParams<ProfileStackParamList>; // Add this for profile navigation
+  ProfileRoot: NavigatorScreenParams<ProfileStackParamList>;
+  MakePostRoot: NavigatorScreenParams<MakePostScreenStackParamList> 
 };
 
 export type ToEatScreenNavigationProp = NativeStackNavigationProp<ToEatStackParamList>;
@@ -25,6 +28,7 @@ export default function ToEatTab() {
       <Stack.Screen name="ToEatDetails" component={ToEatDetails} />
       <Stack.Screen name="PostStack" component={PostStackNavigator} />
       <Stack.Screen name="ProfileRoot" component={ProfileNavigation} />
+      <Stack.Screen name="MakePostRoot" component={MakePostMain} />
     </Stack.Navigator>
   );
 }

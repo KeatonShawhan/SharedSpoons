@@ -14,11 +14,15 @@ import { ProfileStackParamList } from '@/app/pages/profile/profileNavigation';
 import type { PostCardProps } from '@/components/postCard/postCard';
 import LoginContext from '@/contexts/loginContext';
 import { fetchPostData } from './toEatHelper';
+import { MakePostScreenStackParamList } from '@/app/(tabs)/makePostMain';
 
 type ToEatDetailsRouteProp = RouteProp<{ ToEatDetails: { id: string } }, 'ToEatDetails'>;
 
 type ToEatDetailsNavigationProp = CompositeNavigationProp<
-  NativeStackNavigationProp<ToEatStackParamList>,
+  CompositeNavigationProp<
+    NativeStackNavigationProp<ToEatStackParamList>,
+    NativeStackNavigationProp<MakePostScreenStackParamList>
+  >,
   CompositeNavigationProp<
     NativeStackNavigationProp<PostStackParamList>,
     NativeStackNavigationProp<ProfileStackParamList>
@@ -54,17 +58,6 @@ export default function ToEatDetails() {
     fetchData();
   }, [id]);
 
-  const handleProfileNavigation = (userId: string) => {
-    navigation.navigate('ProfileRoot', {
-      screen: 'Main',
-      params: {
-        userId,
-        isFromProfileTab: false,
-        isFromHomeTab: false,
-        isFromExploreTab: false,
-      },
-    });
-  };
 
   if (isLoading) {
     return (
@@ -87,9 +80,8 @@ export default function ToEatDetails() {
 
       <ScrollView contentContainerStyle={{ paddingBottom: 20 }}>
         <ThemedView style={{ paddingTop: 20 }}>
-          <ToEatDetailsInfo
+          <ToEatDetailsInfo navigation={navigation}
             {...post}
-            onProfilePress={post?.user_id ? () => handleProfileNavigation(post.user_id) : undefined}
           />
         </ThemedView>
       </ScrollView>
