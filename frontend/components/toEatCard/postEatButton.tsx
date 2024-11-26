@@ -1,8 +1,9 @@
+import { ToEatScreenNavigationProp } from '@/app/(tabs)/toeat';
 import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 
 
-export function postEatButton(navigation:any) {
+export function postEatButton(navigation:ToEatScreenNavigationProp) {
 
   const postEat = () =>  {
     navigation.navigate("MakePostRoot")

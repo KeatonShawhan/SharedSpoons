@@ -6,7 +6,6 @@ import { PostStackNavigator, PostStackParamList } from '../navigation/PostStackN
 import { NavigatorScreenParams } from '@react-navigation/native';
 import ProfileNavigation, { ProfileStackParamList } from '@/app/pages/profile/profileNavigation';
 import MakePostMain, { MakePostScreenStackParamList } from './makePostMain';
-import MakePost from '../pages/makePost/makepost';
 
 // Update ToEatStackParamList to include ProfileRoot
 export type ToEatStackParamList = {
