@@ -19,15 +19,21 @@ import { Colors } from '@/constants/Colors';
 import { ImagePickerBox } from '@/components/makePost/ImagePickerBox';
 import { DishNameBox } from '@/components/makePost/DishNameBox';
 import { MakePostScreenStackParamList } from '@/app/(tabs)/makePostMain';
+import { useRoute } from '@react-navigation/native';
+import { RouteProp } from '@react-navigation/native';
 
 const HEADER_HEIGHT = 60; // Adjust if needed
 
 type MakePostNavigationProp = NativeStackNavigationProp<MakePostScreenStackParamList, 'Main'>;
 
 export default function MakePost() {
+  const route = useRoute<RouteProp<MakePostScreenStackParamList, 'Main'>>();
+  const { repostDish, repostRestaurant } = route.params;
   const colorScheme = useColorScheme();
   const navigation = useNavigation<MakePostNavigationProp>();
-  const [dishName, setDishName] = useState('');
+  const [dishName, setDishName] = useState(repostDish ? repostDish : '');
+  const [restaurant, setRestaurant] = useState(repostRestaurant ? repostRestaurant : '');
+
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const isFormComplete = selectedImage && dishName.trim().length > 0;
@@ -48,6 +54,7 @@ export default function MakePost() {
     navigation.navigate('Details', {
       selectedImage,
       dishname: dishName.trim(),
+      restaurant: restaurant
     });
   };
 
@@ -69,6 +76,7 @@ export default function MakePost() {
 
             setSelectedImage(null);
             setDishName('');
+            setRestaurant('');
             navigation.goBack();
           },
         },

@@ -46,9 +46,9 @@ export default function MakePostDetails({route, navigation}: Props) {
 
   const colorScheme = useColorScheme();
   const themeColors = Colors[colorScheme || 'light'];
-  const { selectedImage, dishname } = route.params; // Destructure dishname from route.params
+  const { selectedImage, dishname, restaurant } = route.params; // Destructure dishname from route.params
   const [rating, setRating] = useState(0);
-  const [restaurant, setRestaurant] = useState('');
+  const [restaurantInit, setRestaurant] = useState(restaurant);
   const [captionNew, setCaptionNew] = useState('');
 
   // Import accessToken and userId from LoginContext
@@ -77,14 +77,14 @@ export default function MakePostDetails({route, navigation}: Props) {
   };
 
   const handleSubmit = async () => {
-    if (!rating || !restaurant.trim() || !captionNew.trim()) {
+    if (!rating || !restaurantInit.trim() || !captionNew.trim()) {
       Alert.alert('Incomplete Information', 'Please provide all required information.');
       return;
     }
 
     const postData = {
       rating: rating,
-      restaurant: restaurant.trim(),
+      restaurant: restaurantInit.trim(),
       caption: captionNew.trim(),
       dish: dishname,
     };
@@ -162,7 +162,7 @@ export default function MakePostDetails({route, navigation}: Props) {
         </View>
 
         {/* Form Fields */}
-        <RestaurantInputBox restaurant={restaurant} setRestaurant={setRestaurant} />
+        <RestaurantInputBox restaurant={restaurantInit} setRestaurant={setRestaurant} />
         <CaptionBox caption={captionNew} setCaption={setCaptionNew} />
         {/* Submit Button */}
         <View style={styles.buttonContainer}>

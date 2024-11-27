@@ -13,7 +13,7 @@ export type ToEatStackParamList = {
   ToEatDetails: { id: string };
   PostStack: NavigatorScreenParams<PostStackParamList>;
   ProfileRoot: NavigatorScreenParams<ProfileStackParamList>;
-  MakePostRoot: NavigatorScreenParams<MakePostScreenStackParamList> 
+  MakePostRoot: {repostDish?:string, repostRestaurant?:string};
 };
 
 export type ToEatScreenNavigationProp = NativeStackNavigationProp<ToEatStackParamList>;
@@ -27,7 +27,8 @@ export default function ToEatTab() {
       <Stack.Screen name="ToEatDetails" component={ToEatDetails} />
       <Stack.Screen name="PostStack" component={PostStackNavigator} />
       <Stack.Screen name="ProfileRoot" component={ProfileNavigation} />
-      <Stack.Screen name="MakePostRoot" component={MakePostMain} />
+      <Stack.Screen name="MakePostRoot" initialParams={{repostDish: '', repostRestaurant: ''}}
+       component={MakePostMain} />
     </Stack.Navigator>
   );
 }
