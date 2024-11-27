@@ -1,10 +1,9 @@
-import React, {useState } from "react";
+import React from "react";
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
-  ActivityIndicator,
 } from "react-native";
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from "@react-navigation/native";
@@ -13,7 +12,6 @@ import { StackNavigationProp } from "@react-navigation/stack";
 
 export default function Login() {
 
-  const [loading, setLoading] = useState(false);
   const navigation = useNavigation<StackNavigationProp<RootTabParamList>>();
 
   const toggleLoginPage = () => {
@@ -29,12 +27,8 @@ export default function Login() {
       />
       <Text style={styles.appName}>Welcome to Shared Spoons</Text>
       
-        <TouchableOpacity style={styles.button} onPress={toggleLoginPage} disabled={loading}>
-          {loading ? (
-            <ActivityIndicator color="#fff" />
-          ) : (
+        <TouchableOpacity style={styles.button} onPress={toggleLoginPage}>
             <Text style={styles.buttonText}>Continue</Text>
-          )}
         </TouchableOpacity>
       </View>  );
 };
