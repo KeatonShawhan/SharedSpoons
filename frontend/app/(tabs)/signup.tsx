@@ -7,7 +7,6 @@ import {
   Alert,
   TouchableOpacity,
   ActivityIndicator,
-  ScrollView,
 } from "react-native";
 import Icon from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -121,7 +120,7 @@ export default function Signup() {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.container}>
       {/* App Logo */}
       <FontAwesome
         name="cutlery"
@@ -254,13 +253,13 @@ export default function Signup() {
           <Text style={styles.loginText}>Login</Text>
         </TouchableOpacity>
       </View>
-    </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
+    flex: 1,
     backgroundColor: '#ffffff',
     justifyContent: 'center',
     alignItems: 'center',

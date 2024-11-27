@@ -1,5 +1,14 @@
 import React from 'react';
-import { TouchableOpacity, StyleSheet, Image, View, Text, StyleProp, ViewStyle, useColorScheme } from 'react-native';
+import { 
+  TouchableOpacity, 
+  StyleSheet, 
+  Image, 
+  View, 
+  Text, 
+  StyleProp, 
+  ViewStyle, 
+  useColorScheme 
+} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
 import { Colors } from '@/constants/Colors';
@@ -68,7 +77,18 @@ export function ImagePickerBox({ selectedImage, setSelectedImage, style, isDisab
         <Image source={{ uri: selectedImage }} style={styles.image} />
       ) : (
         <View style={styles.placeholder}>
-          <Text style={[styles.placeholderText, { color: themeColors.icon }]}>Tap to select an image</Text>
+          <Text 
+            style={[
+              styles.placeholderText, 
+              { 
+                color: themeColors.icon,
+                // Remove dynamic font size scaling
+                fontSize: 16,
+              }
+            ]}
+          >
+            Tap to select an image
+          </Text>
         </View>
       )}
     </TouchableOpacity>
@@ -84,14 +104,18 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     overflow: 'hidden',
     marginTop: 60,
+    justifyContent: 'center', // Center content vertically
+    alignItems: 'center', // Center content horizontally
   },
   placeholder: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingHorizontal: 10, // Add padding to prevent text from touching edges
   },
   placeholderText: {
-    fontSize: 16,
+    textAlign: 'center', // Center text horizontally
+    // Allow multiple lines by default
   },
   image: {
     width: '100%',
