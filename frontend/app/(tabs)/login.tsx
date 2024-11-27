@@ -39,7 +39,7 @@ export default function Login() {
         if (storedToken) {
           loginContext.setAccessToken(storedToken);
           loginContext.setIsAuthenticated(true);
-          navigation.navigate('index'); // Navigate if token exists
+          navigation.navigate('index');
         }
       } catch (error) {
         console.log("Error loading token from AsyncStorage", error);
@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 45,
     paddingHorizontal: 15,
-    paddingRight: 45, // Space for the icon
+    paddingRight: 45,
     borderWidth: 1,
     borderColor: '#ddd',
     borderRadius: 25,

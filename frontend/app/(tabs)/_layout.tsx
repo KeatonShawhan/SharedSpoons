@@ -17,6 +17,7 @@ export type RootTabParamList = {
   toeat: undefined;
   profile: { userId: string }; // Example for a screen that takes params
   login: undefined; // For login screen
+  welcome:undefined;
   signup: undefined; // For signup screen
 };
 
@@ -124,7 +125,17 @@ export default function TabLayout() {
         options={{
           headerShown: false,
           tabBarButton: () => null,
-          tabBarStyle: { display: 'none' }, // Always hide the signup tab
+          tabBarStyle: { display: 'none' }, 
+          tabBarIcon: () => null,
+          tabBarLabel: () => null,
+        }}
+      />
+      <Tabs.Screen
+        name="welcome"
+        options={{
+          headerShown: false,
+          tabBarButton: () => null,
+          tabBarStyle: { display: 'none' }, 
           tabBarIcon: () => null,
           tabBarLabel: () => null,
         }}

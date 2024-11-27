@@ -31,7 +31,7 @@ export default function HomeTab() {
   const loginContext = useContext(LoginContext);
 
   if(loginContext.isAuthenticated == false) {
-    navigation.navigate('login');
+    navigation.navigate('welcome');
   }
 
   return (
