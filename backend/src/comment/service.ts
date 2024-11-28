@@ -16,11 +16,7 @@ interface Comment {
 
 export class commentService {
     public async createComment(userID: UUID, postID: UUID, commentData: CommentJSON): Promise<CommentReturn | undefined> {
-        const client = await pool.connect();
-
         try {
-            await client.query('BEGIN');
-
             const insertQuery = `
                 INSERT INTO comment (user_id, post_id, data)
                 VALUES ($1, $2, $3)
@@ -32,9 +28,7 @@ export class commentService {
                 values: [userID, postID, commentData]
             }
 
-            const res = await client.query(query.text, query.values);
-
-            await client.query('COMMIT');
+            const res = await pool.query(query.text, query.values);
 
             if (res.rows.length === 0) {
                 console.error('Database insertion of comment creation failed');
@@ -44,11 +38,8 @@ export class commentService {
             return res.rows[0]; // returning id, user, comment, time
 
         } catch (error) {
-            await client.query('ROLLBACK');
             console.error('Error creating comment:', error);
             return undefined;
-        } finally {
-            client.release();
         }
     }
 

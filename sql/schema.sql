@@ -67,7 +67,7 @@ CREATE TABLE likes (
     PRIMARY KEY (post_id, user_id)
 );
 
--- Like Table
+-- Repost Table
 DROP TABLE IF EXISTS repost CASCADE;
 CREATE TABLE repost (
     post_id UUID REFERENCES post(id) ON DELETE CASCADE,

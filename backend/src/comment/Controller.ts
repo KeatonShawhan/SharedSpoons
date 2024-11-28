@@ -110,9 +110,9 @@ export class CommentController extends Controller{
 
         try {
             const list = await new commentService().getComments(postId);
-            if (!list) {
+            if (list === undefined) {
                 this.setStatus(400);
-                console.error('Could not get list of comments');
+                console.error('List of comments is undefined');
                 return undefined;
             }
 

@@ -59,6 +59,13 @@ CREATE TABLE likes (
     PRIMARY KEY (post_id, user_id)
 );
 
+DROP TABLE IF EXISTS repost CASCADE;
+CREATE TABLE repost (
+    post_id UUID REFERENCES post(id) ON DELETE CASCADE,
+    user_id UUID REFERENCES app_user(id) ON DELETE CASCADE,
+    PRIMARY KEY (post_id, user_id)
+);
+
 WITH salt AS (
     SELECT gen_salt('bf') AS salt
 )
