@@ -12,7 +12,6 @@ export class AccountService {
             if (result.rows.length === 0 || result.rows[0].id === id) {
                 return true;
             } else{
-                console.log(result.rows[0]); 
                 console.error('Username already in use');
                 return false;
             }
@@ -42,9 +41,6 @@ export class AccountService {
             if (updateRequest.bio !== undefined) updatedData.bio = updateRequest.bio;
             if (updateRequest.location !== undefined) updatedData.location = updateRequest.location;
             if (s3key !== undefined) updatedData.pfp = s3key;
-    
-            console.log("Before Update: ", currentData);
-            console.log("After Update: ", updatedData);
     
             // Update the database with the new data
             const updateResult = await pool.query(

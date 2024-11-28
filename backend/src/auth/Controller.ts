@@ -36,7 +36,6 @@ import {
     public async login(
       @Body() credentials: Credentials
     ): Promise<Authenticated | undefined> {
-      console.log(credentials);
       return new AuthService()
         .login(credentials)
         .then(
@@ -58,7 +57,6 @@ import {
       @Body() info: UserSignUp
     ): Promise<Authenticated | undefined> {
       const ret = await new AuthService().signup(info);
-      console.log(ret);
       if (!ret) {
         this.setStatus(409);
         console.log('Signup failed, returning 409.')

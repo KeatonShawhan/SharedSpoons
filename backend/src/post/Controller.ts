@@ -172,7 +172,6 @@ export class PostController extends Controller {
         @Request() request: express.Request,
         @Path() userID: string
     ): Promise<PostTotal[] | undefined> {
-        console.log("userid: ", request.user);
         if (!request.user) {
             this.setStatus(401);
             console.error('Unauthorized user');
@@ -183,7 +182,6 @@ export class PostController extends Controller {
                 .getAllPosts(userID)
                 .then(
                     async (posts: PostTotal[] | undefined): Promise<PostTotal[] | undefined> => {
-                        console.log(posts);
                         if (!posts) {
                             this.setStatus(400);
                             console.error('Could not get posts');
@@ -298,6 +296,71 @@ public async getFriendPosts(
             }
             return new postService()
                 .editPost(postID, rating, caption)
+                .then(
+                    async (edited : string | undefined):
+                        Promise<string | undefined> => {
+                            if (!edited) {
+                                this.setStatus(400);
+                                console.error('Could not edit post');
+                                return undefined;
+                            }
+                            this.setStatus(200);
+                            return edited;
+                        }
+                )
+        } catch (error) {
+            this.setStatus(500);
+            console.error('Error in post /post/edit route:', error);
+            return undefined;
+        }
+    }
+
+    @Post('/add/repost')
+    public async addRepost(
+        @Request() request: express.Request,
+        @Query() postId: string,
+        @Query() userId: string,
+    ): Promise< string | undefined > {
+        try { 
+            if (!request.user) {
+                this.setStatus(401);
+                console.error('Unauthorized user');
+                return undefined;
+            }
+            return new postService()
+                .addRepost(postId, userId)
+                .then(
+                    async (edited : string | undefined):
+                        Promise<string | undefined> => {
+                            if (!edited) {
+                                this.setStatus(400);
+                                console.error('Could not edit post');
+                                return undefined;
+                            }
+                            this.setStatus(200);
+                            return edited;
+                        }
+                )
+        } catch (error) {
+            this.setStatus(500);
+            console.error('Error in post /post/edit route:', error);
+            return undefined;
+        }
+    }
+
+    @Get('/get/repost')
+    public async getRepost(
+        @Request() request: express.Request,
+        @Query() postId: string,
+    ): Promise< string | undefined > {
+        try { 
+            if (!request.user) {
+                this.setStatus(401);
+                console.error('Unauthorized user');
+                return undefined;
+            }
+            return new postService()
+                .getRepost(postId)
                 .then(
                     async (edited : string | undefined):
                         Promise<string | undefined> => {

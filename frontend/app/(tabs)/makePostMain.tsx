@@ -9,11 +9,14 @@ export type MakePostScreenStackParamList = {
   Main: {
     repostDish?:string;
     repostRestaurant?: string;
+    repostId?:string;
   };
   Details: {
     selectedImage: string;
     dishname: string;
     restaurant: string;
+    id:string;
+    isRepost:boolean;
   };
 };
 
@@ -24,13 +27,15 @@ const Stack = createNativeStackNavigator<MakePostScreenStackParamList>();
 
 export default function MakePostMain() {
 
-  const route = useRoute<RouteProp<{ MakePostRoot: { repostDish?: string, repostRestaurant?: string } }, 'MakePostRoot'>>();
+  const route = useRoute<RouteProp<{ MakePostRoot: { repostDish?: string, repostRestaurant?: string, repostId?:string } }, 'MakePostRoot'>>();
   const repostDish = route.params?.repostDish || ''; 
   const repostRestaurant = route.params?.repostRestaurant || ''; 
+  const repostId = route.params?.repostId || ''; 
+
 
   return (
     <Stack.Navigator initialRouteName="Main" screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Main" component={MakePost} initialParams={{repostDish:repostDish, repostRestaurant:repostRestaurant}}/>
+      <Stack.Screen name="Main" component={MakePost} initialParams={{repostDish:repostDish, repostRestaurant:repostRestaurant, repostId:repostId}}/>
       <Stack.Screen name="Details" component={MakePostDetails} initialParams={{restaurant: repostRestaurant}} />
     </Stack.Navigator>
   );

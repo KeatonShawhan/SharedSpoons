@@ -31,7 +31,6 @@ export class ExploreController extends Controller {
     return new ExploreService()
       .searchSuggestion(input, currentUsername)
       .then(async (searchResults: Suggestion[]): Promise<Suggestion[]> => {
-        console.log("Suggestions: " + searchResults);
         if (!searchResults) {
           return [];
         }

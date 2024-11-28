@@ -28,11 +28,20 @@ type MakePostNavigationProp = NativeStackNavigationProp<MakePostScreenStackParam
 
 export default function MakePost() {
   const route = useRoute<RouteProp<MakePostScreenStackParamList, 'Main'>>();
-  const { repostDish, repostRestaurant } = route.params;
+  const { repostDish, repostRestaurant, repostId } = route.params;
   const colorScheme = useColorScheme();
   const navigation = useNavigation<MakePostNavigationProp>();
+  let repost = false
+
+  if (repostDish != '' || repostRestaurant != '' || repostId != '') {
+    repost = true
+  } else {
+    repost = false
+  }
+
   const [dishName, setDishName] = useState(repostDish ? repostDish : '');
   const [restaurant, setRestaurant] = useState(repostRestaurant ? repostRestaurant : '');
+  const [id, setId] = useState(repostId ? repostId : '');
 
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
@@ -41,7 +50,7 @@ export default function MakePost() {
   const [isDishNameFocused, setIsDishNameFocused] = useState(false);
 
   // Animations
-  const dishNamePosition = useRef(new Animated.Value(0)).current; // 0: original position, 1: moved position
+  const dishNamePosition = useRef(new Animated.Value(0)).current; 
   const contentOpacity = useRef(new Animated.Value(1)).current;
 
   const handleNext = () => {
@@ -54,7 +63,9 @@ export default function MakePost() {
     navigation.navigate('Details', {
       selectedImage,
       dishname: dishName.trim(),
-      restaurant: restaurant
+      restaurant: restaurant,
+      id: id,
+      isRepost: repost
     });
   };
 
@@ -77,6 +88,7 @@ export default function MakePost() {
             setSelectedImage(null);
             setDishName('');
             setRestaurant('');
+            setId('');
             navigation.goBack();
           },
         },

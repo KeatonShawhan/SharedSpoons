@@ -31,6 +31,7 @@ import API_URL from '@/config';
 import { RootTabParamList } from '@/app/(tabs)/_layout';
 import { useNavigation } from 'expo-router';
 import { CommonActions } from '@react-navigation/native';
+import { addRepost } from './repostHelpers';
 const HEADER_HEIGHT = 80;
 
 type MakePostDetailsRouteProp = RouteProp<MakePostScreenStackParamList, 'Details'>;
@@ -46,11 +47,11 @@ export default function MakePostDetails({route, navigation}: Props) {
 
   const colorScheme = useColorScheme();
   const themeColors = Colors[colorScheme || 'light'];
-  const { selectedImage, dishname, restaurant } = route.params; // Destructure dishname from route.params
+  const { selectedImage, dishname, restaurant, isRepost, id } = route.params;
+
   const [rating, setRating] = useState(0);
   const [restaurantInit, setRestaurant] = useState(restaurant);
   const [captionNew, setCaptionNew] = useState('');
-
   // Import accessToken and userId from LoginContext
   const { accessToken } = useContext(LoginContext);
 
@@ -77,6 +78,7 @@ export default function MakePostDetails({route, navigation}: Props) {
   };
 
   const handleSubmit = async () => {
+    let post_id = ''
     if (!rating || !restaurantInit.trim() || !captionNew.trim()) {
       Alert.alert('Incomplete Information', 'Please provide all required information.');
       return;
@@ -110,18 +112,18 @@ export default function MakePostDetails({route, navigation}: Props) {
       });
 
       if (response.ok) {
+        post_id = await response.json()
         Alert.alert('Success', 'Your post has been submitted successfully.', [
           
           { text: 'OK', onPress: () => {
             navigation.dispatch(
               CommonActions.reset({
                 index: 0,
-                routes: [{ name: 'Main' }], // Ensure 'Main' is the first route in the stack
+                routes: [{ name: 'Main' }],
               })
             );
             loginContext.setMadePost(!loginContext.madePost)
             rootnav.navigate('index') 
-          
           }},
         ]);
 
@@ -136,6 +138,10 @@ export default function MakePostDetails({route, navigation}: Props) {
       }
       Alert.alert('An Error Occurred', 'Please try again.');
       console.error('Submission error:', error);
+    }
+
+    if (isRepost) {
+      addRepost(id, post_id, accessToken)
     }
   };
 

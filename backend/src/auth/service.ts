@@ -165,7 +165,6 @@ export class AuthService {
     if (rows.length == 0) {
       return undefined;
     }
-    console.log(rows)
     return rows[0];
 }
 }

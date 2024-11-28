@@ -68,14 +68,12 @@ export class AccountController extends Controller {
 
             // Update user data with the S3 key
             updatedAccount = await AccountService.updateUserAccount(request.user.id, updateRequestJson, s3key);
-            console.log("controller updatedAccount: ", updatedAccount);
         } else {
             updatedAccount = await AccountService.updateUserAccount(request.user.id, updateRequestJson);
         }
 
         if (updatedAccount?.profilePicture !== undefined) {
             updatedAccount.profilePicture = await this.s3Service.getFileLink(updatedAccount?.profilePicture);
-            console.log("controller updatedAccount with filelink: ", updatedAccount);
         }
 
         if (!updatedAccount) {

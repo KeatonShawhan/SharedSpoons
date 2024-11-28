@@ -41,11 +41,8 @@ export default function MainScreen() {
   const profileId = route.params?.userId || loginContext.userId;
   const isOwnProfile = profileId === loginContext.userId;
 
-  // Determine if we're in the profile tab or explore tab by checking the route
-  // const isFromHomeTab = route.params?.isFromHomeTab ?? false;
-  // const isFromExploreTab = route.params?.isFromExploreTab ?? false;
+
   const isFromProfileTab = route.params?.isFromProfileTab ?? false;
-  // console.log(isFromExploreTab);
 
   // State variables
   const [username, setUsername] = useState('Loading name...');
@@ -84,7 +81,6 @@ export default function MainScreen() {
 
       // Fetch all posts
       const allPostsData = await fetchAllPosts(profileId, loginContext.accessToken, loginContext.handleLogout);
-      // console.log(allPostsData);
       setPostCount(allPostsData.length);
       setPosts(allPostsData);
 

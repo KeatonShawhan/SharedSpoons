@@ -57,7 +57,6 @@ export class toEatService{
             
         }catch (error) {
             console.error('Error getting to eat list:', error);
-            console.log('ID: ' + postId + ' User: ' + userId); 
             return undefined;
         }
     }

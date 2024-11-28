@@ -53,10 +53,7 @@ export function PostCaption({
     try {
       if (liked) {
         await unlikePost(postId, loginContext.accessToken);
-        console.log("unlike");
       } else {
-        console.log("like");
-
         await likePost(postId, loginContext.accessToken);
       }
       setIsLiked(newLikedState);

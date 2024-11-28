@@ -137,7 +137,6 @@ export class commentService {
 
         try {
             const { rows } = await pool.query(query);
-            console.log(rows);
             if (rows.length === 0) {
                 console.log("No Comments");
                 return 0;

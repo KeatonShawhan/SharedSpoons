@@ -29,7 +29,7 @@ export class postService{
                 console.error('Database insertion of post creation failed');
                 return undefined;
             }
-
+            
             return res.rows[0].id;
             
         }catch (error) {
@@ -268,12 +268,9 @@ export class postService{
                 text: selectQuery,
                 values: queryParams,
             };
-
-            console.log("selectquery: ", query);
     
             // Execute the query
             const { rows } = await pool.query(query);
-            console.log("rows: ", rows);
             if (!rows || rows.length === 0) {
                 console.log('No posts found for user: ' + userID);
                 return [];
@@ -341,6 +338,81 @@ export class postService{
                 rating: updatedFields.rating,
                 caption: updatedFields.caption
             });
+
+
+        } catch (error) {
+            await client.query('ROLLBACK');
+            console.error('Error updating post:', error);
+            return undefined;
+        } finally {
+            client.release();
+        }
+    }
+
+    public async addRepost(postId: UUID, userId:UUID): Promise < string | undefined > {
+        const client = await pool.connect();
+
+        try {
+            await client.query('BEGIN');
+
+            const updateQuery = `
+            INSERT INTO repost (post_id, user_id)
+                VALUES ($1, $2)
+                RETURNING *
+            `;
+
+
+            const query = {
+                text: updateQuery,
+                values: [postId, userId]
+            }
+
+            const res = await client.query(query.text, query.values);
+
+            await client.query('COMMIT');
+
+            if(res.rowCount === 0) {
+                console.error('Database innsert of repost failed');
+                return undefined;
+            }
+
+            return res.rows[0]
+
+
+        } catch (error) {
+            await client.query('ROLLBACK');
+            console.error('Error updating post:', error);
+            return undefined;
+        } finally {
+            client.release();
+        }
+    }
+
+    public async getRepost(postId: UUID): Promise < string | undefined > {
+        const client = await pool.connect();
+
+        try {
+            await client.query('BEGIN');
+
+            const updateQuery = `
+                SELECT * FROM repost WHERE post_id = $1
+            `;
+
+
+            const query = {
+                text: updateQuery,
+                values: [postId]
+            }
+
+            const res = await client.query(query.text, query.values);
+
+            await client.query('COMMIT');
+            if (!res.rows[0]) {
+                return ''
+            }
+            return res.rows[0]
+
+
 
 
         } catch (error) {
