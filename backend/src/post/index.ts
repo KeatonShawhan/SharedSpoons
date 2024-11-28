@@ -11,6 +11,8 @@ export interface PostJSON{
   username: string;
   is_saved: string;
   is_liked: string;
+  is_reposted:string;
+  reposted_by?: string;
 }
 
 export interface PostContent {

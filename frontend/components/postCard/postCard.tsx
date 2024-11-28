@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Animated, TouchableOpacity, View, StyleSheet, Alert } from 'react-native';
 import { useNavigation, CompositeNavigationProp } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons'; // Assuming react-native-vector-icons is installed
@@ -11,7 +11,8 @@ import { ProfileScreenNavigationProp } from '@/app/pages/profile/profileNavigati
 import type { ToEatScreenNavigationProp } from '@/app/(tabs)/toeat';
 import API_URL from '@/config';
 import LoginContext from '@/contexts/loginContext';
-import {fetchAllPosts} from '../../app/pages/profile/profileHelpers'
+import {fetchAllPosts, fetchUserInfo} from '../../app/pages/profile/profileHelpers'
+import { repostCredit } from './repostCredit';
 
 export interface PostCardProps {
   id: string;
@@ -27,6 +28,8 @@ export interface PostCardProps {
   pfp: string;
   parentTab: 'HomeTab' | 'ProfileTab' | 'ToEatTab' | 'ExploreTab';
   isOwnProfile: boolean;
+  isReposted:boolean;
+  repostedBy:string;
 }
 
 // Combine navigation props to include Home, Profile, and ToEat tabs
@@ -49,11 +52,14 @@ export function PostCard({
   pfp,
   isLiked,
   isOwnProfile,
+  isReposted, 
+  repostedBy,
 }: PostCardProps) {
   const navigation = useNavigation<CombinedNavigationProp>();
   const [isFlipped, setIsFlipped] = useState(false);
   const fadeAnim = useState(new Animated.Value(1))[0];
   const loginContext = useContext(LoginContext);
+  const [repostUserName, setRepostUserName] = useState('')
 
   const handlePress = () => {
     setIsFlipped(!isFlipped);
@@ -107,7 +113,7 @@ export function PostCard({
     );
   };
 
-  const handleNavigateToProfile = () => {
+  const handleNavigateToProfile = (newId:string) => {
     switch (parentTab) {
       case 'HomeTab':
         navigation.push('ProfileTab', {
@@ -115,7 +121,7 @@ export function PostCard({
           params: {
             screen: 'Main',
             params: { 
-              userId: user_id,
+              userId: newId,
               isFromHomeTab: true
             }
           },
@@ -127,7 +133,7 @@ export function PostCard({
         navigation.push('ProfileRoot', {
           screen: 'Main',
           params: {
-            userId: user_id,
+            userId: newId,
           }
         });
         break;
@@ -136,7 +142,7 @@ export function PostCard({
         navigation.push('ProfileRoot', {
           screen: 'Main',
           params: {
-            userId: user_id,
+            userId: newId,
           }
         });
         break;
@@ -145,7 +151,7 @@ export function PostCard({
         navigation.push('ProfileRoot', {
           screen: 'Main',
           params: {
-            userId: user_id,
+            userId: newId,
           }
         });
         break;
@@ -155,6 +161,20 @@ export function PostCard({
     }
   };
 
+  useEffect(() => {
+    if(isReposted) {
+      fetchPostData();
+    }
+  }, []);
+
+  const fetchPostData = async () => {
+    const userInfo = await fetchUserInfo(repostedBy, loginContext.accessToken, ()=>{});
+    setRepostUserName(userInfo.username);
+    return userInfo
+  }
+
+
+
   return (
     <View style={styles.cardContainer}>
       {isOwnProfile && (
@@ -163,10 +183,14 @@ export function PostCard({
         </TouchableOpacity>
       )}
       <View style={styles.contentContainer}>
-        <TouchableOpacity onPress={handleNavigateToProfile}>
+        <TouchableOpacity onPress={() => handleNavigateToProfile(user_id)}>
           <View style={styles.headerContainer}>
-            {postHeader({ username, place, user_id, onNavigateToProfile: handleNavigateToProfile, pfp })}
+            {postHeader({ username, place, user_id, onNavigateToProfile: () => handleNavigateToProfile(user_id), pfp })}
           </View>
+          {isReposted &&
+          <View style={styles.headerContainer}>
+            {repostCredit({username: repostUserName, place, user_id, onNavigateToProfile: () => handleNavigateToProfile(repostedBy), pfp })}
+          </View>}
         </TouchableOpacity>
         <TouchableOpacity onPress={handlePress}>
           <View style={{ position: 'relative' }}>

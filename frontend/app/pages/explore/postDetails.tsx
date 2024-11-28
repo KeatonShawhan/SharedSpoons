@@ -82,8 +82,10 @@ export default function PostDetails({ route }: Props) {
         image: apiData.data.image || '',
         pfp: apiData.data.pfp,
         isSaved: apiData.data.is_saved,
-        likes: apiData.likes || 0,
-        commentsCount: apiData.commentsCount || 0,
+        isLiked:apiData.data.is_liked,
+        isReposted:apiData.data.is_reposted,
+        repostedBy:apiData.data.reposted_by,
+        isOwnProfile:apiData.data.isOwnProfile,
         parentTab: 'ExploreTab',
       };
 

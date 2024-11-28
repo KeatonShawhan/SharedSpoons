@@ -31,6 +31,8 @@ interface PostApiResponse {
     username: string;
     is_saved:boolean;
     is_liked:boolean;
+    is_reposted:boolean;
+    reposted_by:string;
   };
 }
 
@@ -73,6 +75,8 @@ export default function PostPage() {
             const transformedData: PostCardProps = {
                 isLiked: apiData.data.is_liked,
                 isSaved: apiData.data.is_saved,
+                isReposted: apiData.data.is_reposted,
+                repostedBy: apiData.data.reposted_by,
                 id: apiData.id,
                 user_id: apiData.user,
                 username: apiData.data.username,
@@ -86,7 +90,7 @@ export default function PostPage() {
                 isOwnProfile,
             };
             
-            
+            console.log(transformedData)
             setPostData(transformedData);
 
         } catch (err) {

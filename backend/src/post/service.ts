@@ -99,7 +99,12 @@ export class postService{
                     CASE
                         WHEN likes.post_id IS NOT NULL THEN TRUE
                         ELSE FALSE
-                    END AS is_liked
+                    END AS is_liked,
+                    CASE
+                        WHEN repost.post_id IS NOT NULL THEN TRUE
+                        ELSE FALSE
+                    END AS is_reposted,
+                    repost.user_id AS reposted_by
                 FROM 
                     post
                 LEFT JOIN 
@@ -108,6 +113,8 @@ export class postService{
                     toEat ON toEat.post_id = post.id AND toEat.user_id = $2
                 LEFT JOIN 
                     likes ON likes.post_id = post.id AND likes.user_id = $2
+                LEFT JOIN 
+                    repost ON repost.post_id = post.id
                 WHERE 
                     post.id = $1;
             `;
@@ -139,7 +146,9 @@ export class postService{
                     pfp: row.pfp || '',
                     is_saved: row.is_saved,
                     username: row.username || '',
-                    is_liked:row.is_liked
+                    is_liked:row.is_liked, 
+                    is_reposted:row.is_reposted, 
+                    reposted_by: row.reposted_by
                 },
             };
     
@@ -194,7 +203,8 @@ export class postService{
                     pfp: row.pfp || '',
                     username: row.username || '',
                     is_saved:row.is_saved,
-                    is_liked:row.is_liked
+                    is_liked:row.is_liked,
+                    is_reposted:row.is_reposted
                 },
             }));
     
@@ -234,7 +244,12 @@ export class postService{
                     CASE
                         WHEN likes.post_id IS NOT NULL THEN TRUE
                         ELSE FALSE
-                    END AS is_liked
+                    END AS is_liked,
+                    CASE
+                        WHEN repost.post_id IS NOT NULL THEN TRUE
+                        ELSE FALSE
+                    END AS is_reposted,
+                    repost.user_id AS reposted_by
                 FROM 
                     post
                 INNER JOIN 
@@ -245,6 +260,8 @@ export class postService{
                     toEat ON toEat.post_id = post.id AND toEat.user_id = $1
                 LEFT JOIN 
                     likes ON likes.post_id = post.id AND likes.user_id = $1
+                LEFT JOIN 
+                    repost ON repost.post_id = post.id
                 WHERE 
                     follow.sender = $1
             `;
@@ -291,6 +308,8 @@ export class postService{
                     username: row.username || '',
                     is_saved: row.is_saved,
                     is_liked: row.is_liked,
+                    is_reposted:row.is_reposted,
+                    reposted_by:row.reposted_by
                 },
             }));
     
