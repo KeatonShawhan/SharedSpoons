@@ -22,7 +22,7 @@ export class ExploreController extends Controller {
   public async searchSuggestion(
     @Query() input: string,
     @Query() currentUsername: string
-  ): Promise<Suggestion[]> {
+  ): Promise<Suggestion[] | undefined> {
     if (input.length < 1) {
       this.setStatus(400);
       return [];
@@ -30,7 +30,7 @@ export class ExploreController extends Controller {
 
     return new ExploreService()
       .searchSuggestion(input, currentUsername)
-      .then(async (searchResults: Suggestion[]): Promise<Suggestion[]> => {
+      .then(async (searchResults: Suggestion[] | undefined ): Promise<Suggestion[] | undefined> => {
         if (!searchResults) {
           return [];
         }

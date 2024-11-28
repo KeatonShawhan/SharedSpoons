@@ -6,7 +6,7 @@ export class ExploreService {
   public async searchSuggestion(
     input: string,
     currentUsername: string
-  ): Promise<Suggestion[]> {
+  ): Promise<Suggestion[] | undefined > {
     const select = `
       SELECT DISTINCT 
         id, 
