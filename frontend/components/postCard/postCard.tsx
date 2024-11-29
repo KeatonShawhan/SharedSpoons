@@ -12,8 +12,7 @@ import type { ToEatScreenNavigationProp } from '@/app/(tabs)/toeat';
 import API_URL from '@/config';
 import LoginContext from '@/contexts/loginContext';
 import {fetchAllPosts, fetchUserInfo} from '../../app/pages/profile/profileHelpers'
-import { repostCredit } from './repostCredit';
-
+import { useCallback } from 'react';
 export interface PostCardProps {
   id: string;
   username: string;
@@ -173,6 +172,7 @@ export function PostCard({
     return userInfo
   }
 
+  const repostNavigation = useCallback(() => handleNavigateToProfile(repostedBy), [repostedBy]);
 
 
   return (
@@ -187,10 +187,6 @@ export function PostCard({
           <View style={styles.headerContainer}>
             {postHeader({ username, place, user_id, onNavigateToProfile: () => handleNavigateToProfile(user_id), pfp })}
           </View>
-          {isReposted &&
-          <View style={styles.headerContainer}>
-            {repostCredit({username: repostUserName, place, user_id, onNavigateToProfile: () => handleNavigateToProfile(repostedBy), pfp })}
-          </View>}
         </TouchableOpacity>
         <TouchableOpacity onPress={handlePress}>
           <View style={{ position: 'relative' }}>
@@ -219,6 +215,9 @@ export function PostCard({
             isSaved={isSaved}
             userId={user_id}
             isLiked={isLiked}
+            repostNavigation={repostNavigation}
+            username={repostUserName}
+            isReposted={isReposted}
           />
         </View>
       </View>
