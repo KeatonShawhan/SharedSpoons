@@ -145,17 +145,6 @@ export function PostCaption({
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           {starDisplay({ rating })}
-          <Text
-            style={{
-              paddingLeft: 5,
-              paddingRight: 10,
-              fontSize: 16,
-              fontWeight: 'bold',
-              maxWidth: '65%',
-            }}
-            numberOfLines={1}
-            ellipsizeMode="tail"
-          />
         </View>
 
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
