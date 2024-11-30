@@ -10,7 +10,6 @@ import { ProfileScreenNavigationProp } from '@/app/pages/profile/profileNavigati
 import type { ToEatScreenNavigationProp } from '@/app/(tabs)/toeat'; 
 import { getCommentCount } from './screens/commentHelper';
 import LoginContext from '@/contexts/loginContext';
-import { RepostCredit } from './repostCredit';
 import { addToEat, deleteToEat, fetchPostData, likeCount, likePost, unlikePost } from '@/app/pages/toeat/toEatHelper';
 const ORANGE_COLOR = '#FF9F45';
 
@@ -28,9 +27,6 @@ interface PostCaptionProps {
   isLiked: boolean;
   userId: string;
   parentTab: 'HomeTab' | 'ProfileTab' | 'ToEatTab' | 'ExploreTab';
-  repostNavigation: ()=>void;
-  username: string;
-  isReposted:boolean;
 }
 
 export function PostCaption({
@@ -42,9 +38,6 @@ export function PostCaption({
   isSaved,
   userId,
   isLiked, 
-  username, 
-  repostNavigation, 
-  isReposted
 }: PostCaptionProps) {
   const [liked, setIsLiked] = useState(isLiked);
   const [saved, setSaved] = useState(isSaved);
@@ -149,10 +142,6 @@ export function PostCaption({
 
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginRight: 10 }}>
-          {isReposted &&
-          <View >
-            <RepostCredit username={username} onNavigateToProfile={repostNavigation} />
-          </View>}
             <TouchableOpacity onPress={handleLike}>
               <Ionicons
                 name={liked ? 'heart' : 'heart-outline'}

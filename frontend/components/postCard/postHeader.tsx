@@ -5,6 +5,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Image } from 'react-native';
+import { RepostCredit } from './repostCredit';
 
 const { width } = Dimensions.get('window');
 
@@ -14,9 +15,12 @@ interface postHeaderProps {
   user_id: string;
   onNavigateToProfile: () => void;
   pfp: string;
+  isReposted: boolean;
+  repostUserName: string;
+  repostNavigation: ()=>void
 }
 
-export function postHeader({ username, place, onNavigateToProfile, pfp }: postHeaderProps): React.JSX.Element {
+export function postHeader({ username, place, onNavigateToProfile, pfp, isReposted, repostUserName, repostNavigation }: postHeaderProps): React.JSX.Element {
   const colorScheme = useColorScheme();
 
   return (
@@ -31,6 +35,10 @@ export function postHeader({ username, place, onNavigateToProfile, pfp }: postHe
             />
         </TouchableOpacity>
         <View>
+        {isReposted &&
+          <View >
+            <RepostCredit username={repostUserName} onNavigateToProfile={repostNavigation} />
+          </View>}
           <TouchableOpacity onPress={onNavigateToProfile}>
             <Text
               style={{

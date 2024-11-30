@@ -185,7 +185,7 @@ export function PostCard({
       <View style={styles.contentContainer}>
         <TouchableOpacity onPress={() => handleNavigateToProfile(user_id)}>
           <View style={styles.headerContainer}>
-            {postHeader({ username, place, user_id, onNavigateToProfile: () => handleNavigateToProfile(user_id), pfp })}
+            {postHeader({ username, place, user_id, onNavigateToProfile: () => handleNavigateToProfile(user_id), pfp, isReposted, repostUserName, repostNavigation })}
           </View>
         </TouchableOpacity>
         <TouchableOpacity onPress={handlePress}>
@@ -215,9 +215,6 @@ export function PostCard({
             isSaved={isSaved}
             userId={user_id}
             isLiked={isLiked}
-            repostNavigation={repostNavigation}
-            username={repostUserName}
-            isReposted={isReposted}
           />
         </View>
       </View>

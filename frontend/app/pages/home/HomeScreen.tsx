@@ -225,6 +225,8 @@ export default function HomeScreen() {
               parentTab="HomeTab"
               pfp={post.data.pfp}
               isOwnProfile={false}
+              isReposted={post.data.is_reposted}
+              repostedBy={post.data.reposted_by}
             />
           ))}
 
