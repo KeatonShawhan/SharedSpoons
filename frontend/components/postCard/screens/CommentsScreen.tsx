@@ -197,6 +197,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
   },
   headerTitle: {
+    paddingLeft: 100,
     fontSize: 18,
     fontWeight: '600',
   },

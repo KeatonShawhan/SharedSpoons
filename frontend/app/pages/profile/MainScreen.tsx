@@ -1,5 +1,3 @@
-// /Users/keaton/cse115a/SharedSpoons/frontend/app/pages/explore/MainScreen.tsx
-
 import React, { useState, useRef, useEffect, useContext } from 'react';
 import {
   View,
@@ -41,13 +39,12 @@ export default function MainScreen() {
   const profileId = route.params?.userId || loginContext.userId;
   const isOwnProfile = profileId === loginContext.userId;
 
-
   const isFromProfileTab = route.params?.isFromProfileTab ?? false;
 
   // State variables
   const [username, setUsername] = useState('Loading name...');
   const [firstName, setFirstName] = useState('Loading firstname...');
-  const [lastName, setLastName] = useState('Loading lastname...')
+  const [lastName, setLastName] = useState('Loading lastname...');
   const [bio, setBio] = useState('Loading bio...');
   const [rank, setRank] = useState('Loading rank...');
   const [activeTab, setActiveTab] = useState<'posts' | 'achievements' | 'settings'>('posts');
@@ -61,6 +58,25 @@ export default function MainScreen() {
   const [isFollowing, setIsFollowing] = useState(false);
   const [pfp, setPfp] = useState('');
 
+  // Function to determine rank based on post count range
+  const getRank = (count: number): string => {
+    if (count >= 500) return 'Culinary Veteran';
+    if (count >= 350) return 'Food Connoisseur';
+    if (count >= 200) return 'Taste Enthusiast';
+    if (count >= 100) return 'Food Explorer';
+    if (count >= 50) return 'New Foodie';
+    return 'New Foodie';
+  };
+
+  // Define achievement milestones with total required post counts
+  const achievementMilestones = [
+    { rank: 'New Foodie', required: 50, description: 'Try your first 50 different dishes' },
+    { rank: 'Food Explorer', required: 100, description: 'Discover 100 unique dishes' },
+    { rank: 'Taste Enthusiast', required: 200, description: 'Experience 200 different dishes' },
+    { rank: 'Food Connoisseur', required: 350, description: 'Savor 350 diverse dishes' },
+    { rank: 'Culinary Veteran', required: 500, description: 'Master 500 different dishes' },
+  ];
+
   const fetchData = async () => {
     try {
       // Fetch user info
@@ -70,7 +86,8 @@ export default function MainScreen() {
       setLastName(`${userData.lastname}`);
       setUsername(`${userData.username}`);
       setBio(userData.bio || 'No bio available');
-      setRank(isOwnProfile ? 'Food Connoisseur' : 'Food Enthusiast');
+
+      // Rank will be set based on postCount in useEffect
 
       // Fetch followers and following data
       const followersData = await fetchFollowerCount(profileId, loginContext.accessToken, loginContext.handleLogout);
@@ -103,18 +120,27 @@ export default function MainScreen() {
     fetchData();
   }, [profileId, loginContext.followed, loginContext.madePost]);
 
+  // useEffect to set achievements and rank based on postCount
   useEffect(() => {
-    // Simulate fetching achievements data
-    setTimeout(() => {
-      setAchievements([
-        { rank: 'New Foodie', progress: 25, required: 25, description: 'Try your first 25 different dishes' },
-        { rank: 'Food Explorer', progress: 100, required: 100, description: 'Discover 100 unique dishes' },
-        { rank: 'Taste Enthusiast', progress: 250, required: 250, description: 'Experience 250 different dishes' },
-        { rank: 'Food Connoisseur', progress: 500, required: 500, description: 'Savor 500 diverse dishes' },
-        { rank: 'Culinary Veteran', progress: 800, required: 1000, description: 'Master 1000 different dishes' },
-      ]);
-    }, 2000);
-  }, []);
+    // Calculate achievements with cumulative progress
+    const updatedAchievements = achievementMilestones.map((achievement) => {
+      // Calculate progress as a proportion of total required posts
+      const progress = Math.min(postCount, achievement.required);
+      
+      return {
+        rank: achievement.rank,
+        progress: progress,
+        required: achievement.required,
+        description: achievement.description,
+      };
+    });
+
+    setAchievements(updatedAchievements);
+
+    // Set rank based on which range the post count falls into
+    const newRank = getRank(postCount);
+    setRank(newRank);
+  }, [postCount]);
 
   const handleFollowPress = async () => {
     setIsFollowing((prev) => !prev);
@@ -132,13 +158,12 @@ export default function MainScreen() {
       loginContext.setFollowed(!loginContext.followed);
     }
   };
-  
 
   useEffect(() => {
     fetchData();
   }, [
     loginContext.deletedPost
-  ])
+  ]);
 
   const tabs = ['posts', 'achievements'];
   if (isOwnProfile) {
