@@ -46,6 +46,7 @@ export default function MainScreen() {
   const [firstName, setFirstName] = useState('Loading firstname...');
   const [lastName, setLastName] = useState('Loading lastname...');
   const [bio, setBio] = useState('Loading bio...');
+  const [location, setLocation] = useState('Loading bio...');
   const [rank, setRank] = useState('Loading rank...');
   const [activeTab, setActiveTab] = useState<'posts' | 'achievements' | 'settings'>('posts');
   const [achievements, setAchievements] = useState([]);
@@ -81,11 +82,14 @@ export default function MainScreen() {
     try {
       // Fetch user info
       const userData = await fetchUserInfo(profileId, loginContext.accessToken, loginContext.handleLogout);
+      console.log(userData)
       setPfp(userData.pfp);
       setFirstName(`${userData.firstname}`);
       setLastName(`${userData.lastname}`);
       setUsername(`${userData.username}`);
       setBio(userData.bio || 'No bio available');
+      setLocation(userData.location || 'No location available');
+
 
       // Rank will be set based on postCount in useEffect
 
@@ -201,8 +205,8 @@ export default function MainScreen() {
           lastname={lastName}
           bio={bio}
           rank={rank}
+          location={location}
           colorScheme={colorScheme}
-          // Show back button if either not our profile OR not in profile tab
           showBackButton={!isFromProfileTab }
           isOwnProfile={isOwnProfile}
           isFollowing={isFollowing}
@@ -293,7 +297,7 @@ export default function MainScreen() {
               <AchievementList achievements={achievements} colorScheme={colorScheme} />
             )}
             {tabName === 'settings' && (
-              <SettingsTab pfp={pfp} setPfp={setPfp} setUsername={setUsername} setBio={setBio} userName={username} bio={bio} colorScheme={colorScheme} />
+              <SettingsTab pfp={pfp} setPfp={setPfp} setUsername={setUsername} setBio={setBio} setLocation={setLocation} location={location} userName={username} bio={bio} colorScheme={colorScheme} />
             )}
           </View>
         ))}

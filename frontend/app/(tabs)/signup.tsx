@@ -62,11 +62,13 @@ export default function Signup() {
   }, [loginContext.accessToken]);
 
   const sendSignUpRequest = async () => {
-    const { username, password, phoneNumber, email, firstname, lastname } = user;
-    if (!username || !password || !phoneNumber || !email || !firstname || !lastname) {
+    const { username, password, phoneNumber, email, firstname, lastname, location } = user;
+    if (!username || !password || !phoneNumber || !email || !firstname || !lastname || !location) {
       Alert.alert("Validation Error", "Please fill out all required fields.");
       return;
     }
+
+    console.log(user);
 
     setLoading(true);
     setBadSignup(false);

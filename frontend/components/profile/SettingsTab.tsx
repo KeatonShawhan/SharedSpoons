@@ -10,17 +10,19 @@ interface SettingsTabProps {
   userName: string;
   pfp: string;
   bio: string;
+  location: string;
   colorScheme: 'light' | 'dark';
   setUsername: (username: string) => void;
   setBio: (bio: string) => void;
   setPfp: (pfp: string) => void;
+  setLocation: (location: string) => void;
 }
 
-const SettingsTab: React.FC<SettingsTabProps> = ({ pfp, setUsername, setBio, setPfp, userName, bio, colorScheme }) => {
+const SettingsTab: React.FC<SettingsTabProps> = ({ pfp, setUsername, setBio, setPfp, setLocation, location, userName, bio, colorScheme }) => {
   const loginContext = useContext(LoginContext)
   const [newUsername, setNewUsername] = useState(loginContext.userName);
   const [bioText, setBioText] = useState(bio);
-  const [location, setLocation] = useState('');
+  const [locationText, setLocationText] = useState('');
   const [profilePicture, setProfilePicture] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
@@ -50,16 +52,14 @@ const SettingsTab: React.FC<SettingsTabProps> = ({ pfp, setUsername, setBio, set
     const updateRequest = {
       username: newUsername.trim(),
       bio: bioText.trim(),
-      location: location.trim(),
+      location: locationText.trim(),
     };
   
     const formData = new FormData();
   
     // Add the updateRequest as a stringified JSON object
     formData.append('updateRequest', JSON.stringify(updateRequest));
-  
-    // Add the profile picture if it exists
-    //console.log("pfp: ",profilePicture);
+
     if (profilePicture) {
       /* eslint-disable */
       formData.append('file', {
@@ -160,8 +160,8 @@ const SettingsTab: React.FC<SettingsTabProps> = ({ pfp, setUsername, setBio, set
           ]}
           placeholder="Location"
           placeholderTextColor={colorScheme === 'dark' ? '#aaa' : '#555'}
-          value={location}
-          onChangeText={setLocation}
+          value={locationText}
+          onChangeText={setLocationText}
           autoCapitalize="none"
         />
       </View>

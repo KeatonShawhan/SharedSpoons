@@ -51,14 +51,14 @@ export default function Welcome() {
     const formData = new FormData();
   
     formData.append('updateRequest', JSON.stringify(updateRequest));
-    /* eslint-disable */
     if (profilePicture) {
+      /* eslint-disable */
       formData.append('file', {
         uri: profilePicture,
         name: 'profilePicture.jpg',
         type: 'image/jpeg',
       } as any);
-    /* eslint-enable */
+      /* eslint-disable */
     }
   
     try {
