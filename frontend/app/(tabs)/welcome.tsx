@@ -70,15 +70,17 @@ export default function Welcome() {
         body: formData,
       });
   
-      const responseData = await response.json();
+      await response.json();
 
       if (response.ok) {
-        Alert.alert('Success', responseData.message || 'Account updated successfully.');
-        
+        Alert.alert('Welcome To SharedSpoons!');
+        setBioText('');
+        setDishes([]);
+        setProfilePicture('');
       } else {
         const errorData = await response.json();
         Alert.alert('Error', errorData.message || 'Failed to update account. Please try again.');
-      }
+      }      
     } catch (error) {
       console.error('Update error:', error);
       if (error.message.includes("401")) {

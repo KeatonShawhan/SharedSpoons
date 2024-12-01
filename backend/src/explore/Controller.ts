@@ -34,6 +34,15 @@ export class ExploreController extends Controller {
         if (!searchResults) {
           return [];
         }
+        for (let i = 0; i < searchResults.length; i++) {
+          const imageLink = await this.s3Service.getFileLink(searchResults[i].pfp);
+          if (imageLink === undefined) {
+              this.setStatus(400);
+              console.error('Could not get image link for post:' + searchResults[i]);
+              return undefined;
+          }
+          searchResults[i].pfp = imageLink;
+        }
         return searchResults;
       });
   }

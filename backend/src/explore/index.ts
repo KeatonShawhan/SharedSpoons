@@ -3,4 +3,5 @@ export interface Suggestion {
     username: string;
     firstname: string;
     lastname: string;
+    pfp: string;
   }

@@ -1,6 +1,6 @@
 // UserItem.js
 import React from 'react';
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { View, TouchableOpacity, Text, StyleSheet, Image } from 'react-native';
 import { Colors } from '@/constants/Colors';
 
 const ORANGE_COLOR = '#FF9F45';
@@ -10,6 +10,7 @@ interface User {
   firstname: string;
   lastname: string;
   username: string;
+  pfp: string;
 }
 
 interface UserItemProps {
@@ -21,7 +22,7 @@ interface UserItemProps {
 export const UserItem: React.FC<UserItemProps> = ({ 
   user, 
   colorScheme, 
-  onPress, 
+  onPress,
 }) => (
   <TouchableOpacity 
     style={styles.userItem} 
@@ -37,8 +38,13 @@ export const UserItem: React.FC<UserItemProps> = ({
         {user.username}
       </Text>
     </View>
-    <View style={styles.circleProfile} />
-  </TouchableOpacity>
+    <Image 
+      style={[styles.circleProfile, { borderColor: Colors[colorScheme].icon }]}
+      /* eslint-disable */
+      source={user.pfp ? { uri: user.pfp } : require('../../assets/images/default.jpeg')}
+      /* eslint-enable */
+      /> 
+    </TouchableOpacity>
 );
 
 const styles = StyleSheet.create({

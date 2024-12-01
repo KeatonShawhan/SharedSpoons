@@ -11,6 +11,7 @@ interface Suggestion {
   username: string;
   firstname: string;
   lastname: string;
+  pfp: string;
 }
 
 interface ExploreSearchBarProps {
@@ -56,7 +57,9 @@ export const ExploreSearchBar: React.FC<ExploreSearchBarProps> = ({ navigation, 
         firstname: user.firstname || 'N/A', // Default value if undefined
         lastname: user.lastname || 'N/A', // Default value if undefined
         username: user.username,
+        pfp: user.pfp || ''
       }));
+      console.log(mappedSuggestions);
 
       setSuggestions(mappedSuggestions);
     } catch (err) {
@@ -105,6 +108,7 @@ export const ExploreSearchBar: React.FC<ExploreSearchBarProps> = ({ navigation, 
                 firstname: item.firstname,
                 lastname: item.lastname,
                 username: item.username,
+                pfp: item.pfp
               }}
               colorScheme={colorScheme}
               onPress={(userId) => {

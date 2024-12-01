@@ -13,32 +13,45 @@ import {
   } from "tsoa";
   
   import {
-    Account
+    Account,
+    PfpAccount
   } from "./index";
 
   import { FollowService } from "./service";
   import { UUID } from '../types';
+  import { S3Service } from "../s3/service"; // Import S3Service for signed URLs
+
   
   @Security('jwt', ['member'])
   @Route("follow")
   export class FollowController extends Controller {
+    private s3Service = new S3Service();
+
     @Get("/getFollowers")
     @Response("404", "User not found")
     public async getFollowers(
       @Query() user: UUID,
-    ): Promise<Account[] | undefined> {
+    ): Promise<PfpAccount[] | undefined> {
       return new FollowService()
         .getFollowers(user)
         .then(
             async (
-              res: Account[] | undefined
-            ): Promise<Account[] | undefined> => {
-              if (res) {
-                // List of 'Account' type users
-                return res;
+              res: PfpAccount[] | undefined
+            ): Promise<PfpAccount[] | undefined> => {
+              if (!res) {
+                this.setStatus(404);
+                return [];
               }
-              this.setStatus(404);
-              return undefined;
+              for (let i = 0; i < res.length; i++) {
+                const imageLink = await this.s3Service.getFileLink(res[i].pfp);
+                if (imageLink === undefined) {
+                    this.setStatus(400);
+                    console.error('Could not get image link for post:' + res[i]);
+                    return undefined;
+                }
+                res[i].pfp = imageLink;
+              }
+              return res;
             }
           );
     }
@@ -72,17 +85,25 @@ import {
         .getFollowing(user)
         .then(
           async (
-            res: Account[] | undefined
-          ): Promise<Account[] | undefined> => {
-            if (res) {
-              // List of 'Account' type users
-              return res;
+            res: PfpAccount[] | undefined
+          ): Promise<PfpAccount[] | undefined> => {
+            if (!res) {
+              this.setStatus(404);
+              return [];
             }
-            this.setStatus(404);
-            return undefined;
+            for (let i = 0; i < res.length; i++) {
+              const imageLink = await this.s3Service.getFileLink(res[i].pfp);
+              if (imageLink === undefined) {
+                  this.setStatus(400);
+                  console.error('Could not get image link for post:' + res[i]);
+                  return undefined;
+              }
+              res[i].pfp = imageLink;
+            }
+            return res;
           }
         );
-    }
+  }
 
     @Get("/getFollowingCount")
     @Response("404", "User not found")

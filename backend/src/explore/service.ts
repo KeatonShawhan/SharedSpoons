@@ -12,7 +12,8 @@ export class ExploreService {
         id, 
         data->>'username' as username,
         data->>'firstname' as firstname,
-        data->>'lastname' as lastname
+        data->>'lastname' as lastname,
+        data->>'pfp' as pfp
       FROM 
         app_user 
       WHERE 
@@ -37,6 +38,7 @@ export class ExploreService {
       username: row.username,
       firstname: row.firstname,
       lastname: row.lastname,
+      pfp: row.pfp
     }));
   }
 
