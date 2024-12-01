@@ -26,11 +26,6 @@ export class PostController extends Controller {
             }
 
             const postData: PostJSON = JSON.parse(post);
-            if (postData === undefined) {
-                this.setStatus(400);
-                console.error('Invalid post data, failed json parsing.');
-                return undefined;
-            }
 
             const { error } = postDataSchema.validate(postData, { allowUnknown: false });
             if (error) {
