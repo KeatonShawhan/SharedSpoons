@@ -61,24 +61,25 @@ export class toEatService{
         }
     }
 
-    public async deleteFromToEat(userId: string, postId: string): Promise<boolean | undefined> {
+    public async deleteFromToEat(userId: string, postId: string): Promise<boolean> {
         try {
-            const deleteQuery = {
-                text: `DELETE FROM toEat WHERE user_id = $1 AND post_id = $2 RETURNING *`,
-                values: [userId, postId],
-            };
-            const res = await pool.query(deleteQuery);
-            if(res.rowCount === 0) {
-                console.error('to eat post deletion failed.');
-                return undefined;
-            }
-            return true;
-
+          const deleteQuery = {
+            text: `DELETE FROM toEat WHERE user_id = $1 AND post_id = $2 RETURNING *`,
+            values: [userId, postId],
+          };
+          console.log(deleteQuery);
+          const res = await pool.query(deleteQuery);
+          console.log(res);
+          if (res.rowCount === 0) {
+            console.error('ToEat post deletion failed: No matching record.');
+            return false;
+          }
+          return true;
         } catch (error) {
-            console.error("Error deleting to eat post:", error);
-            return undefined;
+          console.error('Error deleting ToEat post:', error);
+          throw error; // Let the controller handle the error
         }
-    }
+      }
 
     public async isInToEat(userId: string, postId: string): Promise<boolean | undefined> {
         try {

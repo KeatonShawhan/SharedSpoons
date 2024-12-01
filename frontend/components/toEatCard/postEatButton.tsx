@@ -3,10 +3,10 @@ import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 
 
-export function postEatButton(navigation:ToEatScreenNavigationProp, dish:string, place:string, user_id:string) {
+export function postEatButton(navigation:ToEatScreenNavigationProp, dish:string, place:string, user_id:string, postId: string) {
 
   const postEat = () =>  {
-    navigation.navigate("MakePostRoot", {repostDish: dish, repostRestaurant:place, repostId:user_id})
+    navigation.navigate("MakePostRoot", {repostDish: dish, repostRestaurant:place, repostId:user_id, postId: postId})
   }
   return (
     <TouchableOpacity

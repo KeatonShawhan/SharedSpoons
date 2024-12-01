@@ -15,6 +15,7 @@ export default function ToEatPage() {
   const colorScheme = useColorScheme();
   const loginContext = useContext(LoginContext)
   const [list, setList] = useState([]);
+  console.log("list: ", list);
 
 
   useEffect(() => {
@@ -27,6 +28,7 @@ export default function ToEatPage() {
       }
     };
     fetchData();
+    console.log("list: ", list);
   }, [loginContext.addedEat]);
   
 

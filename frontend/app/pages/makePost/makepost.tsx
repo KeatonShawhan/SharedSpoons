@@ -28,15 +28,15 @@ type MakePostNavigationProp = NativeStackNavigationProp<MakePostScreenStackParam
 
 export default function MakePost() {
   const route = useRoute<RouteProp<MakePostScreenStackParamList, 'Main'>>();
-  const { repostDish, repostRestaurant, repostId } = route.params;
+  const { repostDish, repostRestaurant, repostId, postId } = route.params;
   const colorScheme = useColorScheme();
   const navigation = useNavigation<MakePostNavigationProp>();
-  let repost = false
+  let repost = false;
 
-  if (repostDish != '' || repostRestaurant != '' || repostId != '') {
-    repost = true
+  if (repostDish != '' || repostRestaurant != '' || repostId != '' || postId != '') {
+    repost = true;
   } else {
-    repost = false
+    repost = false;
   }
 
   const [dishName, setDishName] = useState(repostDish ? repostDish : '');
@@ -65,7 +65,8 @@ export default function MakePost() {
       dishname: dishName.trim(),
       restaurant: restaurant,
       id: id,
-      isRepost: repost
+      isRepost: repost,
+      postId: postId,
     });
   };
 
