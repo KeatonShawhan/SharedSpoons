@@ -51,7 +51,7 @@ export default function Welcome() {
     const formData = new FormData();
   
     formData.append('updateRequest', JSON.stringify(updateRequest));
-  
+    /* eslint-disable */
     if (profilePicture) {
       /* eslint-disable */
       formData.append('file', {

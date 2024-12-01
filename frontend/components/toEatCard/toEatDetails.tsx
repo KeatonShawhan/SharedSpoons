@@ -22,7 +22,7 @@ export function ToEatDetailsInfo({navigation, ...postProps}: ToEatDetailsInfoPro
           parentTab="ToEatTab"
         />
         <View>
-          {postEatButton(navigation, postProps.dish, postProps.place, postProps.user_id)}
+          {postEatButton(navigation, postProps.dish, postProps.place, postProps.user_id, postProps.id)}
         </View>
       </View>
     </View>

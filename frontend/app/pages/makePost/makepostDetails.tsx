@@ -32,6 +32,7 @@ import { RootTabParamList } from '@/app/(tabs)/_layout';
 import { useNavigation } from 'expo-router';
 import { CommonActions } from '@react-navigation/native';
 import { addRepost } from './repostHelpers';
+import { deleteToEat } from '../toeat/toEatHelper';
 const HEADER_HEIGHT = 80;
 
 type MakePostDetailsRouteProp = RouteProp<MakePostScreenStackParamList, 'Details'>;
@@ -47,7 +48,7 @@ export default function MakePostDetails({route, navigation}: Props) {
 
   const colorScheme = useColorScheme();
   const themeColors = Colors[colorScheme || 'light'];
-  const { selectedImage, dishname, restaurant, isRepost, id } = route.params;
+  const { selectedImage, dishname, restaurant, isRepost, id, postId} = route.params;
 
   const [rating, setRating] = useState(0);
   const [restaurantInit, setRestaurant] = useState(restaurant);
@@ -112,21 +113,25 @@ export default function MakePostDetails({route, navigation}: Props) {
       });
 
       if (response.ok) {
-        post_id = await response.json()
+        post_id = await response.json();
+        deleteToEat(postId, loginContext.accessToken);
         Alert.alert('Success', 'Your post has been submitted successfully.', [
-          
-          { text: 'OK', onPress: () => {
-            navigation.dispatch(
-              CommonActions.reset({
-                index: 0,
-                routes: [{ name: 'Main' }],
-              })
-            );
-            loginContext.setMadePost(!loginContext.madePost)
-            rootnav.navigate('index') 
-          }},
+          {
+            text: 'OK',
+            onPress: () => {
+              // Reset the Make Post stack
+              navigation.dispatch(
+                CommonActions.reset({
+                  index: 0,
+                  routes: [{ name: 'ToEatList' }],
+                })
+              );
+              loginContext.setMadePost(!loginContext.madePost);
+              rootnav.navigate('toeat');
+            },
+          },
         ]);
-
+        loginContext.setFollowed(!loginContext.followed);
       } else {
         const errorData = await response.json();
         Alert.alert('Submission Failed', errorData.message || 'Failed to submit post. Please try again.');

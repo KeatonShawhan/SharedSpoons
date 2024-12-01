@@ -12,6 +12,11 @@ import { getCommentCount } from './screens/commentHelper';
 import LoginContext from '@/contexts/loginContext';
 import { addToEat, deleteToEat, fetchPostData, likeCount, likePost, unlikePost } from '@/app/pages/toeat/toEatHelper';
 const ORANGE_COLOR = '#FF9F45';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootTabParamList } from '@/app/(tabs)/_layout';
+import { useNavigation } from 'expo-router';
+import { CommonActions } from '@react-navigation/native';
+
 
 type CombinedNavigationProp = CompositeNavigationProp<
   CompositeNavigationProp<HomeScreenNavigationProp, ProfileScreenNavigationProp>,
@@ -45,6 +50,7 @@ export function PostCaption({
   const [commentCount, setCommentCount] = useState(0);
   const loginContext = useContext(LoginContext);
   const [isLoading, setIsLoading] = useState(true);
+  const rootnav = useNavigation<StackNavigationProp<RootTabParamList>>();
 
   const handleLike = async () => {
     if (!loginContext) return;
@@ -69,6 +75,13 @@ export function PostCaption({
       const newSavedState = !saved; 
       if (saved) {
         await deleteToEat(postId, loginContext.accessToken);
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: 'ToEatList' }],
+          })
+        );
+        rootnav.navigate('toeat');
       } else {
         await addToEat(postId, loginContext.accessToken);
       }

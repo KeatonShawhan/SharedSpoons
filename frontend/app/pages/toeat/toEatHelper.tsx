@@ -57,6 +57,7 @@ export const deleteToEat = async (postId, accessToken) => {
     });
 
     if (!response.ok) {
+      console.log(response);
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
 
@@ -102,7 +103,9 @@ export const fetchPostData = async (postId, accessToken) => {
                 image: apiData.data.image,
                 pfp: apiData.data.pfp,
                 isOwnProfile: false,
-                parentTab: 'ToEatTab' 
+                parentTab: 'ToEatTab',
+                isReposted: apiData.data.is_reposted,
+                repostedBy: apiData.data.reposted_by
             };
             //console.log("apiData: ", apiData);
             return transformedData;
