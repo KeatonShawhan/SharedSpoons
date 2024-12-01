@@ -154,7 +154,8 @@ export class AuthService {
     data->>'lastname' AS lastname,
     data->>'username' AS username,
     data->>'firstname' AS firstname,
-    data->>'phoneNumber' AS phoneNumber
+    data->>'phoneNumber' AS phoneNumber,
+    data->>'location' AS location
     FROM app_user
     WHERE id = $1`;
     const query = {

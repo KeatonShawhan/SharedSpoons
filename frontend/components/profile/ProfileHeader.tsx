@@ -16,6 +16,7 @@ interface ProfileHeaderProps {
   showBackButton?: boolean;
   isOwnProfile: boolean;
   isFollowing: boolean;
+  location:string;
   handleFollowPress: () => void;
   pfp: string;
 }
@@ -23,6 +24,7 @@ interface ProfileHeaderProps {
 const ProfileHeader: React.FC<ProfileHeaderProps> = ({
   username,
   firstname,
+  location,
   lastname,
   bio,
   rank,
@@ -63,6 +65,8 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({
         </Text>
         <Text style={[styles.name, { color: Colors[colorScheme].text }]}>{firstname + ' ' + lastname}</Text>
         <Text style={[styles.bio, { color: Colors[colorScheme].text }]}>{bio}</Text>
+        <Text style={[styles.bio, { color: Colors[colorScheme].text }]}>{location}</Text>
+
       </View>
       <View style={styles.profileImageContainer}>
         <Image

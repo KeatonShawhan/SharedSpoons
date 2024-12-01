@@ -53,11 +53,13 @@ export default function Welcome() {
     formData.append('updateRequest', JSON.stringify(updateRequest));
   
     if (profilePicture) {
+      /* eslint-disable */
       formData.append('file', {
         uri: profilePicture,
         name: 'profilePicture.jpg',
         type: 'image/jpeg',
       } as any);
+      /* eslint-disable */
     }
   
     try {
