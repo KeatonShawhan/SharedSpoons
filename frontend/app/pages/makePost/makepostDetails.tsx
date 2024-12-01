@@ -131,6 +131,7 @@ export default function MakePostDetails({route, navigation}: Props) {
             },
           },
         ]);
+        loginContext.setFollowed(!loginContext.followed);
       } else {
         const errorData = await response.json();
         Alert.alert('Submission Failed', errorData.message || 'Failed to submit post. Please try again.');
