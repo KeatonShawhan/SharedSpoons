@@ -192,7 +192,7 @@ SELECT
         'bio', 'Music producer and DJ.',
         'phoneNumber', '(123) 456-7891',
         'location', 'Austin',
-        'pfp', 'e40b6cef-4b53-41ba-9ebc-1e5cadd4b790.jpg',
+        'pfp', 'da3b7c5b-2e1e-482c-b35a-cf55edd047fc.jpg',
         'pwhash', crypt('Passw0rd10!', s.salt),
         'salt', s.salt
     )
