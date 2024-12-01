@@ -95,7 +95,6 @@ export const fetchAllPosts = async (userId, accessToken, handleLogout) => {
       handleLogout();
       return;
     }
-    console.log("Error fetching posts:", err);
     return [];
   }
 };

@@ -106,7 +106,7 @@ export default function Signup() {
         location: ""
       });
       setLoading(false);
-      navigation.navigate('index');
+      navigation.navigate('welcome');
     } catch (err) {
       setBadSignup(true);
       setLoading(false);
@@ -250,7 +250,7 @@ export default function Signup() {
           style={[styles.button, styles.loginButton]}
           onPress={toggleAuthPage}
         >
-          <Text style={styles.loginText}>Login</Text>
+          <Text style={styles.loginText}>Back to Login</Text>
         </TouchableOpacity>
       </View>
     </View>

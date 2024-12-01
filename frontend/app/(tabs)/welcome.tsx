@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Text,
@@ -8,12 +8,15 @@ import {
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
+  Alert
 } from "react-native";
+import API_URL from "@/config";
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from "@react-navigation/native";
 import { RootTabParamList } from './_layout';
 import { StackNavigationProp } from "@react-navigation/stack";
 import { ImagePickerBox } from '@/components/makePost/ImagePickerBox'; // Adjust the import path as necessary
+import LoginContext from "@/contexts/loginContext";
 
 export default function Welcome() {
 
@@ -21,24 +24,73 @@ export default function Welcome() {
 
   const [bioText, setBioText] = useState('');
   const [profilePicture, setProfilePicture] = useState(null);
-
   const [dishes, setDishes] = useState<string[]>([]);
   const [isAddingDish, setIsAddingDish] = useState(false);
   const [dishInputText, setDishInputText] = useState('');
+  const loginContext = useContext(LoginContext);
 
   const handleContinue = () => {
-    // Ensure at least one dish is added before continuing
     if (dishes.length === 0) {
       alert('Please add at least one dish you like.');
       return;
     }
-    // Handle saving bio, profile picture, and dishes here if needed
-    navigation.navigate('login');
+    handleSave();
+    navigation.navigate('index');
   };
+
+  const handleSave = async () => {
+    if (!bioText.trim() && !profilePicture) {
+      Alert.alert('Incomplete Information', 'Please update at least one field.');
+      return;
+    }
+  
+    const updateRequest = {
+      bio: bioText.trim()
+    };
+  
+    const formData = new FormData();
+  
+    formData.append('updateRequest', JSON.stringify(updateRequest));
+  
+    if (profilePicture) {
+      formData.append('file', {
+        uri: profilePicture,
+        name: 'profilePicture.jpg',
+        type: 'image/jpeg',
+      } as any);
+    }
+  
+    try {
+      const response = await fetch(`${API_URL}account/update`, {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${loginContext.accessToken}`,
+        },
+        body: formData,
+      });
+  
+      const responseData = await response.json();
+
+      if (response.ok) {
+        Alert.alert('Success', responseData.message || 'Account updated successfully.');
+        
+      } else {
+        const errorData = await response.json();
+        Alert.alert('Error', errorData.message || 'Failed to update account. Please try again.');
+      }
+    } catch (error) {
+      console.error('Update error:', error);
+      if (error.message.includes("401")) {
+        loginContext.handleLogout();
+        return;
+      }
+      Alert.alert('An Error Occurred', 'Unable to update account. Please try again.');
+    }
+  };
+
 
   const handleAddDish = () => {
     if (dishInputText.trim() === '') {
-      // If input is empty, hide the input field
       setIsAddingDish(false);
       setDishInputText('');
       return;
