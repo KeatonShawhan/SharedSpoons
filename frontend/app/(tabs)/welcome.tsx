@@ -77,6 +77,7 @@ export default function Welcome() {
         setBioText('');
         setDishes([]);
         setProfilePicture('');
+        loginContext.triggerProfilePageRefresh();
       } else {
         const errorData = await response.json();
         Alert.alert('Error', errorData.message || 'Failed to update account. Please try again.');
