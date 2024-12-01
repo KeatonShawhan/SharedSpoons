@@ -67,8 +67,8 @@ export class PostController extends Controller {
                     async (postID : string | undefined):
                         Promise<string | undefined> => {
                             if (!postID) {
-                                //this.setStatus(400);
-                                // console.error('Could not create post');
+                                this.setStatus(400);
+                                console.error('Could not create post');
                                 return undefined;
                             }
                             this.setStatus(201);

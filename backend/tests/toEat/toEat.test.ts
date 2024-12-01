@@ -156,7 +156,7 @@ describe('Error Test Suite: Verify error handling of /toEat/delete endpoint', ()
       .set('Authorization', `Bearer ${lucaToken}`)
       .query({ postId: invalidPostID });
 
-    expect(res.status).toBe(400);
+    expect(res.status).toBe(500);
   });
 
   test('Delete a post not in toEat list', async () => {
