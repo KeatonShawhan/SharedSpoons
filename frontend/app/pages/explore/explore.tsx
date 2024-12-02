@@ -17,7 +17,7 @@ import { BlurView } from 'expo-blur';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Colors } from '@/constants/Colors';
 import { ExploreScreenNavigationProp } from '@/app/(tabs)/exploreMain';
-import { ExploreSearchBar } from '@/components/explore/ExploreSearchbar';
+import ExploreSearchBar, { ExploreSearchBarHandles } from '@/components/explore/ExploreSearchbar';
 import LoginContext from '@/contexts/loginContext';
 import { fetchExplorePosts } from '@/app/pages/explore/exploreHelpers';
 import ExplorePostSquare from '@/components/explore/ExplorePostSquare';
@@ -33,6 +33,7 @@ export default function Explore() {
   const navigation = useNavigation<ExploreScreenNavigationProp>();
   const colorScheme = useColorScheme();
   const themeColors = Colors[colorScheme];
+  const searchBarRef = useRef<ExploreSearchBarHandles>(null);
 
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(false);
@@ -191,7 +192,9 @@ export default function Explore() {
       toValue: 1,
       duration: 300,
       useNativeDriver: true,
-    }).start();
+    }).start(() => {
+      searchBarRef.current?.focus();
+    });
   };
 
   const closeSearchBar = () => {
@@ -273,15 +276,20 @@ export default function Explore() {
             opacity: searchBarOpacity,
             backgroundColor: themeColors.background,
             borderColor: themeColors.icon,
-            height: searchInput.length > 0 ? null : 50, // Adjust height based on input
-            paddingBottom: searchInput.length > 0 ? 10 : 0, // Adjust padding if needed
-            zIndex: 12, // Ensure it's above the overlay
+            height: searchInput.length > 0 ? null : 50,
+            paddingBottom: searchInput.length > 0 ? 10 : 0,
+            zIndex: 12,
           },
         ]}
         pointerEvents={isSearchActive ? 'auto' : 'none'}
       >
-        <ExploreSearchBar navigation={navigation} onSearchInputChange={setSearchInput} />
+        <ExploreSearchBar
+          ref={searchBarRef}
+          navigation={navigation}
+          onSearchInputChange={setSearchInput}
+        />
       </Animated.View>
+
 
       {/* Posts Section */}
       <View style={{ flex: 1, zIndex: isSearchActive ? -1 : 0 }}>

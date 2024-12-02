@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef, useImperativeHandle, forwardRef } from 'react';
 import { View, TextInput, FlatList, StyleSheet } from 'react-native';
 import { useColorScheme } from 'react-native';
 import { Colors } from '@/constants/Colors';
@@ -21,11 +21,24 @@ interface ExploreSearchBarProps {
   onSearchInputChange: (input: string) => void; // Added callback prop
 }
 
-export const ExploreSearchBar: React.FC<ExploreSearchBarProps> = ({ navigation, onSearchInputChange }) => {
-  const [searchInput, setSearchInput] = useState('');
-  const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
-  const loginContext = useContext(LoginContext);
-  const colorScheme = useColorScheme();
+export interface ExploreSearchBarHandles {
+  focus: () => void;
+}
+
+export const ExploreSearchBar = forwardRef<ExploreSearchBarHandles, ExploreSearchBarProps>(
+  ({ navigation, onSearchInputChange }, ref) => {
+    const [searchInput, setSearchInput] = useState('');
+    const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
+    const loginContext = useContext(LoginContext);
+    const colorScheme = useColorScheme();
+
+    const textInputRef = useRef<TextInput>(null);
+
+    useImperativeHandle(ref, () => ({
+      focus: () => {
+        textInputRef.current?.focus();
+      },
+    }));
 
   // Fetch user suggestions from the backend
   const fetchSuggestions = async (input: string) => {
@@ -48,6 +61,10 @@ export const ExploreSearchBar: React.FC<ExploreSearchBarProps> = ({ navigation, 
       }
 
       const result = await response.json();
+      if (result.length === 0) {
+        setSuggestions([]);
+        return;
+      }
 
       // Map and ensure all fields are available before setting suggestions
       /* eslint-disable */
@@ -59,7 +76,6 @@ export const ExploreSearchBar: React.FC<ExploreSearchBarProps> = ({ navigation, 
         username: user.username,
         pfp: user.pfp || ''
       }));
-      console.log(mappedSuggestions);
 
       setSuggestions(mappedSuggestions);
     } catch (err) {
@@ -82,6 +98,7 @@ export const ExploreSearchBar: React.FC<ExploreSearchBarProps> = ({ navigation, 
     <View style={styles.container}>
       {/* Search Input */}
       <TextInput
+        ref={textInputRef}
         style={[
           styles.searchInput,
           {
@@ -127,7 +144,7 @@ export const ExploreSearchBar: React.FC<ExploreSearchBarProps> = ({ navigation, 
       )}
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {

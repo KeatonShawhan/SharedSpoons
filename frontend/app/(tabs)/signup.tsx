@@ -86,7 +86,7 @@ export default function Signup() {
 
       if (!response.ok) {
         setBadSignup(true);
-        Alert.alert("Sign Up Failed", json.message || "Username or email already in use.");
+        Alert.alert("Sign Up Failed", json.message || "Username, email, or phone number already in use.");
         setLoading(false);
         return;
       }
@@ -113,7 +113,6 @@ export default function Signup() {
       setBadSignup(true);
       setLoading(false);
       console.log(err);
-      Alert.alert("Error", "Something went wrong. Please try again later.");
     }
   };
 

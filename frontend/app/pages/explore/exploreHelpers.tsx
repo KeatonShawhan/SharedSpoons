@@ -16,6 +16,9 @@ export const fetchExplorePosts = async (  handleLogout: () => void, accessToken,
       if (response.status === 401) {
         handleLogout();
       }
+      if (response.status === 404) {
+        return [];
+      }
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
 

@@ -2,10 +2,11 @@
 import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-navigation/native-stack';
 import ToEatPage from '@/app/pages/toeat/toEatPage';
 import ToEatDetails from '@/app/pages/toeat/toEatDetails';
-import { PostStackNavigator, PostStackParamList } from '../navigation/PostStackNavigator';
+import { PostStackNavigator } from '../navigation/PostStackNavigator';
 import { NavigatorScreenParams } from '@react-navigation/native';
-import ProfileNavigation, { ProfileStackParamList } from '@/app/pages/profile/profileNavigation';
+import ProfileNavigation from '@/app/pages/profile/profileNavigation';
 import MakePostMain from './makePostMain';
+import {PostStackParamList, ProfileStackParamList} from '../pages/profile/navigationTypes';
 
 // Update ToEatStackParamList to include ProfileRoot
 export type ToEatStackParamList = {

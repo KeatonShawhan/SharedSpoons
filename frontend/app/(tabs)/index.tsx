@@ -3,12 +3,17 @@ import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-na
 import { NavigatorScreenParams } from '@react-navigation/native';
 import HomeScreen from '../pages/home/HomeScreen';
 import ProfileTab, { ProfileTabParamList } from './profile';  // Import ProfileTabParamList
-import { PostStackNavigator, PostStackParamList } from '../navigation/PostStackNavigator';
+import { PostStackNavigator } from '../navigation/PostStackNavigator';
 import { useNavigation } from 'expo-router';
 import LoginContext from '@/contexts/loginContext';
 import { useContext,} from 'react';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootTabParamList } from './_layout';
+import {PostStackParamList} from '../pages/profile/navigationTypes';
+import { LogBox } from 'react-native';
+LogBox.ignoreLogs([
+  'Require cycle:',
+]);
 // Define HomeStack params, with nested ProfileNavigation and PostStack
 export type HomeStackParamList = {
   Home: undefined;
@@ -29,10 +34,6 @@ const Stack = createNativeStackNavigator<HomeStackParamList>()
 export default function HomeTab() {
   const navigation = useNavigation<StackNavigationProp<RootTabParamList>>(); // Use the correct type here
   const loginContext = useContext(LoginContext);
-
-  if(loginContext.isAuthenticated == false) {
-    navigation.navigate('login');
-  }
 
   return (
     <Stack.Navigator 

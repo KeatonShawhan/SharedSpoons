@@ -2,24 +2,7 @@
 import { createNativeStackNavigator, NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { CommentsScreen } from '@/components/postCard/screens/CommentsScreen';
 import ProfileNavigation from '@/app/pages/profile/profileNavigation';
-import { UUID } from '../../../backend/src/types';
-
-// Define the profile params separately
-type ProfileRootParams = {
-  screen: 'Main';
-  params: {
-    userId: UUID;
-    isFromComments?: boolean;
-  };
-};
-
-export type PostStackParamList = {
-  Comments: { 
-    postId: UUID;
-    parentTab: 'HomeTab' | 'ProfileTab' | 'ToEatTab' | 'ExploreTab';
-  };
-  ProfileRoot: ProfileRootParams;
-};
+import {PostStackParamList} from '../pages/profile/navigationTypes';
 
 export type PostStackNavigationProp = NativeStackNavigationProp<PostStackParamList>;
 

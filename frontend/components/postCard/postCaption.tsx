@@ -6,7 +6,7 @@ import { starDisplay } from './starDisplay';
 import { ThemedView } from '@/components/ThemedView';
 import { CompositeNavigationProp } from '@react-navigation/native';
 import type { HomeScreenNavigationProp } from '@/app/(tabs)';
-import { ProfileScreenNavigationProp } from '@/app/pages/profile/profileNavigation';
+import {ProfileScreenNavigationProp} from '../../app/pages/profile/navigationTypes'
 import type { ToEatScreenNavigationProp } from '@/app/(tabs)/toeat'; 
 import { getCommentCount } from './screens/commentHelper';
 import LoginContext from '@/contexts/loginContext';

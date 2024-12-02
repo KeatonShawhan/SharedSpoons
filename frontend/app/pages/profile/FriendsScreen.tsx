@@ -11,7 +11,7 @@ import { Tabs } from 'components/friends/Tabs';
 import { UserItem } from 'components/friends/UserItem';
 import { SuggestedHeader } from 'components/friends/SuggestedHeader';
 import { SuggestedUsers } from 'components/friends/SuggestedUsers';
-import type { ProfileStackParamList, ProfileScreenNavigationProp } from './profileNavigation';
+import type { ProfileStackParamList, ProfileScreenNavigationProp } from './navigationTypes';
 import { fetchFollowersInfo, fetchFollowingInfo, fetchUserInfo } from './profileHelpers'; 
 import LoginContext from '@/contexts/loginContext';
 

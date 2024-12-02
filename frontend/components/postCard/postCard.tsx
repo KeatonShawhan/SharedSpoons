@@ -7,7 +7,7 @@ import { postImage } from './postImage';
 import { PostCaption } from './postCaption';
 import { postDescription } from './postDescription';
 import type { HomeScreenNavigationProp } from '@/app/(tabs)';
-import { ProfileScreenNavigationProp } from '@/app/pages/profile/profileNavigation';
+import {ProfileScreenNavigationProp} from '../../app/pages/profile/navigationTypes'
 import type { ToEatScreenNavigationProp } from '@/app/(tabs)/toeat';
 import API_URL from '@/config';
 import LoginContext from '@/contexts/loginContext';

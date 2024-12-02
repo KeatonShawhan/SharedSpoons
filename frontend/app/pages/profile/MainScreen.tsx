@@ -17,7 +17,7 @@ import ProfileStats from '../../../components/profile/ProfileStats';
 import ProfilePostSquare from '../../../components/profile/profilePostSquare';
 import AchievementList from '../../../components/profile/AchievementList';
 import SettingsTab from '@/components/profile/SettingsTab';
-import type { ProfileStackParamList, ProfileScreenNavigationProp } from './profileNavigation';
+import type { ProfileStackParamList, ProfileScreenNavigationProp } from './navigationTypes';
 import {
   fetchAllPosts,
   fetchUserInfo,
