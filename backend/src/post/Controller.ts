@@ -26,11 +26,6 @@ export class PostController extends Controller {
             }
 
             const postData: PostJSON = JSON.parse(post);
-            if (postData === undefined) {
-                this.setStatus(400);
-                console.error('Invalid post data, failed json parsing.');
-                return undefined;
-            }
 
             const { error } = postDataSchema.validate(postData, { allowUnknown: false });
             if (error) {
@@ -67,8 +62,8 @@ export class PostController extends Controller {
                     async (postID : string | undefined):
                         Promise<string | undefined> => {
                             if (!postID) {
-                                //this.setStatus(400);
-                                // console.error('Could not create post');
+                                this.setStatus(400);
+                                console.error('Could not create post');
                                 return undefined;
                             }
                             this.setStatus(201);

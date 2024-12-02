@@ -1,11 +1,12 @@
-//post.test.ts
 import supertest from 'supertest';
 import * as http from 'http';
 import app from '../../src/app'; // Adjust path as needed to your Express app
 import * as db from '../db';
 import { S3Service } from '../../src/s3/service';
+import { postService } from '../../src/post/service';
 import jwt from 'jsonwebtoken';
-import {UUID} from '../../src/types/index';
+import { UUID } from '../../src/types/index';
+
 let server: http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>;
 
 beforeAll(async () => {
@@ -31,387 +32,672 @@ beforeEach(async () => {
   });
 });
 
+afterEach(async () => {
+  jest.restoreAllMocks();
+  await db.reset();
+});
+
 afterAll((done) => {
   db.shutdown();
   server.close(done);
 });
 
-const generateTestToken = ( id:UUID, username:string, firstname:string, lastname:string ) => {
-  const payload = { id:id, isername:username, firstname:firstname, lastname:lastname };
+const generateTestToken = (id: UUID, username: string, firstname: string, lastname: string) => {
+  const payload = { id: id, username: username, firstname: firstname, lastname: lastname };
   return jwt.sign(payload, `${process.env.HASH_MASTER_SECRET}`, { expiresIn: '1h', algorithm: 'HS256' });
 };
 
-const lucaToken = generateTestToken('a3059ef4-971b-4e60-a692-a3af3365ba85', 'lucaschram', 'Luca', 'Schram');
-const keatonToken = generateTestToken('3b9a58b2-2a07-45d6-85c9-f138d63cb466', 'keatonshawhan', 'Keaton', 'Shawhan');
-const testUserToken = generateTestToken('c9999ef4-971b-4e60-a692-a3af3365ba85', 'testuser', 'Test', 'User')
-const invalidToken = generateTestToken('bbbbbbbb-971b-4e60-a692-a3af3365ba85', 'invalid', 'Invalid', 'User');
+const lucaID = 'a3059ef4-971b-4e60-a692-a3af3365ba85';
+const keatonID = '3b9a58b2-2a07-45d6-85c9-f138d63cb466';
 
-const validTestPostData = { // luca data
+const lucaToken = generateTestToken(lucaID, 'lucaschram', 'Luca', 'Schram');
+const keatonToken = generateTestToken(keatonID, 'keatonshawhan', 'Keaton', 'Shawhan');
+const invalidToken = 'invalidtoken';
+
+const validTestPostData = {
   rating: 5,
   restaurant: 'McDonalds',
   dish: 'Big Mac',
-  caption: 'I love Big Macs'
-}
+  caption: 'I love Big Macs',
+};
 
-const invalidUserPostData = {
-  rating: 1,
-  restaurant: 'Banana Stand',
-  dish: 'Banana',
-  caption: 'I love bananas'
-}
+describe('Post Endpoints Test Suite', () => {
+  /**
+   * Tests for /post/create endpoint
+   */
+  describe('/post/create Endpoint', () => {
+    test('Create post successfully', async () => {
+      const res = await supertest(server)
+        .post('/api/v0/post/create')
+        .set('Content-Type', 'multipart/form-data')
+        .set('Authorization', `Bearer ${lucaToken}`)
+        .field('post', JSON.stringify(validTestPostData))
+        .attach('file', '/usr/src/app/tests/testcat.jpg');
 
-const invalidDataPostData = { // luca data
-  gobbledegook: 5,
-  restaurant: 'McDonalds',
-  caption: 'This should not work'
-}
-
-// Basic Test Suite First and foremost
-describe('Basic Test Suite: Verify Basic functionality of all endpts', () => {
-  test('Testing post/create endpoint - Will create a post under lucaschram account', async () => {
-    return await supertest(server)
-    .post('/api/v0/post/create')
-    .set('Content-Type', 'multipart/form-data')
-    .set('authorization', `Bearer ${lucaToken}`)
-    .field('post', JSON.stringify(validTestPostData))
-    .attach('file', '/usr/src/app/tests/testcat.jpg')
-    .expect(201)
-  });
-
-  test('Testing post/delete endpoint - Will delete a post under keatonshawhan account', async () => {
-    return await supertest(server)
-    .delete('/api/v0/post/delete')
-    .set('Authorization', `Bearer ${keatonToken}`)
-    .query({postID : 'a9359ef4-971b-4e60-a692-a3af3365ba85'})
-    .expect(200)
-  });
-
-  test('Testing post/all/{userID} endpoint - Will get all lucaschram posts', async () => {
-    return await supertest(server)
-    .get('/api/v0/post/all/a3059ef4-971b-4e60-a692-a3af3365ba85')
-    .set('Authorization', `Bearer ${lucaToken}`)
-    .expect(200)
-  });
-
-  test('Testing post/postID/{postID} endpoint - Will get a lucaschram post, but accessible by any user', async () => {
-    return await supertest(server)
-    .get('/api/v0/post/postID/a5059ef4-971b-4e60-a692-a3af3365ba85')
-    .set('Authorization', `Bearer ${keatonToken}`)
-    .expect(200)
-  });
-
-  test('Testing post/edit endpoint - Will edit a lucaschram post', async () => {
-    const response = await supertest(server)
-    .put('/api/v0/post/edit/a5059ef4-971b-4e60-a692-a3af3365ba85')
-    .set('Authorization', `Bearer ${lucaToken}`)
-    .query({rating: 2, caption: 'I hate Big Macs!'})
-    .expect(200)
-
-    expect(response.body).toBeDefined();
-    const resJson = JSON.parse(response.body);
-    expect(resJson.rating).toBe("2");
-    expect(resJson.caption).toBe('I hate Big Macs!');
-  });
-
-  test('Testing post/all/friendsPosts/{userID} endpoint - Will get all friends posts of keatonshawhan', async () => {
-    const response = await supertest(server)
-    .get('/api/v0/post/all/friendsPosts/3b9a58b2-2a07-45d6-85c9-f138d63cb466')
-    .set('Authorization', `Bearer ${keatonToken}`)
-    .expect(200)
-    expect(response.body).toBeDefined();
-    expect(response.body[0]).toHaveProperty('id');
-    expect(response.body[0]).toHaveProperty('data');
+      expect(res.status).toBe(201);
     });
-});
 
-// post/create error testing suite
-describe('Error Test Suite: Verify error handling of post/create', () => {
-  test('Testing post/create endpoint with INVALID USER TOKEN', async () => {
-    return await supertest(server)
-    .post('/api/v0/post/create')
-    .set('Content-Type', 'multipart/form-data')
-    .set('authorization', `Bearer ${invalidToken}`)
-    .field('post', JSON.stringify(invalidUserPostData))
-    .attach('file', '/usr/src/app/tests/testcat.jpg')
-    .expect(400)
-  });
-  test('Testing post/create endpoint with NON-JSON POST DATA', async () => {
-    return await supertest(server)
-    .post('/api/v0/post/create')
-    .set('Content-Type', 'multipart/form-data')
-    .set('authorization', `Bearer ${lucaToken}`)
-    .field('post', 'abcadaba')
-    .attach('file', '/usr/src/app/tests/testcat.jpg')
-    .expect(500)
-  });
-  test('Testing post/create endpoint with INVALID POST DATA', async () => {
-    return await supertest(server)
-    .post('/api/v0/post/create')
-    .set('Content-Type', 'multipart/form-data')
-    .set('authorization', `Bearer ${lucaToken}`)
-    .field('post', JSON.stringify(invalidDataPostData))
-    .attach('file', '/usr/src/app/tests/testcat.jpg')
-    .expect(400)
-  });
-  test('Testing post/create endpoint with INVALID FILE', async () => {
-    return await supertest(server)
-    .post('/api/v0/post/create')
-    .set('Content-Type', 'multipart/form-data')
-    .set('authorization', `Bearer ${lucaToken}`)
-    .field('post', JSON.stringify(validTestPostData))
-    .attach('file', '/usr/src/app/tests/testcat.txt')
-    .expect(400)
-  });
+    test('Create post without authorization token returns 401', async () => {
+      const res = await supertest(server)
+        .post('/api/v0/post/create')
+        .set('Content-Type', 'multipart/form-data')
+        .field('post', JSON.stringify(validTestPostData))
+        .attach('file', '/usr/src/app/tests/testcat.jpg');
 
-});
+      expect(res.status).toBe(401);
+    });
 
-// post/get/{PostID} error testing suite
-describe('Error Test Suite: Verify error handling of post/get/{PostID}', () => {
+    test('Create post with invalid token returns 401', async () => {
+      const res = await supertest(server)
+        .post('/api/v0/post/create')
+        .set('Content-Type', 'multipart/form-data')
+        .set('Authorization', `Bearer ${invalidToken}`)
+        .field('post', JSON.stringify(validTestPostData))
+        .attach('file', '/usr/src/app/tests/testcat.jpg');
 
-  const validPostID = 'a5059ef4-971b-4e60-a692-a3af3365ba85';
+      expect(res.status).toBe(401);
+    });
 
-  // Test for a successful post retrieval
-  test('Get post with VALID POST ID', async () => {
-    const response = await supertest(server)
-      .get(`/api/v0/post/postID/${validPostID}`)
-      .set('Authorization', `Bearer ${lucaToken}`)
-      .expect(200);
+    test('Create post with missing post field returns 400', async () => {
+      const res = await supertest(server)
+        .post('/api/v0/post/create')
+        .set('Content-Type', 'multipart/form-data')
+        .set('Authorization', `Bearer ${lucaToken}`)
+        .attach('file', '/usr/src/app/tests/testcat.jpg');
 
-    expect(response.body).toBeDefined();
-    expect(response.body.id).toBe(validPostID);
-    expect(response.body.data).toHaveProperty('image');
-  });
+      expect(res.status).toBe(400);
+    });
 
-  // Test for retrieval attempt with invalid post ID format
-  test('Get post with INVALID POST ID FORMAT', async () => {
-    const invalidPostID = 'invalid-id';
-    await supertest(server)
-      .get(`/api/v0/post/postID/${invalidPostID}`)
-      .set('Authorization', `Bearer ${lucaToken}`)
-      .expect(400);
-  });
+    test('Create post with invalid JSON in post field returns 500', async () => {
+      const res = await supertest(server)
+        .post('/api/v0/post/create')
+        .set('Content-Type', 'multipart/form-data')
+        .set('Authorization', `Bearer ${lucaToken}`)
+        .field('post', 'invalid-json')
+        .attach('file', '/usr/src/app/tests/testcat.jpg');
 
-  // Test for retrieval attempt with non-existent post ID
-  test('Get post with NON-EXISTENT POST ID', async () => {
-    const nonExistentPostID = 'b1239ef4-971b-4e60-a692-a3af3365ba99';
-    await supertest(server)
-      .get(`/api/v0/post/postID/${nonExistentPostID}`)
-      .set('Authorization', `Bearer ${lucaToken}`)
-      .expect(400);
-  });
+      expect(res.status).toBe(500);
+    });
 
-  // Test for error during image link retrieval
-  test('Get post with ERROR IN IMAGE LINK RETRIEVAL', async () => {
-    jest.spyOn(S3Service.prototype, 'getFileLink')
-      .mockResolvedValue(undefined); // Simulate S3 failure by returning undefined
+    test('Create post with invalid post data (validation failure) returns 400', async () => {
+      const invalidPostData = { 
+        restaurant: 'McDonalds',
+        dish: 'Big Mac',
+        caption: 'I love Big Macs',
+       };
 
-    await supertest(server)
-      .get(`/api/v0/post/postID/${validPostID}`)
-      .set('Authorization', `Bearer ${lucaToken}`)
-      .expect(400);
-  });
-});
+      const res = await supertest(server)
+        .post('/api/v0/post/create')
+        .set('Content-Type', 'multipart/form-data')
+        .set('Authorization', `Bearer ${lucaToken}`)
+        .field('post', JSON.stringify(invalidPostData))
+        .attach('file', '/usr/src/app/tests/testcat.jpg');
 
-// post/delete error testing suite
-describe('Error Test Suite: Verify error handling of post/delete', () => {
+      expect(res.status).toBe(400);
+    });
 
-  const validLucaPostID = 'a5059ef4-971b-4e60-a692-a3af3365ba85';
-  const validKeatonpostID = 'a9359ef4-971b-4e60-a692-a3af3365ba85'
+    test('Create post with invalid file type returns 400', async () => {
+      const res = await supertest(server)
+        .post('/api/v0/post/create')
+        .set('Content-Type', 'multipart/form-data')
+        .set('Authorization', `Bearer ${lucaToken}`)
+        .field('post', JSON.stringify(validTestPostData))
+        .attach('file', '/usr/src/app/tests/testcat.txt');
 
-  test('Delete post with VALID POST ID', async () => {
-    const response = await supertest(server)
-      .delete('/api/v0/post/delete')
-      .set('Authorization', `Bearer ${lucaToken}`)
-      .query({ postID: validLucaPostID })
-      .expect(200);
-    expect(response.body).toBeTruthy();
-  });
+      expect(res.status).toBe(400);
+    });
 
-  // Test for deletion attempt with invalid post ID format
-  test('Delete post with INVALID POST ID FORMAT', async () => {
-    const invalidPostID = 'invalid-id';
-    await supertest(server)
-      .delete('/api/v0/post/delete')
-      .set('Authorization', `Bearer ${lucaToken}`)
-      .query({ postID: invalidPostID })
-      .expect(400);
+    test('Create post when s3Service.uploadFile returns undefined returns 400', async () => {
+      jest.spyOn(S3Service.prototype, 'uploadFile').mockResolvedValue(undefined);
+
+      const res = await supertest(server)
+        .post('/api/v0/post/create')
+        .set('Content-Type', 'multipart/form-data')
+        .set('Authorization', `Bearer ${lucaToken}`)
+        .field('post', JSON.stringify(validTestPostData))
+        .attach('file', '/usr/src/app/tests/testcat.jpg');
+
+      expect(res.status).toBe(400);
+    });
+
+    test('Create post when postService.createPost returns undefined returns 400', async () => {
+      jest.spyOn(postService.prototype, 'createPost').mockResolvedValue(undefined);
+
+      const res = await supertest(server)
+        .post('/api/v0/post/create')
+        .set('Content-Type', 'multipart/form-data')
+        .set('Authorization', `Bearer ${lucaToken}`)
+        .field('post', JSON.stringify(validTestPostData))
+        .attach('file', '/usr/src/app/tests/testcat.jpg');
+
+      expect(res.status).toBe(400);
+    });
+
+    test('Create post when an exception is thrown returns 500', async () => {
+      jest.spyOn(postService.prototype, 'createPost').mockImplementation(() => {
+        throw new Error('Database error');
+      });
+
+      const res = await supertest(server)
+        .post('/api/v0/post/create')
+        .set('Content-Type', 'multipart/form-data')
+        .set('Authorization', `Bearer ${lucaToken}`)
+        .field('post', JSON.stringify(validTestPostData))
+        .attach('file', '/usr/src/app/tests/testcat.jpg');
+
+      expect(res.status).toBe(500);
+    });
   });
 
-  // Test for deletion attempt with non-existent post ID
-  test('Delete post with NON-EXISTENT POST ID', async () => {
-    const nonExistentPostID = 'b1239ef4-971b-4e60-a692-a3af3365ba99';
-    await supertest(server)
-      .delete('/api/v0/post/delete')
-      .set('Authorization', `Bearer ${lucaToken}`)
-      .query({ postID: nonExistentPostID })
-      .expect(400);
-  });
+  /**
+   * Tests for /post/delete endpoint
+   */
+  describe('/post/delete Endpoint', () => {
+    const validLucaPostID = 'a5059ef4-971b-4e60-a692-a3af3365ba85';
+    const validKeatonPostID = 'a9359ef4-971b-4e60-a692-a3af3365ba85';
 
-  // Test for missing post ID
-  test('Delete post with MISSING POST ID', async () => {
-    await supertest(server)
-      .delete('/api/v0/post/delete')
-      .set('Authorization', `Bearer ${lucaToken}`)
-      .expect(400);
-  });
+    test('Delete post successfully', async () => {
+      const res = await supertest(server)
+        .delete('/api/v0/post/delete')
+        .set('Authorization', `Bearer ${lucaToken}`)
+        .query({ postID: validLucaPostID });
 
-  // Test for user deleting post that isn't theirs
-  test('Delete post with UNAUTHORIZED USER', async () => {
-    await supertest(server)
-      .delete('/api/v0/post/delete')
-      .set('Authorization', `Bearer ${lucaToken}`)
-      .query({ postID: validKeatonpostID })
-      .expect(400);
-  });
-});
+      expect(res.status).toBe(200);
+    });
 
-// post/all/{UUID} error testing suite
-describe('Test Suite: Verify behavior of /all/{userID} endpoint', () => {
-  // Test for successful retrieval of posts for a valid user ID
-  test('Get all posts for VALID USER ID', async () => {
-    const validUserID = 'a3059ef4-971b-4e60-a692-a3af3365ba85';
-    const response = await supertest(server)
-      .get(`/api/v0/post/all/${validUserID}`)
-      .set('Authorization', `Bearer ${lucaToken}`)
-      .expect(200);
+    test('Delete post without authorization token returns 401', async () => {
+      const res = await supertest(server)
+        .delete('/api/v0/post/delete')
+        .query({ postID: validLucaPostID });
 
-    expect(response.body[0]).toHaveProperty('data');
-    expect(response.body[0].data).toHaveProperty('image');
-  });
+      expect(res.status).toBe(401);
+    });
 
-  // Test for retrieval attempt with invalid user ID format
-  test('Get all posts with INVALID USER ID FORMAT', async () => {
-    const invalidUserID = 'invalid-id';
-    await supertest(server)
-      .get(`/api/v0/post/all/${invalidUserID}`)
-      .set('Authorization', `Bearer ${lucaToken}`)
-      .expect(400);
-  });
+    test('Delete post with invalid token returns 401', async () => {
+      const res = await supertest(server)
+        .delete('/api/v0/post/delete')
+        .set('Authorization', `Bearer invalidtoken`)
+        .query({ postID: validLucaPostID });
 
-});
+      expect(res.status).toBe(401);
+    });
 
-// post/edit/{PostID} error testing suite
-describe('Error Test Suite: Verify error handling of post/edit', () => {
-  
-    const validPostID = 'a5059ef4-971b-4e60-a692-a3af3365ba85';
-  
-    // Test for edit attempt with invalid post ID format
-    test('Edit post with INVALID POST ID FORMAT', async () => {
+    test('Delete post with invalid postID returns 400', async () => {
       const invalidPostID = 'invalid-id';
-      await supertest(server)
+      const res = await supertest(server)
+        .delete('/api/v0/post/delete')
+        .set('Authorization', `Bearer ${lucaToken}`)
+        .query({ postID: invalidPostID });
+
+      expect(res.status).toBe(400);
+    });
+
+    test('Delete post when postService.deletePost returns undefined returns 400', async () => {
+      jest.spyOn(postService.prototype, 'deletePost').mockResolvedValue(undefined);
+
+      const res = await supertest(server)
+        .delete('/api/v0/post/delete')
+        .set('Authorization', `Bearer ${lucaToken}`)
+        .query({ postID: validLucaPostID });
+
+      expect(res.status).toBe(400);
+    });
+
+    test('Delete post when an exception is thrown returns 500', async () => {
+      jest.spyOn(postService.prototype, 'deletePost').mockImplementation(() => {
+        throw new Error('Database error');
+      });
+
+      const res = await supertest(server)
+        .delete('/api/v0/post/delete')
+        .set('Authorization', `Bearer ${lucaToken}`)
+        .query({ postID: validLucaPostID });
+
+      expect(res.status).toBe(500);
+    });
+
+    test('Delete post with unauthorized user returns 400', async () => {
+      // Attempt to delete Keaton's post with Luca's token
+      const res = await supertest(server)
+        .delete('/api/v0/post/delete')
+        .set('Authorization', `Bearer ${lucaToken}`)
+        .query({ postID: validKeatonPostID });
+
+      expect(res.status).toBe(400);
+    });
+  });
+
+  /**
+   * Tests for /post/postID/{postID} endpoint
+   */
+  describe('/post/postID/{postID} Endpoint', () => {
+    const validPostID = 'a5059ef4-971b-4e60-a692-a3af3365ba85';
+
+    test('Get post successfully', async () => {
+      const res = await supertest(server)
+        .get(`/api/v0/post/postID/${validPostID}`)
+        .set('Authorization', `Bearer ${lucaToken}`);
+
+      expect(res.status).toBe(200);
+    });
+
+    test('Get post without authorization token returns 401', async () => {
+      const res = await supertest(server)
+        .get(`/api/v0/post/postID/${validPostID}`);
+
+      expect(res.status).toBe(401);
+    });
+
+    test('Get post with invalid token returns 401', async () => {
+      const res = await supertest(server)
+        .get(`/api/v0/post/postID/${validPostID}`)
+        .set('Authorization', `Bearer invalidtoken`);
+
+      expect(res.status).toBe(401);
+    });
+
+    test('Get post with invalid postID returns 400', async () => {
+      const invalidPostID = 'invalid-id';
+      const res = await supertest(server)
+        .get(`/api/v0/post/postID/${invalidPostID}`)
+        .set('Authorization', `Bearer ${lucaToken}`);
+
+      expect(res.status).toBe(400);
+    });
+
+    test('Get post when postService.getPost returns undefined returns 400', async () => {
+      jest.spyOn(postService.prototype, 'getPost').mockResolvedValue(undefined);
+
+      const res = await supertest(server)
+        .get(`/api/v0/post/postID/${validPostID}`)
+        .set('Authorization', `Bearer ${lucaToken}`);
+
+      expect(res.status).toBe(400);
+    });
+
+    test('Get post when s3Service.getFileLink for image returns undefined returns 400', async () => {
+      jest.spyOn(S3Service.prototype, 'getFileLink').mockResolvedValueOnce(undefined);
+
+      const res = await supertest(server)
+        .get(`/api/v0/post/postID/${validPostID}`)
+        .set('Authorization', `Bearer ${lucaToken}`);
+
+      expect(res.status).toBe(400);
+    });
+
+    test('Get post when an exception is thrown returns 500', async () => {
+      jest.spyOn(postService.prototype, 'getPost').mockImplementation(() => {
+        throw new Error('Database error');
+      });
+
+      const res = await supertest(server)
+        .get(`/api/v0/post/postID/${validPostID}`)
+        .set('Authorization', `Bearer ${lucaToken}`);
+
+      expect(res.status).toBe(500);
+    });
+  });
+
+  /**
+   * Tests for /post/all/{userID} endpoint
+   */
+  describe('/post/all/{userID} Endpoint', () => {
+    const validUserID = lucaID;
+
+    test('Get all posts successfully', async () => {
+      const res = await supertest(server)
+        .get(`/api/v0/post/all/${validUserID}`)
+        .set('Authorization', `Bearer ${lucaToken}`);
+
+      expect(res.status).toBe(200);
+    });
+
+    test('Get all posts without authorization token returns 401', async () => {
+      const res = await supertest(server)
+        .get(`/api/v0/post/all/${validUserID}`);
+
+      expect(res.status).toBe(401);
+    });
+
+    test('Get all posts with invalid token returns 401', async () => {
+      const res = await supertest(server)
+        .get(`/api/v0/post/all/${validUserID}`)
+        .set('Authorization', `Bearer invalidtoken`);
+
+      expect(res.status).toBe(401);
+    });
+
+    test('Get all posts with invalid userID returns 400', async () => {
+      const invalidUserID = 'invalid-id';
+
+      const res = await supertest(server)
+        .get(`/api/v0/post/all/${invalidUserID}`)
+        .set('Authorization', `Bearer ${lucaToken}`);
+
+      expect(res.status).toBe(400);
+    });
+
+    test('Get all posts when postService.getAllPosts returns undefined returns 400', async () => {
+      jest.spyOn(postService.prototype, 'getAllPosts').mockResolvedValue(undefined);
+
+      const res = await supertest(server)
+        .get(`/api/v0/post/all/${validUserID}`)
+        .set('Authorization', `Bearer ${lucaToken}`);
+
+      expect(res.status).toBe(400);
+    });
+
+    test('Get all posts when s3Service.getFileLink fails returns 400', async () => {
+      jest.spyOn(S3Service.prototype, 'getFileLink').mockResolvedValue(undefined);
+
+      const res = await supertest(server)
+        .get(`/api/v0/post/all/${validUserID}`)
+        .set('Authorization', `Bearer ${lucaToken}`);
+
+      expect(res.status).toBe(400);
+    });
+
+    test('Get all posts when an exception is thrown returns 500', async () => {
+      jest.spyOn(postService.prototype, 'getAllPosts').mockImplementation(() => {
+        throw new Error('Database error');
+      });
+
+      const res = await supertest(server)
+        .get(`/api/v0/post/all/${validUserID}`)
+        .set('Authorization', `Bearer ${lucaToken}`);
+
+      expect(res.status).toBe(500);
+    });
+  });
+
+  /**
+   * Tests for /post/edit/{postID} endpoint
+   */
+  describe('/post/edit/{postID} Endpoint', () => {
+    const validPostID = 'a5059ef4-971b-4e60-a692-a3af3365ba85';
+
+    test('Edit post successfully', async () => {
+      const res = await supertest(server)
+        .put(`/api/v0/post/edit/${validPostID}`)
+        .set('Authorization', `Bearer ${lucaToken}`)
+        .query({ rating: 4, caption: 'Updated caption' });
+
+      expect(res.status).toBe(200);
+    });
+
+    test('Edit post without authorization token returns 401', async () => {
+      const res = await supertest(server)
+        .put(`/api/v0/post/edit/${validPostID}`)
+        .query({ rating: 4, caption: 'Updated caption' });
+
+      expect(res.status).toBe(401);
+    });
+
+    test('Edit post with invalid token returns 401', async () => {
+      const res = await supertest(server)
+        .put(`/api/v0/post/edit/${validPostID}`)
+        .set('Authorization', `Bearer invalidtoken`)
+        .query({ rating: 4, caption: 'Updated caption' });
+
+      expect(res.status).toBe(401);
+    });
+
+    test('Edit post with invalid postID returns 400', async () => {
+      const invalidPostID = 'invalid-id';
+
+      const res = await supertest(server)
         .put(`/api/v0/post/edit/${invalidPostID}`)
         .set('Authorization', `Bearer ${lucaToken}`)
-        .query({ rating: 2, caption: 'I hate Big Macs!' })
-        .expect(400);
+        .query({ rating: 4, caption: 'Updated caption' });
+
+      expect(res.status).toBe(400);
     });
-  
-    // Test for edit attempt with non-existent post ID
-    test('Edit post with NON-EXISTENT POST ID', async () => {
-      const nonExistentPostID = 'b1239ef4-971b-4e60-a692-a3af3365ba99';
-      await supertest(server)
-        .put(`/api/v0/post/edit/${nonExistentPostID}`)
-        .set('Authorization', `Bearer ${lucaToken}`)
-        .query({ rating: 2, caption: 'I hate Big Macs!' })
-        .expect(400);
-    });
-  
-    // Test for missing post ID
-    test('Edit post with MISSING POST ID', async () => {
-      await supertest(server)
-        .put('/api/v0/post/edit/')
-        .set('Authorization', `Bearer ${lucaToken}`)
-        .query({ rating: 2, caption: 'I hate Big Macs!' })
-        .expect(404);
-    });
-  
-    // Test for edit attempt with invalid rating
-    test('Edit post with INVALID RATING', async () => {
-      await supertest(server)
+
+    test('Edit post with invalid data (validation failure) returns 400', async () => {
+      const res = await supertest(server)
         .put(`/api/v0/post/edit/${validPostID}`)
         .set('Authorization', `Bearer ${lucaToken}`)
-        .query({ rating: 6, caption: 'I hate Big Macs!' })
-        .expect(400);
+        .query({ rating: 6, caption: 'Updated caption' }); // Rating out of valid range
+
+      expect(res.status).toBe(400);
     });
 
-    // Test for edit attempt with invalid caption
-    test('Edit post with INVALID CAPTION', async () => {
-      await supertest(server)
+    test('Edit post when postService.editPost returns undefined returns 400', async () => {
+      jest.spyOn(postService.prototype, 'editPost').mockResolvedValue(undefined);
+
+      const res = await supertest(server)
         .put(`/api/v0/post/edit/${validPostID}`)
         .set('Authorization', `Bearer ${lucaToken}`)
-        .query({ rating: 2, caption: 6 })
-        .expect(400);
+        .query({ rating: 4, caption: 'Updated caption' });
+
+      expect(res.status).toBe(400);
+    });
+
+    test('Edit post when an exception is thrown returns 500', async () => {
+      jest.spyOn(postService.prototype, 'editPost').mockImplementation(() => {
+        throw new Error('Database error');
+      });
+
+      const res = await supertest(server)
+        .put(`/api/v0/post/edit/${validPostID}`)
+        .set('Authorization', `Bearer ${lucaToken}`)
+        .query({ rating: 4, caption: 'Updated caption' });
+
+      expect(res.status).toBe(500);
     });
   });
 
-describe('Error Test Suite: Verify error handling of post/all/friendsPosts/{userID}', () => {
-  test('Get friends\' posts with VALID USER ID', async () => {
-    const validUserID = '3b9a58b2-2a07-45d6-85c9-f138d63cb466'; // Keaton's user ID
+  /**
+   * Tests for /post/all/friendsPosts/{userID} endpoint
+   */
+  describe('/post/all/friendsPosts/{userID} Endpoint', () => {
+    const validUserID = keatonID;
 
-    const response = await supertest(server)
-      .get(`/api/v0/post/all/friendsPosts/${validUserID}`)
-      .set('Authorization', `Bearer ${keatonToken}`)
-      .expect(200);
+    test('Get friends posts successfully', async () => {
+      const res = await supertest(server)
+        .get(`/api/v0/post/all/friendsPosts/${validUserID}`)
+        .set('Authorization', `Bearer ${keatonToken}`)
+        .query({ limit: 10, lastPostTime: '2023-10-01T00:00:00Z' });
 
-    expect(response.body).toBeDefined();
-    expect(Array.isArray(response.body)).toBe(true);
-    expect(response.body.length).toBeGreaterThan(0); // Assuming keaton follows luca who has posts
+      expect(res.status).toBe(200);
+    });
+
+    test('Get friends posts without authorization token returns 401', async () => {
+      const res = await supertest(server)
+        .get(`/api/v0/post/all/friendsPosts/${validUserID}`)
+        .query({ limit: 10, lastPostTime: '2023-10-01T00:00:00Z' });
+
+      expect(res.status).toBe(401);
+    });
+
+    test('Get friends posts with invalid token returns 401', async () => {
+      const res = await supertest(server)
+        .get(`/api/v0/post/all/friendsPosts/${validUserID}`)
+        .set('Authorization', `Bearer invalidtoken`)
+        .query({ limit: 10, lastPostTime: '2023-10-01T00:00:00Z' });
+
+      expect(res.status).toBe(401);
+    });
+
+    test('Get friends posts with invalid userID returns 400', async () => {
+      const invalidUserID = 'invalid-id';
+      const res = await supertest(server)
+        .get(`/api/v0/post/all/friendsPosts/${invalidUserID}`)
+        .set('Authorization', `Bearer ${keatonToken}`)
+        .query({ limit: 10, lastPostTime: '2023-10-01T00:00:00Z' });
+
+      expect(res.status).toBe(400);
+    });
+
+    test('Get friends posts when postService.getAllFriendsPosts returns undefined returns 400', async () => {
+      jest.spyOn(postService.prototype, 'getAllFriendsPosts').mockResolvedValue(undefined);
+
+      const res = await supertest(server)
+        .get(`/api/v0/post/all/friendsPosts/${validUserID}`)
+        .set('Authorization', `Bearer ${keatonToken}`)
+        .query({ limit: 10, lastPostTime: '2023-10-01T00:00:00Z' });
+
+      expect(res.status).toBe(400);
+    });
+
+    test('Get friends posts when s3Service.getFileLink fails returns 400', async () => {
+      jest.spyOn(S3Service.prototype, 'getFileLink').mockResolvedValue(undefined);
+
+      const res = await supertest(server)
+        .get(`/api/v0/post/all/friendsPosts/${lucaID}`)
+        .set('Authorization', `Bearer ${lucaToken}`)
+
+      expect(res.status).toBe(400);
+    });
+
+    test('Get friends posts when an exception is thrown returns 500', async () => {
+      jest.spyOn(postService.prototype, 'getAllFriendsPosts').mockImplementation(() => {
+        throw new Error('Database error');
+      });
+
+      const res = await supertest(server)
+        .get(`/api/v0/post/all/friendsPosts/${validUserID}`)
+        .set('Authorization', `Bearer ${keatonToken}`)
+        .query({ limit: 10, lastPostTime: '2023-10-01T00:00:00Z' });
+
+      expect(res.status).toBe(500);
+    });
   });
 
-  // Test for retrieval attempt with invalid user ID format
-  test('Get friends\' posts with INVALID USER ID FORMAT', async () => {
-    const invalidUserID = 'invalid-id';
+  /**
+   * Tests for /post/add/repost endpoint
+   */
+  describe('/post/add/repost Endpoint', () => {
+    const validPostID = 'a5059ef4-971b-4e60-a692-a3af3365ba85';
 
-    await supertest(server)
-      .get(`/api/v0/post/all/friendsPosts/${invalidUserID}`)
-      .set('Authorization', `Bearer ${lucaToken}`)
-      .expect(400); // Expecting a 400 Bad Request for invalid ID format
+    test('Add repost successfully', async () => {
+      const res = await supertest(server)
+        .post('/api/v0/post/add/repost')
+        .set('Authorization', `Bearer ${lucaToken}`)
+        .query({ postId: validPostID, userId: keatonID });
+
+      expect(res.status).toBe(200);
+    });
+
+    test('Add repost without authorization token returns 401', async () => {
+      const res = await supertest(server)
+        .post('/api/v0/post/add/repost')
+        .query({ postId: validPostID, userId: lucaID });
+
+      expect(res.status).toBe(401);
+    });
+
+    test('Add repost with invalid token returns 401', async () => {
+      const res = await supertest(server)
+        .post('/api/v0/post/add/repost')
+        .set('Authorization', `Bearer invalidtoken`)
+        .query({ postId: validPostID, userId: lucaID });
+
+      expect(res.status).toBe(401);
+    });
+
+    test('Add repost with invalid postId returns 400', async () => {
+      const invalidPostID = 'invalid-id';
+
+      const res = await supertest(server)
+        .post('/api/v0/post/add/repost')
+        .set('Authorization', `Bearer ${lucaToken}`)
+        .query({ postId: invalidPostID, userId: lucaID });
+
+      expect(res.status).toBe(400);
+    });
+
+    test('Add repost when postService.addRepost returns undefined returns 400', async () => {
+      jest.spyOn(postService.prototype, 'addRepost').mockResolvedValue(undefined);
+
+      const res = await supertest(server)
+        .post('/api/v0/post/add/repost')
+        .set('Authorization', `Bearer ${lucaToken}`)
+        .query({ postId: validPostID, userId: lucaID });
+
+      expect(res.status).toBe(400);
+    });
+
+    test('Add repost when an exception is thrown returns 500', async () => {
+      jest.spyOn(postService.prototype, 'addRepost').mockImplementation(() => {
+        throw new Error('Database error');
+      });
+
+      const res = await supertest(server)
+        .post('/api/v0/post/add/repost')
+        .set('Authorization', `Bearer ${lucaToken}`)
+        .query({ postId: validPostID, userId: lucaID });
+
+      expect(res.status).toBe(500);
+    });
   });
 
-  // Test for retrieval attempt with non-existent user ID
-  test('Get friends\' posts with NON-EXISTENT USER ID', async () => {
-    const nonExistentUserID = 'b1239ef4-971b-4e60-a692-a3af3365ba99';
+  /**
+   * Tests for /post/get/repost endpoint
+   */
+  describe('/post/get/repost Endpoint', () => {
+    const validPostID = 'a5059ef4-971b-4e60-a692-a3af3365ba85';
 
-    await supertest(server)
-      .get(`/api/v0/post/all/friendsPosts/${nonExistentUserID}`)
-      .set('Authorization', `Bearer ${lucaToken}`)
-      .expect(400);
+    test('Get repost successfully', async () => {
+      jest.spyOn(postService.prototype, 'getRepost').mockResolvedValue('repost-id');
+      const res = await supertest(server)
+        .get('/api/v0/post/get/repost')
+        .set('Authorization', `Bearer ${lucaToken}`)
+        .query({ postId: validPostID });
+
+      expect(res.status).toBe(200);
+    });
+
+    test('Get repost without authorization token returns 401', async () => {
+      const res = await supertest(server)
+        .get('/api/v0/post/get/repost')
+        .query({ postId: validPostID });
+
+      expect(res.status).toBe(401);
+    });
+
+    test('Get repost with invalid token returns 401', async () => {
+      const res = await supertest(server)
+        .get('/api/v0/post/get/repost')
+        .set('Authorization', `Bearer invalidtoken`)
+        .query({ postId: validPostID });
+
+      expect(res.status).toBe(401);
+    });
+
+    test('Get repost with invalid postId returns 400', async () => {
+      const invalidPostID = 'invalid-id';
+
+      const res = await supertest(server)
+        .get('/api/v0/post/get/repost')
+        .set('Authorization', `Bearer ${lucaToken}`)
+        .query({ postId: invalidPostID });
+
+      expect(res.status).toBe(400);
+    });
+
+    test('Get repost when postService.getRepost returns undefined returns 400', async () => {
+      jest.spyOn(postService.prototype, 'getRepost').mockResolvedValue(undefined);
+
+      const res = await supertest(server)
+        .get('/api/v0/post/get/repost')
+        .set('Authorization', `Bearer ${lucaToken}`)
+        .query({ postId: validPostID });
+
+      expect(res.status).toBe(400);
+    });
+
+    test('Get repost when an exception is thrown returns 500', async () => {
+      jest.spyOn(postService.prototype, 'getRepost').mockImplementation(() => {
+        throw new Error('Database error');
+      });
+
+      const res = await supertest(server)
+        .get('/api/v0/post/get/repost')
+        .set('Authorization', `Bearer ${lucaToken}`)
+        .query({ postId: validPostID });
+
+      expect(res.status).toBe(500);
+    });
   });
-
-  // Test for unauthorized access (no token provided)
-  test('Get friends\' posts without AUTHORIZATION TOKEN', async () => {
-    const validUserID = 'a3059ef4-971b-4e60-a692-a3af3365ba85';
-
-    await supertest(server)
-      .get(`/api/v0/post/all/friendsPosts/${validUserID}`)
-      // No Authorization header set
-      .expect(401); // Expecting a 401 Unauthorized error
-  });
-
-  // Test when the user has no friends or friends have no posts
-  test('Get friends\' posts when there are NO FRIENDS POSTS', async () => {
-    const userWithNoFriendsID = '38ababab-2a07-45d6-85c9-f138d63cb466'; // Test user's ID
-
-    const response = await supertest(server)
-      .get(`/api/v0/post/all/friendsPosts/${userWithNoFriendsID}`)
-      .set('Authorization', `Bearer ${testUserToken}`)
-      .expect(200); // Should return 200 with an empty array
-
-    expect(response.body).toBeDefined();
-    expect(Array.isArray(response.body)).toBe(true);
-    expect(response.body.length).toBe(0); // No friends' posts
-  });
-
-  // Test for error during image link retrieval
-  test('Get friends\' posts with ERROR IN IMAGE LINK RETRIEVAL', async () => {
-    // Mock the getFileLink method to return undefined, simulating an error
-    jest.spyOn(S3Service.prototype, 'getFileLink')
-      .mockResolvedValue(undefined);
-    const validUserID = '3b9a58b2-2a07-45d6-85c9-f138d63cb466';
-
-    await supertest(server)
-      .get(`/api/v0/post/all/friendsPosts/${validUserID}`)
-      .set('Authorization', `Bearer ${lucaToken}`)
-      .expect(400); // Expecting a 400 Bad Request due to image link retrieval failure
-  });
-
 });

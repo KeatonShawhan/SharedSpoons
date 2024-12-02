@@ -95,7 +95,7 @@ export class ToEatController extends Controller {
             return new toEatService()
                 .deleteFromToEat(request.user.id, postId)
                 .then(async (deleted) => {
-                    if (deleted === false) {
+                    if (deleted === false || deleted === undefined) {
                         this.setStatus(400);
                         console.error('Could not delete to eat post');
                         return undefined;

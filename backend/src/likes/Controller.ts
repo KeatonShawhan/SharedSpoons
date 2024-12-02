@@ -31,6 +31,7 @@ export class LikesController extends Controller{
                     return like;
                 })
         } catch (error) {
+            this.setStatus(500);
             console.error('Error adding like', error);
             return undefined;
         }
@@ -60,6 +61,7 @@ export class LikesController extends Controller{
                     return likeRemoved;
                 })
         } catch (error) {
+            this.setStatus(500);
             console.error('Error removing like', error);
             return undefined;
         }
@@ -88,6 +90,7 @@ export class LikesController extends Controller{
                     return likeCount;
                 })
         } catch (error) {
+            this.setStatus(500);
             console.error('Error getting like count', error);
             return undefined;
         }

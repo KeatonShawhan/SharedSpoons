@@ -61,7 +61,7 @@ export class toEatService{
         }
     }
 
-    public async deleteFromToEat(userId: string, postId: string): Promise<boolean> {
+    public async deleteFromToEat(userId: string, postId: string): Promise<boolean | undefined > {
         try {
           const deleteQuery = {
             text: `DELETE FROM toEat WHERE user_id = $1 AND post_id = $2 RETURNING *`,
