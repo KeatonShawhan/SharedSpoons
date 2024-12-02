@@ -7,15 +7,21 @@ import {
   Alert,
   TouchableOpacity,
   ActivityIndicator,
+  Image, // Import Image component
 } from "react-native";
 import Icon from 'react-native-vector-icons/Ionicons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+// Removed FontAwesome import since we're replacing it with an image
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoginContext from "@/contexts/loginContext";
 import API_URL from '../../config';
 import { useNavigation } from "@react-navigation/native";
 import { RootTabParamList } from './_layout';
 import { StackNavigationProp } from "@react-navigation/stack";
+
+// Import your custom logo image
+/* eslint-disable */
+const LogoImage = require('../../assets/images/FullSpoonsLogo.png'); // Adjust the path if necessary
+/* eslint-enable */
 
 export default function Signup() {
   const loginContext = useContext(LoginContext);
@@ -113,6 +119,7 @@ export default function Signup() {
       setBadSignup(true);
       setLoading(false);
       console.log(err);
+      Alert.alert("Error", "Something went wrong. Please try again later.");
     }
   };
 
@@ -123,10 +130,8 @@ export default function Signup() {
   return (
     <View style={styles.container}>
       {/* App Logo */}
-      <FontAwesome
-        name="cutlery"
-        size={60}
-        color="#FF9900"
+      <Image
+        source={LogoImage}
         style={styles.logo}
       />
       {/* App Name */}
@@ -268,7 +273,10 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   logo: {
+    width: 60, // Adjust based on your logo image dimensions
+    height: 60, // Adjust based on your logo image dimensions
     marginBottom: 10,
+    resizeMode: 'contain', // Ensures the image scales correctly
   },
   appName: {
     fontSize: 28,
