@@ -25,7 +25,9 @@ export interface ExploreSearchBarHandles {
   focus: () => void;
 }
 
+/* eslint-disable */
 export const ExploreSearchBar = forwardRef<ExploreSearchBarHandles, ExploreSearchBarProps>(
+/* eslint-enable */
   ({ navigation, onSearchInputChange }, ref) => {
     const [searchInput, setSearchInput] = useState('');
     const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
