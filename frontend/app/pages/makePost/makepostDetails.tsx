@@ -120,14 +120,24 @@ export default function MakePostDetails({route, navigation}: Props) {
             text: 'OK',
             onPress: () => {
               // Reset the Make Post stack
-              navigation.dispatch(
-                CommonActions.reset({
-                  index: 0,
-                  routes: [{ name: 'ToEatList' }],
-                })
-              );
               loginContext.setMadePost(!loginContext.madePost);
-              rootnav.navigate('toeat');
+              if (isRepost){
+                navigation.dispatch(
+                  CommonActions.reset({
+                    index: 0,
+                    routes: [{ name: 'ToEatList' }],
+                  })
+                );
+                rootnav.navigate('toeat');
+              } else {
+                navigation.dispatch(
+                  CommonActions.reset({
+                    index: 0,
+                    routes: [{ name: 'Main' }],
+                  })
+                );
+                rootnav.navigate('index');
+              }
             },
           },
         ]);
