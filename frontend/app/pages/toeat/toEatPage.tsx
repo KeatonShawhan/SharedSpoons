@@ -40,20 +40,20 @@ export default function ToEatPage() {
 
       <ScrollView>
         <ThemedView style={styles.contentContainer}>
-        {list && list.length > 0 ? (
-          list.map((item) => (
-            <ToEatCard
-              key={item.id || Math.random().toString()}
-              id={item.id}
-              dish={item.data.dish || "Default Dish"}
-              place={item.data.restaurant || "Default Place"}
-              image={item.data.image}
-              onPress={() => navigation.navigate('ToEatDetails', { id: item.id })}
-            />
-          ))
-        ) : (
-          <Text style={{ textAlign: 'center', marginTop: 20 }}>No items to display</Text>
-        )}
+          {list && list.length > 0 ? (
+            list.map((item) => (
+              <ToEatCard
+                key={item.id || Math.random().toString()}
+                id={item.id}
+                dish={item.data.dish || "Default Dish"}
+                place={item.data.restaurant || "Default Place"}
+                image={item.data.image}
+                onPress={() => navigation.navigate('ToEatDetails', { id: item.id })}
+              />
+            ))
+          ) : (
+            <Text style={{ textAlign: 'center', marginTop: 20 }}>No items to display</Text>
+          )}
         </ThemedView>
       </ScrollView>
     </SafeAreaView>

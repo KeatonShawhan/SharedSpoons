@@ -52,9 +52,9 @@ export default function FriendsScreen() {
   }, [profileId]);
 
   const filteredData = (activeTab === 'followers' ? followers : following).filter((user) =>
-  (user.name?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    (user.name?.toLowerCase().includes(searchQuery.toLowerCase()) || 
    user.username?.toLowerCase().includes(searchQuery.toLowerCase()))
-);
+  );
 
   const listData = [
     ...(filteredData.map((user) => ({ type: 'user', data: user })) || []),

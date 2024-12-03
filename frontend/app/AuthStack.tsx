@@ -11,10 +11,10 @@ export default function AuthNavigator() {
   return (
     <AuthStack.Navigator>
       <LoginProvider>
-      <AuthStack.Screen name="pages/login/LoginPage" component={LoginPage} options={{ headerShown: false  }} />
-      <AuthStack.Screen name="pages/login/WelcomePage" component={WelcomePage} options={{ headerShown: false }} />
-      <AuthStack.Screen name="pages/login/SignUpPage" component={SignUpPage} options={{ headerShown: false }} />
-    </LoginProvider>
+        <AuthStack.Screen name="pages/login/LoginPage" component={LoginPage} options={{ headerShown: false  }} />
+        <AuthStack.Screen name="pages/login/WelcomePage" component={WelcomePage} options={{ headerShown: false }} />
+        <AuthStack.Screen name="pages/login/SignUpPage" component={SignUpPage} options={{ headerShown: false }} />
+      </LoginProvider>
     </AuthStack.Navigator>
   );
 }

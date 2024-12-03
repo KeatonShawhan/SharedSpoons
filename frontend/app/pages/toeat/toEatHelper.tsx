@@ -76,42 +76,42 @@ export const deleteToEat = async (postId, accessToken) => {
 
 export const fetchPostData = async (postId, accessToken) => {
   try {
-      const response = await fetch(`${API_URL}post/postID/${postId}`, {
-          method: 'GET',
-          headers: {
-              'Authorization': `Bearer ${accessToken}`
-          }
-      });
-
-      if (!response.ok) {
-          throw new Error('Failed to fetch post');
+    const response = await fetch(`${API_URL}post/postID/${postId}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${accessToken}`
       }
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch post');
+    }
 
 
-      const apiData = await response.json();  
-            // Transform API data to match PostCard props
-            const transformedData: PostCardProps = {
-                isSaved: apiData.data.is_saved,
-                isLiked:apiData.data.is_liked,
-                id: apiData.id,
-                user_id: apiData.user,
-                username: apiData.data.username,
-                caption: apiData.data.caption,
-                dish: apiData.data.dish,
-                rating: apiData.data.rating,
-                place: apiData.data.restaurant,
-                image: apiData.data.image,
-                pfp: apiData.data.pfp,
-                isOwnProfile: false,
-                parentTab: 'ToEatTab',
-                isReposted: apiData.data.is_reposted,
-                repostedBy: apiData.data.reposted_by
-            };
-            //console.log("apiData: ", apiData);
-            return transformedData;
+    const apiData = await response.json();  
+    // Transform API data to match PostCard props
+    const transformedData: PostCardProps = {
+      isSaved: apiData.data.is_saved,
+      isLiked:apiData.data.is_liked,
+      id: apiData.id,
+      user_id: apiData.user,
+      username: apiData.data.username,
+      caption: apiData.data.caption,
+      dish: apiData.data.dish,
+      rating: apiData.data.rating,
+      place: apiData.data.restaurant,
+      image: apiData.data.image,
+      pfp: apiData.data.pfp,
+      isOwnProfile: false,
+      parentTab: 'ToEatTab',
+      isReposted: apiData.data.is_reposted,
+      repostedBy: apiData.data.reposted_by
+    };
+    // console.log("apiData: ", apiData);
+    return transformedData;
 
   } catch (err) {
-      console.error('Error fetching post:', err);
+    console.error('Error fetching post:', err);
   }
 };
 

@@ -29,7 +29,7 @@ export default function ToEatTab() {
       <Stack.Screen name="PostStack" component={PostStackNavigator} />
       <Stack.Screen name="ProfileRoot" component={ProfileNavigation} />
       <Stack.Screen name="MakePostRoot" initialParams={{repostDish: '', repostRestaurant: '', repostId: '', postId: ''}}
-       component={MakePostMain} />
+        component={MakePostMain} />
     </Stack.Navigator>
   );
 }

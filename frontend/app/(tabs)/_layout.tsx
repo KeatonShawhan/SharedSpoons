@@ -30,7 +30,7 @@ export default function TabLayout() {
       const token = await AsyncStorage.getItem('accessToken');
       loginContext.setIsAuthenticated(!!token);
       loginContext.decodeToken();
-      //const temp = !!token
+      // const temp = !!token
       if (token) {
         try {
           const response = await fetch(`${API_URL}auth?accessToken=${token}`, {
@@ -149,7 +149,7 @@ export default function TabLayout() {
           tabBarIcon: () => null,
           tabBarLabel: () => null,
         }}
-        />
+      />
     </Tabs>
   );
 }

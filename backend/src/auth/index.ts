@@ -6,16 +6,16 @@ export interface Authenticated {
     username: string
   }
   
-  export interface Credentials {
+export interface Credentials {
     username: string;
     password: string;
   }
   
-  export type SessionUser = {
+export type SessionUser = {
     id: string;
   };
   
-  export type UserSignUp = {
+export type UserSignUp = {
     username: string;
     firstname: string;
     lastname: string;
@@ -25,17 +25,17 @@ export interface Authenticated {
     phoneNumber: string;
   };
   
-  export type SignUpRet = {
+export type SignUpRet = {
     username: string;
     firstname: string;
   };
   
-  export type UserIdInfo = {
+export type UserIdInfo = {
     id: string;
     name: string;
   }
 
-  export type DecodedToken = {
+export type DecodedToken = {
     id: string;
     username: string;
     firstname: string;

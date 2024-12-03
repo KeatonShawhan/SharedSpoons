@@ -35,15 +35,15 @@ export class AuthService {
     };
     let password = "";
     try {
-        const { rows } = await pool.query(query);
-        if (rows.length != 1) {
-            console.log("no users");
-            return undefined;
-          }
-          password = rows[0].pass;
-    } catch (err) {
-        console.error(err);
+      const { rows } = await pool.query(query);
+      if (rows.length != 1) {
+        console.log("no users");
         return undefined;
+      }
+      password = rows[0].pass;
+    } catch (err) {
+      console.error(err);
+      return undefined;
     }
     const select2 = `SELECT data || jsonb_build_object('id', id) AS user FROM app_user WHERE data->>'username' = $1::text AND data->>'pwhash' = crypt($2::text, $3::text)`;
 
@@ -52,23 +52,23 @@ export class AuthService {
       values: [credentials.username, credentials.password, password],
     };
     try {
-        const { rows: row } = await pool.query(query2);
-        if (row.length != 1) {
-          return undefined;
-        }
-        const user = row[0].user;
-        const accessToken = jwt.sign(
-            { id: user.id, username: user.username, firstname: user.firstname, lastname: user.lastname},
-            `${process.env.HASH_MASTER_SECRET}`,
-            {
-              expiresIn: "7d",
-              algorithm: "HS256",
-            }
-          );
-          return { id: user.id, firstname: user.firstname, lastname: user.lastname, accessToken: accessToken, username: user.username };
-    } catch (err) {
-        console.error(err);
+      const { rows: row } = await pool.query(query2);
+      if (row.length != 1) {
         return undefined;
+      }
+      const user = row[0].user;
+      const accessToken = jwt.sign(
+        { id: user.id, username: user.username, firstname: user.firstname, lastname: user.lastname},
+        `${process.env.HASH_MASTER_SECRET}`,
+        {
+          expiresIn: "7d",
+          algorithm: "HS256",
+        }
+      );
+      return { id: user.id, firstname: user.firstname, lastname: user.lastname, accessToken: accessToken, username: user.username };
+    } catch (err) {
+      console.error(err);
+      return undefined;
     }
   }
 
@@ -167,5 +167,5 @@ export class AuthService {
       return undefined;
     }
     return rows[0];
-}
+  }
 }

@@ -26,12 +26,12 @@ export const Header: React.FC<HeaderProps> = ({ colorScheme }) => {
           style={styles.icon}
         />
         <TouchableOpacity onPress={loginContext.handleLogout} style={styles.icon}>
-        <Ionicons 
-          name="log-out-outline" 
-          size={28}
-          color={Colors[colorScheme].text} 
-          style={styles.icon}
-        />
+          <Ionicons 
+            name="log-out-outline" 
+            size={28}
+            color={Colors[colorScheme].text} 
+            style={styles.icon}
+          />
         </TouchableOpacity>
       </View>
       <View style={styles.divider} />

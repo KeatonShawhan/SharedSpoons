@@ -1,4 +1,4 @@
-//profileHelpers.tsx
+// profileHelpers.tsx
 import API_URL from '@/config';
 
 export const checkIfFollowing = async (currentUserId, profileUserId, accessToken, handleLogout) => {

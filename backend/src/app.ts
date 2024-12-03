@@ -8,7 +8,7 @@ import express, {
 import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
 import { RegisterRoutes } from "../build/routes";
-//import { expressAuthentication } from './middleware';
+// import { expressAuthentication } from './middleware';
 
 const app: Express = express();
 
@@ -17,13 +17,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use('/api/v0/docs', swaggerUi.serve, async (_req: ExRequest, res: ExResponse) => {
-res.send(
-  swaggerUi.generateHTML(await import('../build/swagger.json'))
-);
+  res.send(
+    swaggerUi.generateHTML(await import('../build/swagger.json'))
+  );
 });
 
 const router = Router();
-//router.use(expressAuthentication);
+// router.use(expressAuthentication);
 RegisterRoutes(router);
 app.use('/api/v0', router);
 

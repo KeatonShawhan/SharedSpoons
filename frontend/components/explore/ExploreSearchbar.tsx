@@ -42,111 +42,111 @@ export const ExploreSearchBar = forwardRef<ExploreSearchBarHandles, ExploreSearc
       },
     }));
 
-  // Fetch user suggestions from the backend
-  const fetchSuggestions = async (input: string) => {
-    try {
-      const response = await fetch(
-        `${API_URL}/explore/search/suggestion?input=${encodeURIComponent(input)}&currentUsername=${encodeURIComponent(
-          loginContext.userName
-        )}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${loginContext.accessToken}`,
-          },
+    // Fetch user suggestions from the backend
+    const fetchSuggestions = async (input: string) => {
+      try {
+        const response = await fetch(
+          `${API_URL}/explore/search/suggestion?input=${encodeURIComponent(input)}&currentUsername=${encodeURIComponent(
+            loginContext.userName
+          )}`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${loginContext.accessToken}`,
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(await response.text());
         }
-      );
 
-      if (!response.ok) {
-        throw new Error(await response.text());
-      }
+        const result = await response.json();
+        if (result.length === 0) {
+          setSuggestions([]);
+          return;
+        }
 
-      const result = await response.json();
-      if (result.length === 0) {
-        setSuggestions([]);
-        return;
-      }
-
-      // Map and ensure all fields are available before setting suggestions
-      /* eslint-disable */
+        // Map and ensure all fields are available before setting suggestions
+        /* eslint-disable */
       const mappedSuggestions = result.map((user: any) => ({
       /* eslint-enable */
-        id: user.id,
-        firstname: user.firstname || 'N/A', // Default value if undefined
-        lastname: user.lastname || 'N/A', // Default value if undefined
-        username: user.username,
-        pfp: user.pfp || ''
-      }));
+          id: user.id,
+          firstname: user.firstname || 'N/A', // Default value if undefined
+          lastname: user.lastname || 'N/A', // Default value if undefined
+          username: user.username,
+          pfp: user.pfp || ''
+        }));
 
-      setSuggestions(mappedSuggestions);
-    } catch (err) {
-      console.error('Error fetching suggestions:', err);
-    }
-  };
+        setSuggestions(mappedSuggestions);
+      } catch (err) {
+        console.error('Error fetching suggestions:', err);
+      }
+    };
 
-  // Fetch suggestions whenever searchInput changes
-  useEffect(() => {
-    onSearchInputChange(searchInput); // Notify parent of the input change
+    // Fetch suggestions whenever searchInput changes
+    useEffect(() => {
+      onSearchInputChange(searchInput); // Notify parent of the input change
 
-    if (searchInput) {
-      fetchSuggestions(searchInput);
-    } else {
-      setSuggestions([]);
-    }
-  }, [searchInput]);
+      if (searchInput) {
+        fetchSuggestions(searchInput);
+      } else {
+        setSuggestions([]);
+      }
+    }, [searchInput]);
 
-  return (
-    <View style={styles.container}>
-      {/* Search Input */}
-      <TextInput
-        ref={textInputRef}
-        style={[
-          styles.searchInput,
-          {
-            borderColor: Colors[colorScheme].icon,
-            backgroundColor: Colors[colorScheme].background,
-            color: Colors[colorScheme].text,
-          },
-        ]}
-        placeholder="Search for usernames"
-        placeholderTextColor={Colors[colorScheme].icon}
-        value={searchInput}
-        onChangeText={(text) => setSearchInput(text)}
-        autoCapitalize="none"
-      />
-      {/* Search Suggestions */}
-      {suggestions.length > 0 && (
-        <FlatList
-          data={suggestions}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <UserItem
-              user={{
-                id: item.id,
-                firstname: item.firstname,
-                lastname: item.lastname,
-                username: item.username,
-                pfp: item.pfp
-              }}
-              colorScheme={colorScheme}
-              onPress={(userId) => {
-                navigation.push('ProfileRoot', {
-                  screen: 'Main',
-                  params: { userId, isFromExploreTab: true }, // Pass additional params
-                });
-              }}
-            />
-          )}
+    return (
+      <View style={styles.container}>
+        {/* Search Input */}
+        <TextInput
+          ref={textInputRef}
           style={[
-            styles.suggestionsList,
-            { backgroundColor: Colors[colorScheme].background },
+            styles.searchInput,
+            {
+              borderColor: Colors[colorScheme].icon,
+              backgroundColor: Colors[colorScheme].background,
+              color: Colors[colorScheme].text,
+            },
           ]}
+          placeholder="Search for usernames"
+          placeholderTextColor={Colors[colorScheme].icon}
+          value={searchInput}
+          onChangeText={(text) => setSearchInput(text)}
+          autoCapitalize="none"
         />
-      )}
-    </View>
-  );
-});
+        {/* Search Suggestions */}
+        {suggestions.length > 0 && (
+          <FlatList
+            data={suggestions}
+            keyExtractor={(item) => item.id}
+            renderItem={({ item }) => (
+              <UserItem
+                user={{
+                  id: item.id,
+                  firstname: item.firstname,
+                  lastname: item.lastname,
+                  username: item.username,
+                  pfp: item.pfp
+                }}
+                colorScheme={colorScheme}
+                onPress={(userId) => {
+                  navigation.push('ProfileRoot', {
+                    screen: 'Main',
+                    params: { userId, isFromExploreTab: true }, // Pass additional params
+                  });
+                }}
+              />
+            )}
+            style={[
+              styles.suggestionsList,
+              { backgroundColor: Colors[colorScheme].background },
+            ]}
+          />
+        )}
+      </View>
+    );
+  });
 
 const styles = StyleSheet.create({
   container: {

@@ -124,7 +124,7 @@ describe('Post Endpoints Test Suite', () => {
         restaurant: 'McDonalds',
         dish: 'Big Mac',
         caption: 'I love Big Macs',
-       };
+      };
 
       const res = await supertest(server)
         .post('/api/v0/post/create')

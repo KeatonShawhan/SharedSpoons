@@ -14,19 +14,19 @@ export function addButton() {
   }
 
   return (
-      <ThemedView >
-        <TouchableOpacity
-          onPress={added}
-          style={{
-            position: 'absolute',
-            bottom: 10,  
-            right: 10,
-            backgroundColor: 'rgba(0, 0, 0, 0.3)', 
-            padding: 10,
-            borderRadius: 25,
-          }}>
-          <Ionicons name={currentIcon} size={24} color="white" />        
-        </TouchableOpacity>
-      </ThemedView>
+    <ThemedView >
+      <TouchableOpacity
+        onPress={added}
+        style={{
+          position: 'absolute',
+          bottom: 10,  
+          right: 10,
+          backgroundColor: 'rgba(0, 0, 0, 0.3)', 
+          padding: 10,
+          borderRadius: 25,
+        }}>
+        <Ionicons name={currentIcon} size={24} color="white" />        
+      </TouchableOpacity>
+    </ThemedView>
   );
 }

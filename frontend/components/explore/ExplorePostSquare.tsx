@@ -19,8 +19,8 @@ export default function ExplorePostSquare({
   const resolvedUri = isBase64
     ? imageUrl
     : imageUrl.startsWith('http')
-    ? imageUrl
-    : `data:image/jpeg;base64,${imageUrl}`;
+      ? imageUrl
+      : `data:image/jpeg;base64,${imageUrl}`;
 
   // Calculate dynamic height based on heightRatio
   const IMAGE_WIDTH = (Dimensions.get('window').width - 32) / 3; // 8px padding on each side and between columns (3 columns: 8*4 = 32)

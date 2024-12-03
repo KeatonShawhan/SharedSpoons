@@ -37,132 +37,132 @@ interface PostApiResponse {
 }
 
 export default function PostPage() {
-    const navigation = useNavigation();
-    const route = useRoute<PostPageRouteProp>();
-    const colorScheme = useColorScheme();
-    const loginContext = useContext(LoginContext);
-    const { isOwnProfile } = route.params;
+  const navigation = useNavigation();
+  const route = useRoute<PostPageRouteProp>();
+  const colorScheme = useColorScheme();
+  const loginContext = useContext(LoginContext);
+  const { isOwnProfile } = route.params;
 
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-    const [postData, setPostData] = useState<PostCardProps | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [postData, setPostData] = useState<PostCardProps | null>(null);
 
-    useEffect(() => {
-        fetchPostData();
-    }, [route.params.postId]);
+  useEffect(() => {
+    fetchPostData();
+  }, [route.params.postId]);
 
-    const fetchPostData = async () => {
-        if (!loginContext?.accessToken) return;
+  const fetchPostData = async () => {
+    if (!loginContext?.accessToken) return;
 
-        try {
-            setIsLoading(true);
-            setError(null);
+    try {
+      setIsLoading(true);
+      setError(null);
 
-            const response = await fetch(`${API_URL}post/postID/${route.params.postId}`, {
-                headers: {
-                    'Authorization': `Bearer ${loginContext.accessToken}`
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch post');
-            }
-
-            const apiData: PostApiResponse = await response.json();
-            // console.log("apiData: ", apiData.data.is_saved);
-            
-            // Transform API data to match PostCard props
-            const transformedData: PostCardProps = {
-                isLiked: apiData.data.is_liked,
-                isSaved: apiData.data.is_saved,
-                isReposted: apiData.data.is_reposted,
-                repostedBy: apiData.data.reposted_by,
-                id: apiData.id,
-                user_id: apiData.user,
-                username: apiData.data.username,
-                caption: apiData.data.caption,
-                dish: apiData.data.dish,
-                rating: apiData.data.rating,
-                place: apiData.data.restaurant,
-                image: apiData.data.image,
-                parentTab: 'ProfileTab',
-                pfp: apiData.data.pfp,
-                isOwnProfile,
-            };
-            
-            console.log(transformedData)
-            setPostData(transformedData);
-
-        } catch (err) {
-            setError(err instanceof Error ? err.message : 'Failed to fetch post');
-            console.error('Error fetching post:', err);
-        } finally {
-            setIsLoading(false);
+      const response = await fetch(`${API_URL}post/postID/${route.params.postId}`, {
+        headers: {
+          'Authorization': `Bearer ${loginContext.accessToken}`
         }
-    };
+      });
 
-    // Apply color scheme dynamically to the styles
-    const styles = getStyles(Colors[colorScheme]);
+      if (!response.ok) {
+        throw new Error('Failed to fetch post');
+      }
 
-    if (isLoading) {
-        return (
-            <View style={styles.container}>
-                <ProfilePostHeader onBackPress={() => navigation.goBack()} />
-                <View style={styles.loadingContainer}>
-                    <ActivityIndicator size="large" color={Colors[colorScheme].tint} />
-                </View>
-            </View>
-        );
+      const apiData: PostApiResponse = await response.json();
+      // console.log("apiData: ", apiData.data.is_saved);
+            
+      // Transform API data to match PostCard props
+      const transformedData: PostCardProps = {
+        isLiked: apiData.data.is_liked,
+        isSaved: apiData.data.is_saved,
+        isReposted: apiData.data.is_reposted,
+        repostedBy: apiData.data.reposted_by,
+        id: apiData.id,
+        user_id: apiData.user,
+        username: apiData.data.username,
+        caption: apiData.data.caption,
+        dish: apiData.data.dish,
+        rating: apiData.data.rating,
+        place: apiData.data.restaurant,
+        image: apiData.data.image,
+        parentTab: 'ProfileTab',
+        pfp: apiData.data.pfp,
+        isOwnProfile,
+      };
+            
+      console.log(transformedData)
+      setPostData(transformedData);
+
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to fetch post');
+      console.error('Error fetching post:', err);
+    } finally {
+      setIsLoading(false);
     }
+  };
 
-    if (error || !postData) {
-        return (
-            <View style={styles.container}>
-                <ProfilePostHeader onBackPress={() => navigation.goBack()} />
-                <View style={styles.content}>
-                    <Text style={[styles.errorText, { color: Colors[colorScheme].text }]}>
-                        {error || 'Failed to load post'}
-                    </Text>
-                </View>
-            </View>
-        );
-    }
+  // Apply color scheme dynamically to the styles
+  const styles = getStyles(Colors[colorScheme]);
 
+  if (isLoading) {
     return (
-        <View style={styles.container}>
-            <ProfilePostHeader onBackPress={() => navigation.goBack()} />
-            <View style={styles.content}>
-                <View style={styles.postCardContainer}>
-                    <PostCard {...postData} />
-                </View>
-            </View>
+      <View style={styles.container}>
+        <ProfilePostHeader onBackPress={() => navigation.goBack()} />
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={Colors[colorScheme].tint} />
         </View>
+      </View>
     );
+  }
+
+  if (error || !postData) {
+    return (
+      <View style={styles.container}>
+        <ProfilePostHeader onBackPress={() => navigation.goBack()} />
+        <View style={styles.content}>
+          <Text style={[styles.errorText, { color: Colors[colorScheme].text }]}>
+            {error || 'Failed to load post'}
+          </Text>
+        </View>
+      </View>
+    );
+  }
+
+  return (
+    <View style={styles.container}>
+      <ProfilePostHeader onBackPress={() => navigation.goBack()} />
+      <View style={styles.content}>
+        <View style={styles.postCardContainer}>
+          <PostCard {...postData} />
+        </View>
+      </View>
+    </View>
+  );
 }
 
 const getStyles = (colors: { [key: string]: string }) => StyleSheet.create({
-    container: {
-        flex: 1,
-        width: '100%',
-        backgroundColor: colors.background,
-    },
-    content: {
-        flex: 1,
-        alignItems: 'center',
-        paddingTop: 15,
-    },
-    postCardContainer: {
-        width: '90%',
-        alignSelf: 'center',
-    },
-    loadingContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    errorText: {
-        fontSize: 16,
-        textAlign: 'center',
-        marginTop: 20,
-    },
+  container: {
+    flex: 1,
+    width: '100%',
+    backgroundColor: colors.background,
+  },
+  content: {
+    flex: 1,
+    alignItems: 'center',
+    paddingTop: 15,
+  },
+  postCardContainer: {
+    width: '90%',
+    alignSelf: 'center',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  errorText: {
+    fontSize: 16,
+    textAlign: 'center',
+    marginTop: 20,
+  },
 });

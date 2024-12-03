@@ -26,7 +26,7 @@ type ProfileRootParams = {
     };
   };
   
-  export type PostStackParamList = {
+export type PostStackParamList = {
     Comments: { 
       postId: UUID;
       parentTab: 'HomeTab' | 'ProfileTab' | 'ToEatTab' | 'ExploreTab';

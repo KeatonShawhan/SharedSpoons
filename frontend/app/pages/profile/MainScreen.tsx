@@ -192,8 +192,8 @@ export default function MainScreen() {
         ? '#FFFFFF'
         : '#000000'
       : colorScheme === 'dark'
-      ? '#666666'
-      : '#999999';
+        ? '#666666'
+        : '#999999';
   };
 
   return (
@@ -242,8 +242,8 @@ export default function MainScreen() {
                   tabName === 'posts'
                     ? 'grid-outline'
                     : tabName === 'achievements'
-                    ? 'trophy-outline'
-                    : 'settings-outline'
+                      ? 'trophy-outline'
+                      : 'settings-outline'
                 }
                 size={24}
                 color={getIconColor(activeTab === tabName)}

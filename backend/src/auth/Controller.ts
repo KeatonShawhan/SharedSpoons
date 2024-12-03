@@ -1,54 +1,54 @@
 import {
-    Body,
-    Query,
-    Controller,
-    Post,
-    Get,
-    Response,
-    Route,
-    // Put,
-    SuccessResponse,
-    Request, 
-    Security
-    // Path
-  } from "tsoa";
+  Body,
+  Query,
+  Controller,
+  Post,
+  Get,
+  Response,
+  Route,
+  // Put,
+  SuccessResponse,
+  Request, 
+  Security
+  // Path
+} from "tsoa";
   
-  import * as express from 'express';
-  import { S3Service } from "../s3/service";
-  import {
-    Authenticated,
-    Credentials,
-    SessionUser,
-    UserSignUp,
-    DecodedToken,
-  } from "./index";
-  import { AuthService } from "./service";
-  import type User from "./service";
-  import jwt from 'jsonwebtoken';
+import * as express from 'express';
+import { S3Service } from "../s3/service";
+import {
+  Authenticated,
+  Credentials,
+  SessionUser,
+  UserSignUp,
+  DecodedToken,
+} from "./index";
+import { AuthService } from "./service";
+import type User from "./service";
+import jwt from 'jsonwebtoken';
 
 
   @Route("auth")
-  export class AuthController extends Controller {
-    private s3Service = new S3Service();
+export class AuthController extends Controller {
+  private s3Service = new S3Service();
 
     @Post("/login")
     @Response("401", "Unauthorized")
-    public async login(
+  public async login(
       @Body() credentials: Credentials
-    ): Promise<Authenticated | undefined> {
-      return new AuthService()
-        .login(credentials)
-        .then(
-          async (
-            account: Authenticated | undefined
-          ): Promise<Authenticated | undefined> => {
-            if (!account) {
-              this.setStatus(401);
-            }
-            return account;
+  ): Promise<Authenticated | undefined> {
+    return new AuthService()
+      .login(credentials)
+      .then(
+        async (
+          account: Authenticated | undefined
+        ): Promise<Authenticated | undefined> => {
+          if (!account) {
+            this.setStatus(401);
           }
-        );
-    }
+          return account;
+        }
+      );
+  }
   
     @Post("/signup")
     @Response("409", "Email/Username already in use")

@@ -43,8 +43,8 @@ export const UserItem: React.FC<UserItemProps> = ({
       /* eslint-disable */
       source={user.pfp ? { uri: user.pfp } : require('../../assets/images/default.jpeg')}
       /* eslint-enable */
-      /> 
-    </TouchableOpacity>
+    /> 
+  </TouchableOpacity>
 );
 
 const styles = StyleSheet.create({

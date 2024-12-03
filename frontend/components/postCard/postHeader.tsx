@@ -32,10 +32,10 @@ export function postHeader({ username, place, onNavigateToProfile, pfp, isRepost
             /* eslint-disable */
             source={pfp ? { uri: pfp } : require('../../assets/images/default.jpeg')}
             /* eslint-enable */
-            />
+          />
         </TouchableOpacity>
         <View>
-        {isReposted &&
+          {isReposted &&
           <View >
             <RepostCredit username={repostUserName} onNavigateToProfile={repostNavigation} />
           </View>}

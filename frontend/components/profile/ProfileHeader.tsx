@@ -157,7 +157,7 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     fontFamily: 'Inter_400Regular',
     marginBottom: 3,
-    //textAlign: 'center', // Optional: to center-align username
+    // textAlign: 'center', // Optional: to center-align username
   },
   bio: {
     fontSize: width * 0.038,

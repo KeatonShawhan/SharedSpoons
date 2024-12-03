@@ -1,4 +1,4 @@
-//service.ts
+// service.ts
 import AWS from 'aws-sdk';
 import { v4 as uuidv4 } from 'uuid';
 import { S3 } from 'aws-sdk';
@@ -33,7 +33,6 @@ export class S3Service {
       return  s3key;   
     } catch (error) {
       console.error('Error uploading file to S3:', error);
-      throw new Error('Could not upload file');
       return undefined;
     }
   }
