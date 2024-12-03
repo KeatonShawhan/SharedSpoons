@@ -1,10 +1,10 @@
 // Controller.ts
 import { Controller, Get, Route, Request, FormField, Post, UploadedFile, Query, Delete, Put, Path, Security} from 'tsoa';
 import * as express from 'express';
-import { S3Service } from '../s3/service'; // S3 service for handling uploads
-import { postService } from './service'; // Post service for handling post creation
-import { PostJSON, PostContent, PostTotal } from '.';
-import  {postDataSchema, editPostDataSchema}  from './validator';
+import { S3Service } from '../s3/Service'; // S3 service for handling uploads
+import { postService } from './Service'; // Post service for handling post creation
+import { PostJSON, PostContent, PostTotal } from './Index';
+import  {postDataSchema, editPostDataSchema}  from './Validator';
 
 
 @Security('jwt')

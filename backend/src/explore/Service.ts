@@ -1,6 +1,6 @@
 import { pool } from "../db";
-import { Suggestion } from "./index";
-import { PostContent } from "../post";
+import { Suggestion } from "./Index";
+import { PostContent } from "../post/Index";
 
 export class ExploreService {
   public async searchSuggestion(

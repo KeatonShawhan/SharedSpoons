@@ -4,9 +4,9 @@ import {
   Credentials,
   SessionUser,
   UserSignUp,
-} from ".";
+} from "./Index";
 import { pool } from "../db";
-import { UUID } from '../types/index';
+import { UUID } from '../types/Index';
 
 interface Account {
   id: string;

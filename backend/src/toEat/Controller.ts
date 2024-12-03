@@ -1,9 +1,9 @@
 // Controller.ts
 import { Controller, Get, Route, Request, Post, Query, Response, Security, Delete} from 'tsoa';
 import * as express from 'express';
-import {toEatService } from './service'; // Post service for handling post creation
-import { PostTotal } from '../post';
-import { S3Service } from '../s3/service';
+import {toEatService } from './Service'; // Post service for handling post creation
+import { PostTotal } from '../post/Index';
+import { S3Service } from '../s3/Service';
 
 @Security('jwt')
 @Route('toEat')

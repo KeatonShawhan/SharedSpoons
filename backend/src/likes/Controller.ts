@@ -1,8 +1,8 @@
 import { Controller, Route, Request, Post, Query, Delete, Security, Get} from 'tsoa';
 import * as express from 'express';
-import { postLiked } from './index';
-import { likeService } from './service'; // Comment service for handling comment creation
-import { UUID } from '../types';
+import { postLiked } from './Index';
+import { likeService } from './Service'; // Comment service for handling comment creation
+import { UUID } from '../types/Index';
 
 @Security('jwt')
 @Route('likes')

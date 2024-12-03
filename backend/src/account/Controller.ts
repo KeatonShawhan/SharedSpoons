@@ -8,9 +8,9 @@ import {
   FormField,
   UploadedFile
 } from "tsoa";
-import { AccountService } from "./service";
-import { S3Service } from '../s3/service';
-import { UpdateAccountRequest } from "./index";
+import { AccountService } from "./Service";
+import { S3Service } from '../s3/Service';
+import { UpdateAccountRequest } from "./Index";
 import * as express from 'express';
 
 @Security('jwt', ['member'])

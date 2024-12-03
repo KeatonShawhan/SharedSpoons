@@ -2,10 +2,10 @@ import supertest from 'supertest';
 import * as http from 'http';
 import app from '../../src/app';
 import * as db from '../db';
-import { S3Service } from '../../src/s3/service';
-import { toEatService } from '../../src/toEat/service';
+import { S3Service } from '../../src/s3/Service';
+import { toEatService } from '../../src/toEat/Service';
 import jwt from 'jsonwebtoken';
-import { UUID } from '../../src/types/index';
+import { UUID } from '../../src/types/Index';
 
 let server: http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>;
 

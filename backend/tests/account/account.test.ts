@@ -3,8 +3,8 @@ import * as http from 'http';
 import app from '../../src/app'; // Adjust path as needed to your Express app
 import * as db from '../db';
 import jwt from 'jsonwebtoken';
-import { UUID } from '../../src/types/index';
-import { S3Service } from '../../src/s3/service';
+import { UUID } from '../../src/types/Index';
+import { S3Service } from '../../src/s3/Service';
 import path from 'path';
 
 let server: http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>;

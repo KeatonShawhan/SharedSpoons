@@ -1,6 +1,6 @@
 import { pool } from "../db";
 
-import { UpdateAccountRequest } from "./index";
+import { UpdateAccountRequest } from "./Index";
 
 export class AccountService {
   public static async usernameAvailable(username: string, id: string): Promise<boolean> {

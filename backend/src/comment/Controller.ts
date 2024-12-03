@@ -1,10 +1,10 @@
 import { Controller, Route, Request, Post, Query, Delete, Security, Get, Response} from 'tsoa';
 import * as express from 'express';
-import { CommentJSON, CommentReturn } from '.';
-import { commentService } from './service'; // Comment service for handling comment creation
-import { UUID } from '../types';
-import { commentSchema } from './validator';
-import { S3Service } from '../s3/service';
+import { CommentJSON, CommentReturn } from './Index';
+import { commentService } from './Service'; // Comment service for handling comment creation
+import { UUID } from '../types/Index';
+import { commentSchema } from './Validator';
+import { S3Service } from '../s3/Service';
 
 interface Comment {
     data: {

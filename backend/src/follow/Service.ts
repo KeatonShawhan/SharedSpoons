@@ -1,8 +1,8 @@
 import {
   PfpAccount
-} from "./index";
+} from "./Index";
 import { pool } from "../db";
-import { UUID } from '../types';
+import { UUID } from '../types/Index';
 
 export class FollowService {
   public async getFollowers(user: UUID): Promise<PfpAccount[] | undefined> {

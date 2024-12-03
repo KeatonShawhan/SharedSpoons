@@ -15,11 +15,11 @@ import {
 import {
   Account,
   PfpAccount
-} from "./index";
+} from "./Index";
 
-import { FollowService } from "./service";
-import { UUID } from '../types';
-import { S3Service } from "../s3/service"; // Import S3Service for signed URLs
+import { FollowService } from "./Service";
+import { UUID } from '../types/Index';
+import { S3Service } from "../s3/Service"; // Import S3Service for signed URLs
 
   
   @Security('jwt', ['member'])
