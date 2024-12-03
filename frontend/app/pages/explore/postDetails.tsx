@@ -48,9 +48,6 @@ export default function PostDetails({ route }: Props) {
       setIsLoading(true);
       setError(null);
 
-      // Debugging: Log the token and postId
-      console.log(`Fetching post with ID: ${postId} and token: ${loginContext.accessToken}`);
-
       const response = await fetch(`${API_URL}post/postID/${postId}`, {
         headers: {
           Authorization: `Bearer ${loginContext.accessToken}`,

@@ -6,7 +6,8 @@ import { useNavigation } from '@react-navigation/native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import type { PostStackNavigationProp, PostStackParamList } from '@/app/navigation/PostStackNavigator';
+import type { PostStackParamList } from '../../../app/pages/profile/navigationTypes';
+import type {PostStackNavigationProp} from '../../../app/navigation/PostStackNavigator';
 import { postComment, getComment } from './commentHelper';
 import { useRoute, RouteProp } from '@react-navigation/native';
 import LoginContext from '@/contexts/loginContext';
@@ -74,7 +75,6 @@ export function CommentsScreen() {
   }, [postId, loginContext.accessToken]);
 
   const handleProfilePress = (userId: UUID) => {
-    console.log("Navigating to user profile:", userId);
     navigation.push('ProfileRoot', {
       screen: 'Main',
       params: {
@@ -85,7 +85,6 @@ export function CommentsScreen() {
   };
 
   const renderComment = ({ item }: { item: Comment }) => {
-    console.log("Comment user_id:", item.user_id); // This will show the user_id
     return (
       <View style={styles.commentContainer}>
         <View style={styles.commentHeader}>

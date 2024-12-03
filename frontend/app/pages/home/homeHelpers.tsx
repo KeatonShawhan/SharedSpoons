@@ -25,11 +25,9 @@ export const fetchPosts = async (userId, accessToken, handleLogout, limit = 10, 
     return json;
   } catch (err) {
     if (err.message.includes("401")) {
-      console.log("fetching post logging u out");
       handleLogout();
       return;
     }
-    console.log("Error fetching post info:", err);
     return [];
   }
 }

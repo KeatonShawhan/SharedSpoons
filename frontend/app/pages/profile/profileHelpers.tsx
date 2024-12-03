@@ -41,7 +41,6 @@ export const fetchFollowersInfo = async (userId, accessToken, handleLogout) => {
       handleLogout();
       return;
     }
-    console.log("Error fetching followers info:", err);
     return [];
   }
 };
@@ -68,7 +67,6 @@ export const fetchFollowingInfo = async (userId, accessToken, handleLogout) => {
       handleLogout();
       return;
     }
-    console.log("Error fetching following info:", err);
     return [];
   }
 };
@@ -122,7 +120,6 @@ export const fetchUserInfo = async (userId, accessToken, handleLogout) => {
       handleLogout();
       return;
     }
-    console.log("Error fetching user info:", err);
     return null;
   }
 };
@@ -140,7 +137,6 @@ export const sendFollowRequest = async (userId, accessToken, handleLogout) => {
     return true;
   } catch (err) {
     if (err.message.includes("401")) {
-      console.log("Unauthorized, logging out...");
       handleLogout();
       return;
     }
@@ -162,7 +158,6 @@ export const removeFollowRequest = async (userId, accessToken, handleLogout) => 
     return true;
   } catch (err) {
     if (err.message.includes("401")) {
-      console.log("Unauthorized, logging out...");
       handleLogout();
       return;
     }
@@ -192,7 +187,6 @@ export const fetchFollowerCount = async (userId, accessToken, handleLogout) => {
       handleLogout();
       return;
     }
-    console.log("Error fetching follower count:", err);
     return [];
   }
 };
@@ -218,7 +212,6 @@ export const fetchFollowingCount = async (userId, accessToken, handleLogout) => 
       handleLogout();
       return;
     }
-    console.log("Error fetching following count:", err);
     return [];
   }
 };

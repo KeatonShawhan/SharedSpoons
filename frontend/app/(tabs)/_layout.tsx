@@ -55,7 +55,6 @@ export default function TabLayout() {
             loginContext.handleLogout();
             return;
           }
-          console.log("Error fetching user info:", err);
           return null;
         }
       }

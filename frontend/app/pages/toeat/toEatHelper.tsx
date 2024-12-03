@@ -18,8 +18,7 @@ export const fetchToEat = async (accessToken) => {
 
     const json = await response.json();
     return json;
-  } catch (err) {
-    console.log("Error fetching to Eat:", err);
+  } catch {
     return [];
   }
 };
@@ -40,8 +39,7 @@ export const addToEat = async (postId, accessToken) => {
 
     const json = await response.ok;
     return json;
-  } catch (err) {
-    console.log("Error adding To Eat:", err);
+  } catch {
     return [];
   }
 };
@@ -57,7 +55,6 @@ export const deleteToEat = async (postId, accessToken) => {
     });
 
     if (!response.ok) {
-      console.log(response);
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
 
@@ -67,8 +64,7 @@ export const deleteToEat = async (postId, accessToken) => {
       return JSON.parse(text); // Parse only if response body is non-empty
     }
     return null; // No response body
-  } catch (err) {
-    console.log("Error deleting To Eat:", err);
+  } catch {
     return [];
   }
 };
@@ -107,7 +103,6 @@ export const fetchPostData = async (postId, accessToken) => {
       isReposted: apiData.data.is_reposted,
       repostedBy: apiData.data.reposted_by
     };
-    // console.log("apiData: ", apiData);
     return transformedData;
 
   } catch (err) {
@@ -131,8 +126,7 @@ export const likePost = async (postId, accessToken) => {
 
     const json = await response.json();
     return json;
-  } catch (err) {
-    console.log("Error liking post:", err);
+  } catch {
     return [];
   }
 };
@@ -153,8 +147,7 @@ export const unlikePost = async (postId, accessToken) => {
 
     const json = await response.ok;
     return json;
-  } catch (err) {
-    console.log("Error unliking", err);
+  } catch {
     return [];
   }
 };
@@ -175,8 +168,7 @@ export const likeCount = async (postId, accessToken) => {
 
     const json = await response.json();
     return json;
-  } catch (err) {
-    console.log("Error getting like count", err);
+  } catch {
     return [];
   }
 };

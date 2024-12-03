@@ -74,7 +74,6 @@ export default function Signup() {
       return;
     }
 
-    console.log(user);
 
     setLoading(true);
     setBadSignup(false);
@@ -115,10 +114,9 @@ export default function Signup() {
       });
       setLoading(false);
       navigation.navigate('welcome');
-    } catch (err) {
+    } catch {
       setBadSignup(true);
       setLoading(false);
-      console.log(err);
       Alert.alert("Error", "Something went wrong. Please try again later.");
     }
   };

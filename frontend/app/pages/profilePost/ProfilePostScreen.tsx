@@ -5,7 +5,7 @@ import ProfilePostHeader from '@/components/profilePost/ProfilePostHeader';
 import { PostCard, PostCardProps } from '@/components/postCard/postCard';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { ProfileStackParamList } from '../profile/profileNavigation';
+import { ProfileStackParamList } from '../profile/navigationTypes';
 import LoginContext from '@/contexts/loginContext';
 import API_URL from '@/config';
 
@@ -69,7 +69,6 @@ export default function PostPage() {
       }
 
       const apiData: PostApiResponse = await response.json();
-      // console.log("apiData: ", apiData.data.is_saved);
             
       // Transform API data to match PostCard props
       const transformedData: PostCardProps = {
@@ -90,7 +89,6 @@ export default function PostPage() {
         isOwnProfile,
       };
             
-      console.log(transformedData)
       setPostData(transformedData);
 
     } catch (err) {

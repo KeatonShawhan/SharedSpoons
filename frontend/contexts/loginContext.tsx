@@ -84,7 +84,6 @@ export const LoginProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const decodeToken = async () => {
     const token = await AsyncStorage.getItem('accessToken');
     if (!token) {
-      console.log('No token found');
       setIsInitialized(true);
       return;
     }
@@ -93,7 +92,6 @@ export const LoginProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       setUserId(decoded.id);
       setUserName(decoded.username);
       setFirstName(decoded.firstname);
-      console.log('Decoded token:', decoded);
       setAccessToken(token);
     } catch (error) {
       console.error('Failed to decode token:', error);
@@ -102,7 +100,6 @@ export const LoginProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   const triggerToEatRefresh = (postId: string, isSaved: boolean) => {
-    console.log('triggerToEatRefresh called for postId:', postId, 'isSaved:', isSaved);
     setAddedEat((prev) => prev + 1); // This can remain for other uses
     setSavedPostData({ postId, isSaved }); // Store the updated post info
   };

@@ -17,8 +17,7 @@ export const addRepost = async (userId, postId, accessToken) => {
     }
     const json = await response.json();
     return json;
-  } catch (err) {
-    console.log("Error adding repost info:", err);
+  } catch {
     return [];
   }
 }
@@ -40,8 +39,7 @@ export const getRepost = async (postId, accessToken) => {
     }
     const json = await response.json();
     return json;
-  } catch (err) {
-    console.log("Error fetching repost info:", err);
+  } catch {
     return [];
   }
 }

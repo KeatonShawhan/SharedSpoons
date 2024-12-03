@@ -11,7 +11,6 @@ export function ToEatCard({
   dish,
   place,
   image,
-  id,
   onPress,
 }: {
   dish: string;
@@ -22,7 +21,6 @@ export function ToEatCard({
 }) {
   const colorScheme = useColorScheme();
   const themeColors = Colors[colorScheme];
-  console.log(id)
   return (
     <TouchableOpacity onPress={onPress}>
       <View style={styles.container}>

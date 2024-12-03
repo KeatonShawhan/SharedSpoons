@@ -34,7 +34,6 @@ export default function HomeScreen() {
   const [isResetting, setIsResetting] = useState(false);
 
   const resetPostsState = () => {
-    console.log('Resetting posts state');
     setHomePosts([]);
     setLastPostTime(undefined);
     setIsResetting(true);
@@ -42,17 +41,14 @@ export default function HomeScreen() {
 
   const getPosts = async (reset = false) => {
     if (!loginContext.isInitialized || !loginContext.accessToken) {
-      console.log('Not initialized or no access token, skipping fetch');
       return;
     }
 
     if (loading && !reset) {
-      console.log('Already loading, skipping fetch');
       return;
     }
 
     setLoading(true);
-    console.log('Fetching posts. Reset:', reset, 'Last post time:', lastPostTime);
 
     try {
       if (reset) {
@@ -70,9 +66,6 @@ export default function HomeScreen() {
       if (posts && posts.length > 0) {
         setHomePosts((prevPosts) => [...(reset ? [] : prevPosts), ...posts]);
         setLastPostTime(posts[posts.length - 1].data.time);
-        console.log('Successfully loaded posts. Count:', posts.length);
-      } else {
-        console.log('No posts returned from fetch');
       }
     } catch (error) {
       console.error('Error in getPosts:', error);
@@ -88,17 +81,8 @@ export default function HomeScreen() {
 
     const hasUserChanged = loginContext.userId !== loginContext.lastUser;
     const isNewSession = loginContext.userId && !loginContext.lastUser;
-    
-    console.log('User session check:', {
-      currentUser: loginContext.userId,
-      lastUser: loginContext.lastUser,
-      hasUserChanged,
-      isNewSession,
-      isAuthenticated: loginContext.isAuthenticated
-    });
 
     if (hasUserChanged || isNewSession) {
-      console.log('User changed or new session detected, resetting posts');
       getPosts(true);
     }
   }, [
@@ -111,7 +95,6 @@ export default function HomeScreen() {
   // Handle follow status changes
   useEffect(() => {
     if (!loginContext.isInitialized) return;
-    console.log('Follow status changed, refreshing posts');
     getPosts(true);
   }, [loginContext.followed]);
 
@@ -120,7 +103,6 @@ export default function HomeScreen() {
     if (!loginContext.savedPostData) return;
 
     const { postId, isSaved } = loginContext.savedPostData;
-    console.log("Updating saved status for post:", postId, "to", isSaved);
     
     setHomePosts((prevPosts) =>
       prevPosts.map((post) =>

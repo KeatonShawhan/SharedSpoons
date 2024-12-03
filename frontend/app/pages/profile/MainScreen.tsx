@@ -82,7 +82,6 @@ export default function MainScreen() {
     try {
       // Fetch user info
       const userData = await fetchUserInfo(profileId, loginContext.accessToken, loginContext.handleLogout);
-      console.log(userData)
       setPfp(userData.pfp);
       setFirstName(`${userData.firstname}`);
       setLastName(`${userData.lastname}`);
