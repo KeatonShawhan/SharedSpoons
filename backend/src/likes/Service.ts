@@ -1,6 +1,6 @@
 import { pool } from '../db';
-import { postLiked } from '.';
-import { UUID } from '../types';
+import { postLiked } from './Index';
+import { UUID } from '../types/Index';
 
 export class likeService {
   public async addLike(userId: UUID, postId: UUID): Promise< postLiked | undefined > {

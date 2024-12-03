@@ -3,10 +3,10 @@ import * as http from 'http';
 import app from '../../src/app'; // Adjust path as needed to your Express app
 import * as db from '../db';
 import jwt from 'jsonwebtoken';
-import { UUID } from '../../src/types/index';
+import { UUID } from '../../src/types/Index';
 
 // Import necessary modules for mocking
-import { likeService } from '../../src/likes/service';
+import { likeService } from '../../src/likes/Service';
 
 let server: http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>;
 

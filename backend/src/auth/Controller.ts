@@ -14,16 +14,16 @@ import {
 } from "tsoa";
   
 import * as express from 'express';
-import { S3Service } from "../s3/service";
+import { S3Service } from "../s3/Service";
 import {
   Authenticated,
   Credentials,
   SessionUser,
   UserSignUp,
   DecodedToken,
-} from "./index";
-import { AuthService } from "./service";
-import type User from "./service";
+} from "./Index";
+import { AuthService } from "./Service";
+import type User from "./Service";
 import jwt from 'jsonwebtoken';
 
 

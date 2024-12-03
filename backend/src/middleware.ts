@@ -1,6 +1,6 @@
 import { Request } from 'express';
-import { AuthService } from './auth/service';
-import { SessionUser } from './types';
+import { AuthService } from './auth/Service';
+import { SessionUser } from './types/Index';
 
 
 // Authentication middleware that conforms to TSOA's expected signature

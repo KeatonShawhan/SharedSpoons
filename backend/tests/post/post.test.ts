@@ -2,10 +2,10 @@ import supertest from 'supertest';
 import * as http from 'http';
 import app from '../../src/app'; // Adjust path as needed to your Express app
 import * as db from '../db';
-import { S3Service } from '../../src/s3/service';
-import { postService } from '../../src/post/service';
+import { S3Service } from '../../src/s3/Service';
+import { postService } from '../../src/post/Service';
 import jwt from 'jsonwebtoken';
-import { UUID } from '../../src/types/index';
+import { UUID } from '../../src/types/Index';
 
 let server: http.Server<typeof http.IncomingMessage, typeof http.ServerResponse>;
 

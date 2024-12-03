@@ -1,5 +1,5 @@
 import { pool } from '../db';
-import { PostTotal } from '../post';
+import { PostTotal } from '../post/Index';
 
 
 export class toEatService{

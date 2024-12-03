@@ -1,5 +1,5 @@
 import { pool } from '../db';
-import { UUID } from '../types/index';
+import { UUID } from '../types/Index';
 
 export class welcomeService {
   public async uploadData(user: UUID, foodsPreferred: string[]): Promise<boolean | undefined> {

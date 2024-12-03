@@ -1,6 +1,6 @@
 import { pool } from '../db';
-import { CommentJSON, CommentReturn } from '.';
-import { UUID } from '../types';
+import { CommentJSON, CommentReturn } from './Index';
+import { UUID } from '../types/Index';
 
 interface Comment {
     data: {

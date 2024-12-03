@@ -1,6 +1,6 @@
 import { Controller, Route, Request, Post, Security, Body} from 'tsoa';
 import * as express from 'express';
-import { welcomeService } from './service';
+import { welcomeService } from './Service';
 
 @Route('welcome')
 @Security('jwt')

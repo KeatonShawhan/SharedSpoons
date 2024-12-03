@@ -1,6 +1,6 @@
 import { pool } from '../db';
-import { PostContent, PostTotal } from '.';
-import { UUID } from '../types/index';
+import { PostContent, PostTotal } from './Index';
+import { UUID } from '../types/Index';
 
 export class postService{
 

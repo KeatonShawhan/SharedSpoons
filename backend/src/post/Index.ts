@@ -1,4 +1,4 @@
-import { UUID } from '../types';
+import { UUID } from '../types/Index';
 
 export interface PostJSON{
   image: string;

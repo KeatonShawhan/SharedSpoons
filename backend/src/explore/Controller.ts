@@ -7,11 +7,11 @@ import {
   Request,
 } from "tsoa";
 
-import { ExploreService } from "./service";
-import { Suggestion } from "./index";
+import { ExploreService } from "./Service";
+import { Suggestion } from "./Index";
 import * as express from "express";
-import { PostContent } from "../post";
-import { S3Service } from "../s3/service"; // Import S3Service for signed URLs
+import { PostContent } from "../post/Index";
+import { S3Service } from "../s3/Service"; // Import S3Service for signed URLs
 
 @Security("jwt", ["member"])
 @Route("explore")
