@@ -1,8 +1,14 @@
 import React, { useContext } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+// Removed FontAwesome import since it's no longer needed for the logo
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { Colors } from '@/constants/Colors';
 import LoginContext from '@/contexts/loginContext';
+
+// Import your custom logo image
+/* eslint-disable */
+const LogoImage = require('../../assets/images/SpoonsLogo.png'); // Adjust the path if necessary
+/* eslint-enable */
 
 const ORANGE_COLOR = '#FF9F45';
 
@@ -11,26 +17,27 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ colorScheme }) => {
-  const loginContext = useContext(LoginContext)
+  const loginContext = useContext(LoginContext);
 
   return (
     <View style={styles.headerContainer}>
       <View style={styles.titleContainer}>
+        {/* App Logo */}
+        <Image
+          source={LogoImage}
+          style={[styles.logo, { tintColor: Colors[colorScheme].text }]} // Apply tintColor if your logo is monochromatic
+          accessibilityLabel="Shared Spoons Logo" // Accessibility label for screen readers
+        />
+        {/* App Name */}
         <Text style={[styles.title, { color: Colors[colorScheme].text }]}>
           SharedSpoons
         </Text>
-        <Ionicons 
-          name="restaurant" 
-          size={28} 
-          color={Colors[colorScheme].text} 
-          style={styles.icon}
-        />
-        <TouchableOpacity onPress={loginContext.handleLogout} style={styles.icon}>
+        {/* Logout Button */}
+        <TouchableOpacity onPress={loginContext.handleLogout} style={styles.logoutButton}>
           <Ionicons 
             name="log-out-outline" 
             size={28}
             color={Colors[colorScheme].text} 
-            style={styles.icon}
           />
         </TouchableOpacity>
       </View>
@@ -42,21 +49,28 @@ export const Header: React.FC<HeaderProps> = ({ colorScheme }) => {
 const styles = StyleSheet.create({
   headerContainer: {
     paddingTop: 60,
+    backgroundColor: '#fff', // Optional: Set a background color if needed
   },
   titleContainer: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
     paddingBottom: 15,
+    justifyContent: 'flex-start', // Align items to the start
+  },
+  logo: {
+    width: 40, // Adjust based on your logo image dimensions
+    height: 40, // Adjust based on your logo image dimensions
+    resizeMode: 'contain', // Ensures the image scales correctly
+    marginRight: 10, // Space between logo and title
   },
   title: {
     fontSize: 32,
     fontWeight: '800',
+    flex: 1, // Allows the title to take up available space
   },
-  icon: {
-    marginLeft: 'auto',
-    paddingTop: 2
+  logoutButton: {
+    paddingLeft: 10, // Space between title and logout icon
   },
   divider: {
     height: 2,

@@ -8,22 +8,28 @@ import {
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
-  Alert
+  Alert,
+  Image, // Import Image component
 } from "react-native";
+import FontAwesome from 'react-native-vector-icons/FontAwesome'; // Retain if still used for other icons
 import API_URL from "@/config";
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useNavigation } from "@react-navigation/native";
 import { RootTabParamList } from './_layout';
 import { StackNavigationProp } from "@react-navigation/stack";
 import { ImagePickerBox } from '@/components/makePost/ImagePickerBox'; // Adjust the import path as necessary
 import LoginContext from "@/contexts/loginContext";
 
+// Import your custom logo image
+/* eslint-disable */
+const LogoImage = require('../../assets/images/FullSpoonsLogo.png'); // Adjust the path if necessary
+/* eslint-enable */
+
 export default function Welcome() {
 
   const navigation = useNavigation<StackNavigationProp<RootTabParamList>>();
 
   const [bioText, setBioText] = useState('');
-  const [profilePicture, setProfilePicture] = useState(null);
+  const [profilePicture, setProfilePicture] = useState<string | null>(null);
   const [dishes, setDishes] = useState<string[]>([]);
   const [isAddingDish, setIsAddingDish] = useState(false);
   const [dishInputText, setDishInputText] = useState('');
@@ -31,7 +37,7 @@ export default function Welcome() {
 
   const handleContinue = () => {
     if (dishes.length === 0) {
-      alert('Please add at least one dish you like.');
+      Alert.alert('Validation Error', 'Please add at least one dish you like.');
       return;
     }
     handleSave();
@@ -58,7 +64,7 @@ export default function Welcome() {
         name: 'profilePicture.jpg',
         type: 'image/jpeg',
       } as any);
-      /* eslint-disable */
+      /* eslint-enable */
     }
   
     try {
@@ -70,19 +76,20 @@ export default function Welcome() {
         body: formData,
       });
   
-      await response.json();
+      const json = await response.json();
 
       if (response.ok) {
         Alert.alert('Welcome To SharedSpoons!');
         setBioText('');
         setDishes([]);
-        setProfilePicture('');
+        setProfilePicture(null);
         loginContext.triggerProfilePageRefresh();
       } else {
-        const errorData = await response.json();
-        Alert.alert('Error', errorData.message || 'Failed to update account. Please try again.');
+        Alert.alert('Error', json.message || 'Failed to update account. Please try again.');
       }      
-    } catch (error) {
+      /* eslint-disable */
+    } catch (error: any) {
+      /* eslint-enable */
       console.error('Update error:', error);
       if (error.message.includes("401")) {
         loginContext.handleLogout();
@@ -100,7 +107,7 @@ export default function Welcome() {
       return;
     }
     if (dishes.length >= 10) {
-      alert('You can only add up to 10 dishes.');
+      Alert.alert('Limit Reached', 'You can only add up to 10 dishes.');
       setIsAddingDish(false);
       setDishInputText('');
       return;
@@ -126,12 +133,12 @@ export default function Welcome() {
         <View style={styles.contentContainer}>
           {/* Header Section */}
           <View style={styles.headerContainer}>
-            <FontAwesome
-              name="cutlery"
-              size={60}
-              color="#FF9900"
+            {/* App Logo */}
+            <Image
+              source={LogoImage}
               style={styles.logo}
             />
+            {/* App Name */}
             <Text style={styles.appName}>Welcome to{'\n'}Shared Spoons</Text>
           </View>
           
@@ -148,6 +155,7 @@ export default function Welcome() {
                 multiline
                 numberOfLines={4}
                 textAlignVertical="top"
+                placeholderTextColor="#999"
               />
             </View>
 
@@ -187,6 +195,8 @@ export default function Welcome() {
                   onSubmitEditing={handleAddDish}
                   autoFocus
                   returnKeyType="done"
+                  placeholder="Add dish"
+                  placeholderTextColor="#999"
                 />
               ) : (
                 dishes.length < 10 && (
@@ -237,7 +247,10 @@ const styles = StyleSheet.create({
     paddingVertical: 25,
   },
   logo: {
+    width: 60, // Adjust based on your logo image dimensions
+    height: 60, // Adjust based on your logo image dimensions
     marginBottom: 10,
+    resizeMode: 'contain', // Ensures the image scales correctly
   },
   appName: {
     fontSize: 28,
@@ -329,6 +342,8 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     marginRight: 10,
     marginBottom: 10,
+    color: '#333',
+    fontSize: 16,
   },
   button: {
     backgroundColor: '#FF9900',
