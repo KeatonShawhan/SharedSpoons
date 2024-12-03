@@ -6,7 +6,8 @@ import Explore from '@/app/pages/explore/explore';
 import PostDetails from '@/app/pages/explore/postDetails';
 import ProfileNavigation from '@/app/pages/profile/profileNavigation'; // Import the ProfileNavigation stack
 import { NavigatorScreenParams } from '@react-navigation/native';
-import { PostStackNavigator, PostStackParamList } from '../navigation/PostStackNavigator';
+import { PostStackNavigator } from '../navigation/PostStackNavigator';
+import {PostStackParamList} from '../pages/profile/navigationTypes';
 
 
 
