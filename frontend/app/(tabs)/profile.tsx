@@ -1,7 +1,8 @@
 // app/(tabs)/profile.tsx
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigatorScreenParams } from '@react-navigation/native';
-import ProfileNavigation, { ProfileStackParamList } from '../pages/profile/profileNavigation';
+import ProfileNavigation from '../pages/profile/profileNavigation';
+import {ProfileStackParamList} from '../pages/profile/navigationTypes';
 
 // Define the param list for the ProfileTab navigator
 export type ProfileTabParamList = {
