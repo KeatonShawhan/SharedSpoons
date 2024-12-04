@@ -85,6 +85,7 @@ export const LoginProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     const token = await AsyncStorage.getItem('accessToken');
     if (!token) {
       setIsInitialized(true);
+      handleLogout();
       return;
     }
     try {
